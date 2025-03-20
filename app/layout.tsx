@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header className="w-[90%] h-17 fixed left-[5%] flex flex-row top-5 border-1 border-solid border-gray-300 rounded-xl px-5 bg-[var(--color-100)]">
+        <header className="z-[999] w-[90%] h-17 fixed left-[5%] flex flex-row top-5 border-1 border-solid border-gray-300 rounded-xl px-5 bg-[var(--color-100)]">
           <div className="flex-[1] flex items-center justify-start">
             {/* logo */}
             <img src="/logo-e-l.png" alt="Logo non disponible" className="h-17 w-17 object-contain hover:brightness-110 transition-all duration-300"/>
