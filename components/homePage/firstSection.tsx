@@ -12,7 +12,7 @@ const FirstSection = () => {
                 <p className="text-[var(--addi-color-500)] text-sm font-bold mb-9">
                     Start Your favorit cours
                 </p>
-                <div className="w-[50%] mb-16">
+                <div className=" mb-16">
                     <p className="text-4xl font-bold">
                         Now learning from anywhere, and build your <span className="text-[var(--addi-color-500)]">bright career</span>
                     </p>
@@ -28,7 +28,7 @@ const FirstSection = () => {
                     </Button>
                 </div>
             </div>
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-2 flex items-center justify-center">
                 <img src="/image-1-el.png" alt="image non disponible"
                     className="w-[70%]" />
             </div>

@@ -5,7 +5,7 @@ const FilterDiv = () => {
         <div className="flex flex-row h-[10vh]  items-center">
             <div className="flex-1 flex justify-start pl-32">
                 <p className="text-3xl font-bold flex pl-16 ">
-                    Our <span className="text-[var(--addi-color-500)]">Courses</span>
+                    Our <span className="text-[var(--addi-color-500)] ml-0.5"> Courses</span>
                 </p>
             </div>
             <div className="flex-1 flex items-center justify-center">
