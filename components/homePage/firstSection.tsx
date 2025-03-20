@@ -1,5 +1,4 @@
-import { Section } from "lucide-react";
-import { exportTraceState } from "next/dist/trace"
+
 import { Button } from "@/components/ui/button"
 
 
@@ -8,7 +7,7 @@ const FirstSection = () => {
 
     return (
         <section className="w-full h-auto flex flex-row pt-28 bg-[var(--color-50)]">
-            <div className="flex-1 flex flex-col pt-36 pl-16">
+            <div className="flex-1 flex flex-col h-screen pt-[10%] pl-16">
                 <p className="text-[var(--addi-color-500)] text-sm font-bold mb-9">
                     Start Your favorit cours
                 </p>
