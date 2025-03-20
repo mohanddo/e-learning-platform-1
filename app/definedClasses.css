@@ -1,0 +1,47 @@
+@import "tailwindcss/preflight.css" layer(base);
+@tailwind utilities;
+
+:root {
+    --font-heading: "Montserrat", sans-serif;
+    --font-body: "Nunito Sans", sans-serif;
+    --color-50: #ecfeff;
+    --color-100: #cffafe;
+    --color-200: #a5f3fc;
+    --color-300: #67e8f9;
+    --color-400: #22d3ee;
+
+    --addi-color-400: #38bdf8;
+    --addi-color-500: #0ea5e9;
+
+}
+
+.informal-font {
+    font-family: "Caveat", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+@layer utilities {
+
+
+    .header-Links-Activated {
+        @apply font-bold underline
+    }
+
+
+    .header-Links:hover {
+        @apply font-bold underline
+    }
+
+    .primary-Button {
+        background-color: var(--addi-color-400);
+    }
+
+    .primary-Button:hover {
+        background-color: var(--addi-color-500);
+    }
+
+}
+
+
