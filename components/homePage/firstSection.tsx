@@ -9,10 +9,10 @@ const FirstSection = () => {
 
     return (
         <section className="h-auto w-full flex flex-row pt-[3%] bg-[var(--color-50)]">
-            <div className="flex-1 flex flex-col h-screen pt-[10%] pl-16">
+            <div className="flex-1 flex flex-col h-screen pt-[5%] pl-16">
                 <TextAnimate animation="blurInUp" 
                             by="character" once
-                            className="text-5xl text-[var(--addi-color-500)] font-bold">
+                            className="text-4xl text-[var(--addi-color-500)] font-bold">
                     E learning platform
                 </TextAnimate>
                 <p className="text-[var(--addi-color-500)] text-sm font-bold mb-9">
