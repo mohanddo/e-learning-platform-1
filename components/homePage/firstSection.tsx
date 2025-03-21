@@ -1,15 +1,17 @@
+
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
-// import { Button } from "@/components/ui/button"
 import { TypingAnimation } from "@/components/magicui/typing-animation";
 import {TextAnimate} from "@/components/magicui/text-animate"
 import { NumberTicker } from "../magicui/number-ticker";
 
 
+
 const FirstSection = () => {
+
 
     return (
         <section className="h-auto w-full flex flex-row pt-[3%] bg-[var(--color-50)]">
-            <div className="flex-1 flex flex-col h-screen pt-[5%] pl-16">
+            <div className="flex-1 flex flex-col justify-center h-screen pt-[5%] pl-16">
                 <TextAnimate animation="blurInUp" 
                             by="character" once
                             className="text-4xl text-[var(--addi-color-500)] font-bold">

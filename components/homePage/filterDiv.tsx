@@ -1,13 +1,32 @@
-"useClient"
-import { Search } from "lucide-react";
+"use client"
+import { Search, ChevronLeft, ChevronRight} from "lucide-react";
 import categories from "../../app/data"
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { start } from "repl";
+
 const FilterDiv = () => {
 
-    console.log({categories});
     
+    const [startIndex, setStartIndex] = useState<number>(0);
+    const categoriesPerpage = 5
+
+    const currentSet :{id:number, name: string}[] = categories.categories.slice(startIndex, startIndex + categoriesPerpage);
+
+    const handelNext = () => {
+        const nextIndex = startIndex + 1;
+        return nextIndex < categories.categories.length ? setStartIndex(nextIndex) : setStartIndex(categories.categories.length - categoriesPerpage);
+    }
+
+    const handelPrev = () => {
+        const prevIndex = startIndex - 1;
+        return prevIndex >= 0 ? setStartIndex(prevIndex) : setStartIndex(0); 
+    }
+
+
     return (
         <div className="w-full flex flex-col">
-            <div className="flex flex-row h-[10vh]  items-center">
+            <div className="flex flex-row h-[10vh] items-center mb-5">
                 <div className="flex-1 flex justify-start pl-32">
                     <p className="text-3xl font-bold flex pl-16 ">
                         Our <span className="text-[var(--addi-color-500)] ml-0.5"> Courses</span>
@@ -24,8 +43,38 @@ const FilterDiv = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full">
-                
+            <div className="w-full mb-2 flex items-center justify-center">
+                <div className="w-[70%] h-20 px-5 flex flex-row justify-center items-center border border-solid border-gray-300 rounded-lg bg-[var(--color-50)]">
+                    <div className="flex-[0.2] h-full flex items-center justify-center">
+                        <Button variant="outline" size="icon" 
+                                className="hover:bg-[var(--color-100)] disabled:bg-gray-300"
+                                onClick={handelPrev}
+                                disabled = {startIndex === 0}>
+                            <ChevronLeft />
+                        </Button>
+                    </div>
+
+                    <div className="flex-[4] flex flex-row flex-wrap items-center justify-around">
+                        {
+                            currentSet.map((ca) => (
+                                <Button key={ca.id} 
+                                        variant="outline"
+                                        className="w-32 border-gray-300 hover:text-[var(--addi-color-500)] hover:border-[var(--addi-color-500)] hover:font-semibold">
+                                    {ca.name}
+                                </Button>
+                            ))
+                        }
+                    </div>
+
+                    <div className="flex-[0.2] h-full flex items-center justify-center">
+                        <Button variant="outline" size="icon" 
+                                className="hover:bg-[var(--color-100)] disabled:bg-gray-300"
+                                onClick={handelNext}
+                                disabled ={(startIndex + categoriesPerpage) === categories.categories.length }>
+                            <ChevronRight />
+                        </Button>
+                    </div>
+                </div>
 
             </div>
         </div>
