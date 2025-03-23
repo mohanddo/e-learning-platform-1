@@ -25,7 +25,7 @@ const CourseCard = ({ course }: { course: Course }) => {
                         {course.category}
                     </span>
                 </div>
-                <p className="text-lg font-bold mb-2">
+                <p className="text-lg font-bold mb-2 line-clamp-1">
                     {course.title}
                 </p>
                 <div className="w-full flex flex-row justify-between font-semibold mb-3">
@@ -45,7 +45,7 @@ const CourseCard = ({ course }: { course: Course }) => {
                         </span>
                     ) : (
                         <span className="text-green-600 text-lg font-bold">
-                            {course.price}
+                            {course.price} DA
                         </span>
                     )}
 

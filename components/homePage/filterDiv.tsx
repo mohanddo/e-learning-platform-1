@@ -1,6 +1,6 @@
 "use client"
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import categories from "../../app/data"
+import {categories} from "../../app/data"
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useAppContext } from "../context/context";
@@ -13,11 +13,11 @@ const FilterDiv = () => {
     const [startIndex, setStartIndex] = useState<number>(0);
     const categoriesPerpage = 5
 
-    const currentSet: { id: number, name: string }[] = categories.categories.slice(startIndex, startIndex + categoriesPerpage);
+    const currentSet: { id: number, name: string }[] = categories.slice(startIndex, startIndex + categoriesPerpage);
 
     const handelNext = () => {
         const nextIndex = startIndex + 1;
-        return nextIndex < categories.categories.length ? setStartIndex(nextIndex) : setStartIndex(categories.categories.length - categoriesPerpage);
+        return nextIndex < categories.length ? setStartIndex(nextIndex) : setStartIndex(categories.length - categoriesPerpage);
     }
 
     const handelPrev = () => {
@@ -45,7 +45,7 @@ const FilterDiv = () => {
                     </div>
                 </div>
             </div>
-            {categorie}
+            
             <div className="w-full mb-2 flex items-center justify-center">
                 <div className="w-[70%] h-20 px-5 flex flex-row justify-center items-center border border-solid border-gray-300 rounded-lg bg-[var(--color-50)]">
                     <div className="flex-[0.2] h-full flex items-center justify-center">
@@ -76,28 +76,14 @@ const FilterDiv = () => {
                         <Button variant="outline" size="icon"
                             className="hover:bg-[var(--color-100)] disabled:bg-gray-300"
                             onClick={handelNext}
-                            disabled={(startIndex + categoriesPerpage) === categories.categories.length}>
+                            disabled={(startIndex + categoriesPerpage) === categories.length}>
                             <ChevronRight />
                         </Button>
                     </div>
                 </div>
 
             </div>
-            <CourseCard 
-                course={{
-                    id: 1,
-                    title: "Calculus 101",
-                    category: "Mathematics",
-                    teacher: "Dr. John Doe",
-                    pictureUrl: "/exmp1.jpg",
-                    description: "Learn the fundamentals of calculus with real-world examples.",
-                    students: 150,
-                    price: 49.99,
-                    discount: true,
-                    rating: 4,
-                    type: "prerecorded",
-                }} 
-            />
+
         </div>
     )
 }

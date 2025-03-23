@@ -1,6 +1,6 @@
 import { Course } from "@/components/types";
 
-const categories: { id: number, name: string }[] = [
+export const categories: { id: number, name: string }[] = [
     { id: 1, name: "Mathematics" },
     { id: 2, name: "Physics" },
     { id: 3, name: "Chemistry" },
@@ -18,7 +18,7 @@ const categories: { id: number, name: string }[] = [
     { id: 15, name: "Génie Électrique" },
 ];
 
-const courses: Course[] = [
+export const courses: Course[] = [
         {
             id: 1,
             title: "Calculus 101",
@@ -214,9 +214,22 @@ const courses: Course[] = [
             rating: 4,
             type: "prerecorded",
         },
+        {
+            id: 16,
+            title: "Calculus 101",
+            category: "Mathematics",
+            teacher: "Dr. John Doe",
+            pictureUrl: "/exmp1.jpg",
+            description: "Learn the fundamentals of calculus with real-world examples.",
+            students: 150,
+            price: 49.99,
+            discount: true,
+            rating: 4,
+            type: "prerecorded",
+        },
     ];
 
 
 
 
-export default { categories, courses };
+
