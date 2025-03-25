@@ -37,14 +37,14 @@ const FirstSection = () => {
                 </div>
             </div>
             <div className="relative flex-2 flex items-center justify-center">
-                <div className="absolute w-40 h-40 bg-[var(--color-400)] rounded-full left-48 top-20 flex flex-col items-center justify-center text-white text-2xl font-bold">
+                <div className="absolute w-40 h-40 bg-[var(--color-400)] rounded-full left-[15vw] top-20 flex flex-col items-center justify-center text-white text-2xl font-bold">
                     <p >More Than </p>
                     <p><NumberTicker startValue={26} value={40} /> +</p> 
                     <p>Teacher</p>
 
                 </div>
 
-                <div className="absolute w-40 h-40 bg-[var(--addi-color-400)] right-48 bottom-20 rounded-full text-white text-2xl font-bold flex flex-col items-center justify-center">
+                <div className="absolute w-40 h-40 bg-[var(--addi-color-400)] right-[15vw] bottom-[10vw] rounded-full text-white text-2xl font-bold flex flex-col items-center justify-center">
                     <p>+ <NumberTicker startValue={60} value={100}/> </p>
                     <p>student</p>
                     <p>Subscribed</p>

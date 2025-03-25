@@ -4,7 +4,7 @@ import {categories} from "../../app/data"
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useAppContext } from "../context/context";
-import CourseCard from "./courseCard";
+// import CourseCard from "./courseCard";
 
 const FilterDiv = () => {
 
