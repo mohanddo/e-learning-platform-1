@@ -5,15 +5,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Radio, Video, Star } from "lucide-react"
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 
 
 const CourseCard = ({ course }: { course: Course }) => {
 
-
+    const router = useRouter();
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
+    const goToPage = () => {
+        router.push(`/CourseDetails/${course.id}`)
+    }
 
     return (
         <div className="flex flex-col p-5 rounded-2xl overflow-hidden shadow-lg bg-white w-xs "
@@ -56,7 +60,8 @@ const CourseCard = ({ course }: { course: Course }) => {
                                 Add To Cart
                             </Button>
                             <Button variant={"outline"}
-                                className="text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)]">
+                                className="text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)]"
+                                onClick={goToPage}>
                                 See Course details
                             </Button>
                         </div>

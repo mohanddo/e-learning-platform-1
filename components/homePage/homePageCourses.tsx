@@ -34,7 +34,7 @@ const HomePageCourses = () => {
         <section className="mb-5">
             <div className="flex flex-row flex-wrap gap-3 items-center justify-center mb-5">
                 {currentSet.map((crs) => (
-                    <CourseCard course={(crs)}/>
+                    <CourseCard key={crs.id} course={(crs)}/>
                 ))}
             </div>
 
