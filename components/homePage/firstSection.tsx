@@ -31,7 +31,7 @@ const FirstSection = () => {
                     </p>
                 </div>
                 <div className="w-full">
-                    <InteractiveHoverButton className="text-white text-lg font-bold bg-[var(--addi-color-500)] px-6 py-3 rounded-lg">
+                    <InteractiveHoverButton className="btn-principal ">
                         start course
                     </InteractiveHoverButton>
                 </div>

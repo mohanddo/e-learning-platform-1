@@ -56,7 +56,7 @@ const CourseCard = ({ course }: { course: Course }) => {
                 {
                     isHovered ? (
                         <div className="w-full flex flex-row justify-between py-1">
-                            <Button className="text-white font-semibold bg-[var(--addi-color-400)] px-5 py-3 rounded-lg hover:bg-[var(--addi-color-500)]">
+                            <Button className="btn-principal">
                                 Add To Cart
                             </Button>
                             <Button variant={"outline"}

@@ -1,5 +1,6 @@
+
 @import "tailwindcss/preflight.css" layer(base);
-@tailwind utilities;
+
 
 :root {
     --font-heading: "Montserrat", sans-serif;
@@ -12,7 +13,7 @@
 
     --addi-color-400: #38bdf8;
     --addi-color-500: #0ea5e9;
-    --wr-color-9 : #172554;
+    --wr-color-9: #172554;
 
 }
 
@@ -35,14 +36,18 @@
         @apply font-bold underline
     }
 
-    .primary-Button {
-        background-color: var(--addi-color-400);
-    }
-
-    .primary-Button:hover {
-        background-color: var(--addi-color-500);
-    }
 
 }
 
 
+@layer components {
+    .btn-principal {
+        @apply text-white font-semibold py-3 px-5 transition-colors duration-600 ;
+        background-color: var(--addi-color-400);
+        border-radius: 0.5rem !important;
+        
+        &:hover {
+          background-color: var(--addi-color-500);
+        }
+    }
+}
