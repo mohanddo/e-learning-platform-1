@@ -1,0 +1,23 @@
+// SignPage.tsx
+"use client"
+import AnimatedDiv from "@/components/auth/animatedDiv";
+import SignIn from "@/components/auth/signeIn";
+import SignUp from "@/components/auth/signUp";
+import { useAppContext } from "@/components/context/context";
+import { motion, AnimatePresence } from "framer-motion";
+
+const SignPage = () => {
+    const { isSignUp } = useAppContext();
+
+    return (
+        <section className="min-h-screen w-full flex items-center justify-center bg-gray-100">
+            <div className="relative bg-white w-[60%] flex rounded-lg shadow-lg overflow-hidden">
+                {isSignUp && <SignUp />}
+                <AnimatedDiv />
+                {!isSignUp && <SignIn />}
+            </div>
+        </section>
+    );
+};
+
+export default SignPage;

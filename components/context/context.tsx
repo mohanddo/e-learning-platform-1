@@ -6,6 +6,8 @@ import { createContext, ReactNode, useContext, useState } from "react";
 interface AppContextType {
     categorie : string;
     setCategorie : React.Dispatch<React.SetStateAction<string>>;
+    isSignUp : boolean;
+    setIsSignUp : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
@@ -14,9 +16,10 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({children} : {children : ReactNode}) => {
     // defining functions and const that add theme to AppContextType interface;
     const [categorie, setCategorie] = useState<string>("All");
+    const [isSignUp, setIsSignUp] = useState<boolean>(false);
 
     return(
-        <AppContext.Provider value={{categorie, setCategorie}} >
+        <AppContext.Provider value={{categorie, setCategorie, isSignUp, setIsSignUp}} >
             {children}
         </AppContext.Provider>
     )
