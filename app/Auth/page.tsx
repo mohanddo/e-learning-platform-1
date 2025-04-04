@@ -12,9 +12,10 @@ const SignPage = () => {
     return (
         <section className="min-h-screen w-full flex items-center justify-center bg-gray-100">
             <div className="relative bg-white w-[60%] flex rounded-lg shadow-lg overflow-hidden">
-                {isSignUp && <SignUp />}
                 <AnimatedDiv />
+                {isSignUp && <SignUp />}
                 {!isSignUp && <SignIn />}
+
             </div>
         </section>
     );

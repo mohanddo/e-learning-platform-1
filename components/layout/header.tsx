@@ -31,11 +31,13 @@ const Header = () => {
                             className="header-Links">
                             Sign in
                         </Link>
-                        <InteractiveHoverButton className="rounded-lg px-4 py-2 text-center border-1 border-solid border-gray-300 bg-white text-black">
-                            <Link href="/Auth">
+                        <Link href="/Auth">
+                            <InteractiveHoverButton className="rounded-lg px-4 py-2 text-center border-1 border-solid border-gray-300 bg-white text-black">
+
                                 Sign up
-                            </Link>
-                        </InteractiveHoverButton>
+
+                            </InteractiveHoverButton>
+                        </Link>
                     </>
                 ) : (
                     <div className="flex flex-row hover:bg-[var(--color-300)] gap-1.5 items-center cursor-alias p-1 rounded-lg">
