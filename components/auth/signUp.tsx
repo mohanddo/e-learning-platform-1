@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { TextAnimate } from '../magicui/text-animate';
 import { useAppContext } from '../context/context';
 
 const SignUp = () => {
@@ -7,7 +7,9 @@ const SignUp = () => {
     return (
 
         <div className="p-10 flex-1 flex justify-center flex-col items-start">
-            <h2 className="text-2xl font-bold">Create Account</h2>
+                           <p className="text-3xl font-bold">
+                                Creat Account
+                            </p>
             <input type="text" placeholder="Name" className="w-full p-2 mt-4 border rounded" />
             <input type="email" placeholder="Email" className="w-full p-2 mt-4 border rounded" />
             <input type="password" placeholder="Password" className="w-full p-2 mt-4 border rounded" />

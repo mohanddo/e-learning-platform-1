@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useAppContext } from "../context/context";
 const Header = () => {
 
 
     const isLoged: boolean = false;
-
+    const {isSignUp, setIsSignUp} = useAppContext();
 
 
     return (
@@ -28,10 +29,10 @@ const Header = () => {
                 {!isLoged ? (
                     <>
                         <Link href="/Auth"
-                            className="header-Links">
+                            className="header-Links" onClick={() => setIsSignUp(false)}>
                             Sign in
                         </Link>
-                        <Link href="/Auth">
+                        <Link href="/Auth" onClick={() => setIsSignUp(true)}>
                             <InteractiveHoverButton className="rounded-lg px-4 py-2 text-center border-1 border-solid border-gray-300 bg-white text-black">
 
                                 Sign up
