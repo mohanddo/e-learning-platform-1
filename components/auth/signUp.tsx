@@ -1,5 +1,5 @@
 import { TextAnimate } from '../magicui/text-animate';
-import { useAppContext } from '../context/context';
+import { useAppContext } from '../../context/context';
 
 const SignUp = () => {
     const {isSignUp, setIsSignUp} = useAppContext();

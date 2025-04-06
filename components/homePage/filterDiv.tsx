@@ -3,7 +3,7 @@ import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import {categories} from "../../app/data"
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { useAppContext } from "../context/context";
+import { useAppContext } from "../../context/context";
 // import CourseCard from "./courseCard";
 
 const FilterDiv = () => {

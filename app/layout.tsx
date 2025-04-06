@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AppProvider } from "@/components/context/context";
+import { AppProvider } from "@/context/context";
 import dynamic from "next/dynamic";
 
 const Header = dynamic(() => import("@/components/layout/header"));

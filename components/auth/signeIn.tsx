@@ -1,8 +1,8 @@
 import { TextAnimate } from '../magicui/text-animate';
-import { useAppContext } from '../context/context';
+import { useAppContext } from '../../context/context';
 
 const SignIn = () => {
-    const { isSignUp, setIsSignUp } = useAppContext();
+    const { isSignUp, setIsSignUp, setIsLoged} = useAppContext();
 
     return (
 
@@ -13,7 +13,10 @@ const SignIn = () => {
             <input type="email" placeholder="Email" className="w-full p-2 mt-4 border rounded" />
             <input type="password" placeholder="Password" className="w-full p-2 mt-4 border rounded" />
             <a href="/" className='text-start mt-3 text-gray-400 text-sm font-bold'>Forgot password?</a>
-            <button className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded">Sign In</button>
+            <button className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
+                    onClick={() => setIsLoged(true)}>
+                Sign In
+            </button>
             <p className='text-start text-gray-400 text-sm font-bold mt-5'>Or Signe In with :</p>
             <div className='w-full flex justify-center items-center mt-5'>
                 <button className='mr-5 border border-solid border-gray-300 h-12 w-12 rounded-full flex justify-center items-center text-lg font-bold hover:bg-gray-100'>

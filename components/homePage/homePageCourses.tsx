@@ -1,7 +1,7 @@
 "use client"
 import {courses} from "@/app/data"
 import { Course } from "../types";
-import { useAppContext } from "../context/context";
+import { useAppContext } from "../../context/context";
 import { useEffect, useState } from "react";
 import CourseCard from "./courseCard";
 import { Button } from "../ui/button";

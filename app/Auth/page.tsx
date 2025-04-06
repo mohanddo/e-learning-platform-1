@@ -3,7 +3,7 @@
 import AnimatedDiv from "@/components/auth/animatedDiv";
 import SignIn from "@/components/auth/signeIn";
 import SignUp from "@/components/auth/signUp";
-import { useAppContext } from "@/components/context/context";
+import { useAppContext } from "@/context/context";
 import { motion, AnimatePresence } from "framer-motion";
 
 const SignPage = () => {

@@ -1,14 +1,22 @@
 "use client"
 
 import Link from "next/link";
+import { ShoppingCart,LogOut, User,ChevronUp } from "lucide-react";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAppContext } from "../context/context";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useAppContext } from "../../context/context";
+
 const Header = () => {
 
-
-    const isLoged: boolean = false;
-    const {isSignUp, setIsSignUp} = useAppContext();
+    const { isSignUp, setIsSignUp, isLoged } = useAppContext();
 
 
     return (
@@ -41,12 +49,29 @@ const Header = () => {
                         </Link>
                     </>
                 ) : (
-                    <div className="flex flex-row hover:bg-[var(--color-300)] gap-1.5 items-center cursor-alias p-1 rounded-lg">
-                        <p>user Name</p>
-                        <Avatar className="w-10 h-10">
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                    <div className="flex flex-row gap-5 items-center ">
+                        <div>
+                            <button>
+                                <ShoppingCart />
+                            </button>
+                        </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-1.5 items-center cursor-alias p-1 rounded-lg px-2">
+                                    <p>user Name</p>
+                                    <Avatar className="w-10 h-10">
+                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="mt-5 w-25">
+                                    <DropdownMenuLabel className="font-bold">My Account</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    
+                                    <DropdownMenuItem className="hover:bg-gray-200"> <Link href={"/Profile"} className="flex flex-row gap-2 w-full"> <User /> Profile</Link></DropdownMenuItem>
+                                    <DropdownMenuItem className="hover:bg-gray-200"> <LogOut /> Signe out</DropdownMenuItem>
+                                    <DropdownMenuItem className="hover:text-red-500"> <ChevronUp /></DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                     </div>
 
                 )}

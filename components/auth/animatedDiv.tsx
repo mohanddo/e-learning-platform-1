@@ -1,5 +1,5 @@
 import { TypingAnimation } from "../magicui/typing-animation";
-import { useAppContext } from "@/components/context/context";
+import { useAppContext } from "@/context/context";
 import { Button } from "../ui/button";
 
 const AnimatedDiv = () => {

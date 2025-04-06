@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 
 
 interface AppContextType {
@@ -8,6 +8,8 @@ interface AppContextType {
     setCategorie : React.Dispatch<React.SetStateAction<string>>;
     isSignUp : boolean;
     setIsSignUp : React.Dispatch<React.SetStateAction<boolean>>;
+    isLoged : boolean;
+    setIsLoged : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
@@ -17,9 +19,12 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     // defining functions and const that add theme to AppContextType interface;
     const [categorie, setCategorie] = useState<string>("All");
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
+    const [isLoged, setIsLoged] = useState<boolean> (true);
 
     return(
-        <AppContext.Provider value={{categorie, setCategorie, isSignUp, setIsSignUp}} >
+        <AppContext.Provider value={{categorie, setCategorie, 
+                                    isSignUp, setIsSignUp, 
+                                    isLoged, setIsLoged}} >
             {children}
         </AppContext.Provider>
     )
