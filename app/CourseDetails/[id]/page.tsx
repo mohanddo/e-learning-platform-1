@@ -34,6 +34,7 @@ const CourseD = () => {
                     <JoineCourse/>
                 </div>
             </section>
+            
         </section>
     )
 }
