@@ -1,5 +1,6 @@
 "use client"
 
+import FavoritCouses from "@/components/profilePage/favCourses";
 import PersonalData from "@/components/profilePage/personalData";
 import PurshasesTab from "@/components/profilePage/purshases";
 import { useState } from "react";
@@ -36,11 +37,17 @@ const Profile = () => {
                             {
                                 currentComp === "pursh" && <PurshasesTab />
                             }
+                            {
+                                currentComp === "fav" && <FavoritCouses />
+                            }
                         </div>
                     </div>
 
-                    <div className="flex-1 bg-red">
-                        youcef
+                    <div className="flex-1 bg-red-200 self-start flex flex-col">
+                        <p>youcef</p>
+                        <p>youcef</p>
+                        <p>youcef</p>
+                        <p>youcef</p>
                     </div>
                 </div>
             </section>

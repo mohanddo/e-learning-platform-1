@@ -1,4 +1,3 @@
-"use client"
 
 import { courses } from "@/app/data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -6,17 +5,13 @@ import { Course } from "../types";
 import { AnimatedList } from "@/components/magicui/animated-list";
 import { useRouter } from "next/router";
 
-const PurshasesTab = () => {
+const FavoritCouses = () => {
 
-    // const router = useRouter();
-    // const goToPage = (id : number) => {
-    //     router.replace(`/CourseDetails/${id}`)
-    // }
-    return (
+    return(
         <div className="w-full">
             <p className="text-xl font-semibold mb-10">You Courses</p>
             <AnimatedList className="w-full flex flex-col justify-center gap-5">
-                {courses.slice(0,5).map((crs) => (
+                {courses.slice(0,2).map((crs) => (
                     <div className="w-[80%] flex flex-row items-center mb-2 p-5 border border-gray-200 rounded-lg hover:bg-gray-200">
                         <img src={crs.pictureUrl} alt={crs.title} width={100} height={100} className="mr-20" />
                         <div className="flex-1 mr-20">
@@ -37,4 +32,4 @@ const PurshasesTab = () => {
     )
 }
 
-export default PurshasesTab;
+export default FavoritCouses;
