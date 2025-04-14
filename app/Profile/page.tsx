@@ -3,6 +3,7 @@
 import FavoritCouses from "@/components/profilePage/favCourses";
 import PersonalData from "@/components/profilePage/personalData";
 import PurshasesTab from "@/components/profilePage/purshases";
+import SecPanel from "@/components/profilePage/secPanel";
 import { useState } from "react";
 
 const Profile = () => {
@@ -11,7 +12,7 @@ const Profile = () => {
 
     return (
         <section className="flex justify-center pt-[13vh]">
-            <section className="w-[90%] p-5 flex flex-col rounded-lg">
+            <section className="w-[90%] p-5 flex flex-col gap-2.5 rounded-lg">
                 <div className="mb-20">
                     <span className="px-5 py-2 rounded-xl bg-blue-300 text-blue-500 border border-blue-500">Student</span>
                     <p className="text-3xl font-bold mt-5">My Profile</p>
@@ -43,11 +44,8 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 bg-red-200 self-start flex flex-col">
-                        <p>youcef</p>
-                        <p>youcef</p>
-                        <p>youcef</p>
-                        <p>youcef</p>
+                    <div className="flex-1 self-start flex flex-col items-center py-10">
+                        <SecPanel />
                     </div>
                 </div>
             </section>
@@ -56,4 +54,3 @@ const Profile = () => {
 }
 
 export default Profile;
-

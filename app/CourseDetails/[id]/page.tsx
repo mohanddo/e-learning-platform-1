@@ -14,7 +14,7 @@ const CourseD = () => {
 
     return (
         <section className="flex flex-col">
-            <section className="w-full h-[50vh] pt-[13vh] flex justify-center mb-28">
+            {/* <section className="w-full h-[50vh] pt-[13vh] flex justify-center mb-28">
                 <div className="h-full w-[90%] flex flex-col items-center justify-center bg-[var(--color-100)] rounded-xl">
                     <p className="text-3xl font-bold text-[var(--wr-color-9)] mb-5">
                         Course details
@@ -27,8 +27,8 @@ const CourseD = () => {
                         {course?.title}
                     </p>
                 </div>
-            </section>
-            <section className="flex justify-center">
+            </section> */}
+            <section className="flex justify-center pt-[15vh]">
                 <div className="w-[80%] flex flex-row">
                     <AboutCourse />
                     <JoineCourse/>
