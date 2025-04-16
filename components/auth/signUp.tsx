@@ -1,4 +1,3 @@
-import { TextAnimate } from '../magicui/text-animate';
 import { useAppContext } from '../../context/context';
 
 const SignUp = () => {

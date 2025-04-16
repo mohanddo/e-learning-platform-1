@@ -1,7 +1,9 @@
 "use client"
 
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
 import type { Student } from "@/components/types" 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 
 interface AppContextType {
@@ -12,10 +14,8 @@ interface AppContextType {
 
 
     isLoged : boolean;
-    setIsLoged : React.Dispatch<React.SetStateAction<boolean>>;
-    token: string | null;
     user: Student | null;
-    login: (token: string, user: Student) => void;
+    login: (user: Student) => void;
     logout: () => void;
 }
 
@@ -23,22 +23,25 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({children} : {children : ReactNode}) => {
+    const queryClient = new QueryClient()
     // defining functions and const that add theme to AppContextType interface;
     const [categorie, setCategorie] = useState<string>("All");
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
     const [isLoged, setIsLoged] = useState<boolean> (true);
 
-    const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
-    const [user, setUser] = useState<Student | null>(() => {
-        const savedUser = localStorage.getItem('user');
-        return savedUser ? JSON.parse(savedUser) : null;
-    });
+    const [user, setUser] = useState<Student | null>(null);
+
+    useEffect(() => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+        }
+      }, []);
 
     // Auth methods
-    const login = (newToken: string, userData: Student) => {
-        localStorage.setItem('token', newToken);
+    const login = (userData: Student) => {
         localStorage.setItem('user', JSON.stringify(userData));
-        setToken(newToken);
         setUser(userData);
         setIsLoged(true);
     };
@@ -46,18 +49,28 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        setToken(null);
         setUser(null);
         setIsLoged(false);
     };
 
     return(
-        <AppContext.Provider value={{categorie, setCategorie, 
-                                    isSignUp, setIsSignUp, 
-                                    isLoged, setIsLoged,
-                                    token, user, login, logout}} >
-            {children}
-        </AppContext.Provider>
+            <QueryClientProvider client={queryClient}>
+              <AppContext.Provider
+                value={{
+                  categorie,
+                  setCategorie,
+                  isSignUp,
+                  setIsSignUp,
+                  isLoged,
+                  user,
+                  login,
+                  logout,
+                }}
+              >
+                {children}
+              </AppContext.Provider>
+              <ReactQueryDevtools />
+            </QueryClientProvider>
     )
 }
 

@@ -18,6 +18,7 @@ export interface User {
     firstName: string;
     lastName: string;
     email: string;
+    jwtToken: string;
     profilePicDownloadUrl: string | null
 }
 
@@ -29,7 +30,12 @@ export interface Teacher extends User {
     facebookLink: string | null,
     youtubeLink: string | null,
     instagramLink: string | null,
-    description: string,
+    description: string | null,
     sasToken: string;
     baseUrl: string;
+}
+
+export interface  LoginCredentials {
+    email: string;
+    password: string;
 }

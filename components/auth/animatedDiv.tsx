@@ -8,8 +8,6 @@ const AnimatedDiv = () => {
     return (
         <div
             className={`bg-[var(--color-50)] flex-1 py-20 transition-transform duration-500`}
-
-
         >
             <div className="flex flex-col items-center">
                 <img src="/logo-e-l.png" alt="youcef" height={150} width={150} className="mb-10" />

@@ -1,8 +1,43 @@
-import { TextAnimate } from '../magicui/text-animate';
-import { useAppContext } from '../../context/context';
+"use client"
 
+import { useAppContext } from '../../context/context';
+import {  useMutation } from "@tanstack/react-query";
+import { authApi } from '@/api/auth.api';
+import { useState } from 'react';
+import { validateCredentials } from '@/utils/validations';
+import { useRouter } from 'next/navigation';
 const SignIn = () => {
-    const { isSignUp, setIsSignUp, setIsLoged} = useAppContext();
+    const { login } = useAppContext();
+    const router = useRouter();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const loginMutation = useMutation({
+        mutationKey: ['login'],
+        mutationFn: authApi.login,
+        onSuccess: (data) => {
+           login(data)
+           console.log(data)
+           router.push('/')
+        },
+        onError: (error) => {
+            alert("There was an error please try again")
+            console.log(JSON.stringify(error))
+        }
+    });
+
+    const handleLogin = (e : React.FormEvent) => {
+        e.preventDefault();
+
+        const validation = validateCredentials(email, password);
+        if (!validation.isValid) {
+            alert(validation.message);
+            return;
+        }
+
+        loginMutation.mutate({ email, password });
+    }
 
     return (
 
@@ -10,12 +45,13 @@ const SignIn = () => {
             <p className="text-3xl font-bold">
                 Sign In Your Account
             </p>
-            <input type="email" placeholder="Email" className="w-full p-2 mt-4 border rounded" />
-            <input type="password" placeholder="Password" className="w-full p-2 mt-4 border rounded" />
+            <input type="email" placeholder="Email" className="w-full p-2 mt-4 border rounded" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type="password" placeholder="Password" className="w-full p-2 mt-4 border rounded" value={password} onChange={(e) => setPassword(e.target.value)} />
             <a href="/" className='text-start mt-3 text-gray-400 text-sm font-bold'>Forgot password?</a>
             <button className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
-                    onClick={() => setIsLoged(true)}>
-                Sign In
+                    onClick={(e) => handleLogin(e)}
+                    disabled={loginMutation.isPending}>
+                {loginMutation.isPending ? 'Signing in...' : 'Sign In'}
             </button>
             <p className='text-start text-gray-400 text-sm font-bold mt-5'>Or Signe In with :</p>
             <div className='w-full flex justify-center items-center mt-5'>
