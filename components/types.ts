@@ -12,3 +12,24 @@ export interface Course {
     rating: number; 
     type: "live" | "prerecorded";
 }
+
+
+export interface User {
+    firstName: string;
+    lastName: string;
+    email: string;
+    profilePicDownloadUrl: string | null
+}
+
+export type Student = User 
+
+export interface Teacher extends User {
+    numberOfStudents: number;
+    numberOfCourses: number;
+    facebookLink: string | null,
+    youtubeLink: string | null,
+    instagramLink: string | null,
+    description: string,
+    sasToken: string;
+    baseUrl: string;
+}
