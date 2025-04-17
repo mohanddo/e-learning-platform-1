@@ -9,7 +9,7 @@ const SignPage = () => {
     const { isSignUp } = useAppContext();
 
     return (
-        <section className="min-h-screen w-full flex items-center justify-center bg-gray-100">
+        <section className="min-h-screen w-full flex items-center justify-center bg-gray-100 pt-20">
             <div className="relative bg-white w-[60%] flex rounded-lg shadow-lg overflow-hidden">
                 <AnimatedDiv />
                 {isSignUp && <SignUp />}

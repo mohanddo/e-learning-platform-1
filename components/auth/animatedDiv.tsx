@@ -19,7 +19,7 @@ const AnimatedDiv = () => {
                 <Button variant={"outline"}
                     className="text-[var(--addi-color-500)] text-xl font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)]"
                     onClick={() => setIsSignUp(!isSignUp)}>
-                    {isSignUp ? "Sign In" : "sign Up"}
+                    {isSignUp ? "Sign In" : "Sign Up"}
                 </Button>
 
 
