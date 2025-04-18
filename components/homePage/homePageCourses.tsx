@@ -9,11 +9,12 @@ import { Button } from "../ui/button";
 
 const HomePageCourses = () => {
     const {categorie} = useAppContext();
-    const [currentSet, setCurrentSet] = useState<Course[]>([]);
+    const [currentSet, setCurrentSet] = useState<Course[]>([]); 
+    const [count, setCount] = useState<number>(0)
     
     useEffect(() => {
         if(categorie === "All") {
-            const cur = courses.slice(0,6);
+            const cur = courses.slice(count,count + 6);
             setCurrentSet(cur);
         } else {
             const cur: Course[] = courses.filter((pr) => 
@@ -38,10 +39,20 @@ const HomePageCourses = () => {
                 ))}
             </div>
 
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-around">
                 <Button variant={"outline"}
+                onClick={() => setCount(count + 6)}
                         className="border border-solid border-[var(--addi-color-500)] bg-[var(--color-100)] text-[var(--addi-color-500)] hover:bg-[var(--color-200)]">
-                    Other Courses
+                    prev
+                </Button>
+                <p>
+                    1
+                </p>
+                <Button variant={"outline"}
+                        onClick={() => setCount(count - 6)}
+                        
+                        className="border border-solid border-[var(--addi-color-500)] bg-[var(--color-100)] text-[var(--addi-color-500)] hover:bg-[var(--color-200)]">
+                    next
                 </Button>
             </div>
         </section>
