@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const Profile = () => {
 
-    const [currentComp, setCurrentComp] = useState<String>("data");
+    const [currentComp, setCurrentComp] = useState<string>("data");
 
     return (
         <section className="flex justify-center pt-[13vh]">

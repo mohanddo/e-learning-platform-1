@@ -12,7 +12,7 @@ const SignIn = () => {
     const { login } = useAppContext();
     const router = useRouter();
 
-    const isMounted = useRef(false);
+    const isMounted = useRef(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -20,13 +20,13 @@ const SignIn = () => {
         mutationKey: ['login'],
         mutationFn: authApi.login,
         onSuccess: (data) => {
-            if (!isMounted.current) return;
+        if (!isMounted.current) return;
            login(data)
            console.log(data)
            router.push('/')
         },
         onError: (error) => {
-            if (!isMounted.current) return;
+        if (!isMounted.current) return;
             alert("There was an error please try again")
             console.log(JSON.stringify(error))
         }
