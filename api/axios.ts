@@ -7,6 +7,7 @@ export const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
@@ -15,9 +16,8 @@ axiosInstance.interceptors.request.use(
         if (savedUser) {
         //   const parsedUser = JSON.parse(savedUser);
         //   config.headers.Authorization = `Bearer ${parsedUser.jwtToken}`;
-          config.withCredentials = true;
+        //   config.withCredentials = true;
         }
-    
         return config;
     },
     (error) => {

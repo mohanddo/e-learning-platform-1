@@ -1,5 +1,5 @@
 import { axiosInstance } from './axios';
-import { Student, LoginCredentials, RegisterCredentials } from '@/components/types';
+import { Student, LoginCredentials, RegisterCredentials, RegisterResponse } from '@/components/types';
 
 export const authApi = {
     login: async (credentials: LoginCredentials) => {
@@ -10,12 +10,13 @@ export const authApi = {
         return data;
     },
     register: async (credentials: RegisterCredentials) => {
-        const { data } = await axiosInstance.post<Student>(
+        const { data } = await axiosInstance.post<RegisterResponse>(
             'auth/student/signup',
             credentials
         );
         return data;
     },
+
     verifyEmail: async (code: string) => {
         const { data } = await axiosInstance.post<Student>(
             'auth/student/verify',
@@ -23,4 +24,11 @@ export const authApi = {
         );
         return data;
     },
+
+    resetPassword: async (email: string) => {
+        const { data } = await axiosInstance.post<string>(
+            `password/verifyEmail/${email}`,
+        );
+        return data;
+    }
 };

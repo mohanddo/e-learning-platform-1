@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
-import type { Student } from "@/components/types" 
+import type { RegisterResponse, Student } from "@/components/types" 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -17,6 +17,9 @@ interface AppContextType {
     user: Student | null;
     login: (user: Student) => void;
     logout: () => void;
+
+    registerResponse: RegisterResponse | null;
+    register: (response: RegisterResponse) => void;
 }
 
 
@@ -28,6 +31,7 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     const [categorie, setCategorie] = useState<string>("All");
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
     const [isLoged, setIsLoged] = useState<boolean> (true);
+    const [registerResponse, setRegisterResponse] = useState<RegisterResponse | null>(null);
 
     const [user, setUser] = useState<Student | null>(null);
 
@@ -47,10 +51,14 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
         localStorage.removeItem('user');
         setUser(null);
         setIsLoged(false);
+    };
+
+
+    const register = (response: RegisterResponse) => {
+        setRegisterResponse(response);
     };
 
     return(
@@ -65,6 +73,8 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
                   user,
                   login,
                   logout,
+                  registerResponse,
+                  register,
                 }}
               >
                 {children}
