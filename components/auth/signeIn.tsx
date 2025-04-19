@@ -17,18 +17,20 @@ const SignIn = () => {
     const [password, setPassword] = useState("");
 
     const loginMutation = useMutation({
-        mutationKey: ['login'],
+        mutationKey: ['login'], 
         mutationFn: authApi.login,
-        onSuccess: (data) => {
-        if (!isMounted.current) return;
+        onSuccess: (data) => {    
            login(data)
            console.log(data)
-           router.push('/')
+           if (isMounted.current) {
+                router.push('/')
+           } 
         },
         onError: (error) => {
-        if (!isMounted.current) return;
-            alert("There was an error please try again")
-            console.log(JSON.stringify(error))
+            if (isMounted.current) {
+                alert("There was an error please try again")
+                console.log(JSON.stringify(error))
+            }
         }
     });
 
