@@ -10,7 +10,7 @@ export const authApi = {
         return data;
     },
     register: async (credentials: RegisterCredentials) => {
-        const { data } = await axiosInstance.post<Date>(
+        const { data } = await axiosInstance.post<void>(
             'auth/student/signup',
             credentials
         );

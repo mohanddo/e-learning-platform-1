@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
-import type { Student, VerificationCode } from "@/components/types" 
+import type { Student } from "@/components/types" 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -18,9 +18,12 @@ interface AppContextType {
     login: (user: Student) => void;
     logout: () => void;
 
-    verificationCode: VerificationCode | null;
-    register: (response: VerificationCode) => void;
+    emailToVerify: string | null;
+    setEmailToVerify: (emailToVerify: string) => void;
     verifyEmail: (user: Student) => void;
+
+
+    isInitialized: boolean;
 }
 
 
@@ -31,18 +34,20 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     // defining functions and const that add theme to AppContextType interface;
     const [categorie, setCategorie] = useState<string>("All");
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
-    const [isLoged, setIsLoged] = useState<boolean> (true);
-    const [verificationCode, setVerificationCode] = useState<VerificationCode | null>(null);
-
+    const [isLoged, setIsLoged] = useState<boolean>(false);
+    const [emailToVerify, setEmailToVerify] = useState<string | null>(null);
     const [user, setUser] = useState<Student | null>(null);
+    const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
     useEffect(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
-          const parsedUser = JSON.parse(savedUser);
-          setUser(parsedUser);
+            const parsedUser = JSON.parse(savedUser);
+            setUser(parsedUser);
+            setIsLoged(true);
         }
-      }, []);
+        setIsInitialized(true);
+    }, []);
 
     // Auth methods
     const login = (userData: Student) => {
@@ -63,11 +68,6 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
         setIsLoged(false);
     };
 
-
-    const register = (verificationCode: VerificationCode) => {
-        setVerificationCode(verificationCode);
-    };
-
     return(
             <QueryClientProvider client={queryClient}>
               <AppContext.Provider
@@ -80,9 +80,10 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
                   user,
                   login,
                   logout,
-                  verificationCode,
-                  register,
-                  verifyEmail
+                  emailToVerify,
+                  setEmailToVerify,
+                  verifyEmail,
+                  isInitialized
                 }}
               >
                 {children}

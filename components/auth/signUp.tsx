@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 const SignUp = () => {
 
-    const { register } = useAppContext();
+    const { setEmailToVerify } = useAppContext();
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,15 +19,8 @@ const SignUp = () => {
     const signUpMutation = useMutation({
         mutationKey: ['signup'],
         mutationFn: authApi.register,
-        onSuccess: (data) => {
-            const now = new Date();
-            const expiresAt = new Date(data);
-            console.log("Expires At", expiresAt);
-            const diffInSeconds = Math.floor((expiresAt.getTime() - now.getTime()) / 1000);
-            console.log("Diff In Seconds", diffInSeconds);
-            const remainingSeconds = Math.max(0, diffInSeconds);
-
-           register({ remainingSeconds: remainingSeconds, email: email })
+        onSuccess: () => {
+           setEmailToVerify(email)
            if (isMounted.current) {
                 router.push('/verify')
            }    

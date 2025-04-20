@@ -7,9 +7,10 @@ import { useState, useRef, useEffect } from 'react';
 import { validateCredentials } from '@/utils/validations';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { AxiosError } from 'axios';
 
 const SignIn = () => {
-    const { login } = useAppContext();
+    const { login, setEmailToVerify } = useAppContext();
     const router = useRouter();
 
     const isMounted = useRef(false);
@@ -26,12 +27,28 @@ const SignIn = () => {
                 router.push('/')
            } 
         },
-        onError: (error) => {
+        onError: (error: AxiosError) => {
             if (isMounted.current) {
-                alert("There was an error please try again")
-                console.log(JSON.stringify(error))
+                if (error.response?.status === 403) {
+                    alert("Your account is not verified. Press ok to redirect to the verification page.");
+                    setEmailToVerify(email)
+                    resendMutation.mutate(email)
+                    if (isMounted.current) {
+                        router.push('/verify')
+                    }
+                } else if (error.response?.status === 401 || error.response?.status === 404) {
+                    alert("Invalid email or password. Please check your credentials and try again.");
+                } else {
+                    alert("There was an error. Please try again later.");
+                }
+                console.log(JSON.stringify(error));
             }
         }
+    });
+
+    const resendMutation = useMutation({
+        mutationKey: ['resend'],
+        mutationFn: authApi.resendVerificationEmail
     });
 
     useEffect(() => {

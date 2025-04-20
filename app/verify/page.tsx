@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const VerifyPage = () => {
-    const { verificationCode } = useAppContext();
+    const { emailToVerify } = useAppContext();
     const router = useRouter();
     
     useEffect(() => {
-            if (!verificationCode) {
+            if (!emailToVerify) {
             router.push('/');
         } 
-    }, [verificationCode, router]);
+    }, [emailToVerify, router]);
 
-    if (!verificationCode) {
+    if (!emailToVerify) {
         return (
           <div className="h-screen w-full flex items-center justify-center">
             <p>Redirecting...</p>
@@ -25,7 +25,7 @@ const VerifyPage = () => {
     return (
         <section className="min-h-screen w-full bg-gray-100">
             <div className="container mx-auto px-4">
-                <Verify verificationCode={verificationCode} />
+                <Verify />
             </div>
         </section>
     );

@@ -45,11 +45,6 @@ export interface RegisterCredentials {
     password: string;
 }
 
-export interface VerificationCode {
-    remainingSeconds: number;
-    email: string;
-}   
-
 export interface VerifyUserRequest {
     email: string;
     verificationCode: string;

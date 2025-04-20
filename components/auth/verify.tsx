@@ -3,19 +3,16 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from '@/api/auth.api';
-import { VerificationCode } from '@/components/types';
 import { useAppContext } from '@/context/context';
 
-interface VerifyProps {
-    verificationCode: VerificationCode;
-}
+const verificationCodeExpirationTime = process.env.VERIFICATION_CODE_EXPIRATION_TIME || "300";
 
-const Verify = ({ verificationCode }: VerifyProps) => {
+const Verify = () => {
     const router = useRouter();
-    const { verifyEmail } = useAppContext();
+    const { verifyEmail, emailToVerify } = useAppContext();
     const [verificationCodeArray, setVerificationCodeArray] = useState(['', '', '', '', '', '']);
     const [error, setError] = useState('');
-    const [resendTimer, setResendTimer] = useState(verificationCode.remainingSeconds);
+    const [resendTimer, setResendTimer] = useState<number>(parseInt(verificationCodeExpirationTime));
     const [canResend, setCanResend] = useState(false);
     const isMounted = useRef(false);
 
@@ -31,7 +28,7 @@ const Verify = ({ verificationCode }: VerifyProps) => {
         onError: (error) => {
             if (isMounted.current) {
                 setError('Invalid verification code. Please try again.');
-                console.error(error);
+                console.log(JSON.stringify(error));
             }
         }
     });
@@ -41,7 +38,7 @@ const Verify = ({ verificationCode }: VerifyProps) => {
         mutationFn: authApi.resendVerificationEmail,
         onSuccess: () => {
             if (isMounted.current) {
-                setResendTimer(verificationCode.remainingSeconds);
+                setResendTimer(parseInt(verificationCodeExpirationTime));
                 setCanResend(false);
             }
         },
@@ -83,13 +80,13 @@ const Verify = ({ verificationCode }: VerifyProps) => {
             return;
         }
         
-        verifyMutation.mutate({ email: verificationCode.email, verificationCode: code });
+        verifyMutation.mutate({ email: emailToVerify!, verificationCode: code });
         
     };
 
     const handleResendCode = () => {
         if (!canResend) return;
-        resendMutation.mutate(verificationCode.email);
+        resendMutation.mutate(emailToVerify!);
     };
 
     // Timer effect
