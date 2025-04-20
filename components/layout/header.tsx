@@ -16,7 +16,7 @@ import { useAppContext } from "../../context/context";
 
 const Header = () => {
 
-    const { isSignUp, setIsSignUp, isLoged } = useAppContext();
+    const { setIsSignUp, isLoged } = useAppContext();
 
 
     return (

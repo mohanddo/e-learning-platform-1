@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
-import type { RegisterResponse, Student } from "@/components/types" 
+import type { Student, VerificationCode } from "@/components/types" 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -18,8 +18,9 @@ interface AppContextType {
     login: (user: Student) => void;
     logout: () => void;
 
-    registerResponse: RegisterResponse | null;
-    register: (response: RegisterResponse) => void;
+    verificationCode: VerificationCode | null;
+    register: (response: VerificationCode) => void;
+    verifyEmail: (user: Student) => void;
 }
 
 
@@ -31,7 +32,7 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     const [categorie, setCategorie] = useState<string>("All");
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
     const [isLoged, setIsLoged] = useState<boolean> (true);
-    const [registerResponse, setRegisterResponse] = useState<RegisterResponse | null>(null);
+    const [verificationCode, setVerificationCode] = useState<VerificationCode | null>(null);
 
     const [user, setUser] = useState<Student | null>(null);
 
@@ -50,6 +51,12 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
         setIsLoged(true);
     };
 
+    const verifyEmail = (user: Student) => {
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
+      setIsLoged(true);
+  };
+
     const logout = () => {
         localStorage.removeItem('user');
         setUser(null);
@@ -57,8 +64,8 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     };
 
 
-    const register = (response: RegisterResponse) => {
-        setRegisterResponse(response);
+    const register = (verificationCode: VerificationCode) => {
+        setVerificationCode(verificationCode);
     };
 
     return(
@@ -73,8 +80,9 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
                   user,
                   login,
                   logout,
-                  registerResponse,
+                  verificationCode,
                   register,
+                  verifyEmail
                 }}
               >
                 {children}

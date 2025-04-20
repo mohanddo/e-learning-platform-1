@@ -7,18 +7,18 @@ export function middleware(request: NextRequest) {
     // console.log("Token", token)
     const { pathname } = request.nextUrl;
 
-    if (pathname.startsWith('/Profile')) {
+    if (pathname.startsWith('/profile')) {
         
         if (!token) {
-            const loginUrl = new URL('/Auth', request.url);
+            const loginUrl = new URL('/auth', request.url);
             return NextResponse.redirect(loginUrl);
         }
 
     }
 
-    if (pathname.startsWith('/Auth')) {
+    if (pathname.startsWith('/auth')) {
         if (token) {
-            const profileUrl = new URL('/Profile', request.url);
+            const profileUrl = new URL('/profile', request.url);
             return NextResponse.redirect(profileUrl);
         }
     }

@@ -3,10 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 import { authApi } from '@/api/auth.api';
 import { useAppContext } from '@/context/context';
 import { validateCredentials } from '@/utils/validations';
+import { useRouter } from 'next/navigation';
+
 const SignUp = () => {
 
     const { register } = useAppContext();
-
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -18,7 +20,17 @@ const SignUp = () => {
         mutationKey: ['signup'],
         mutationFn: authApi.register,
         onSuccess: (data) => {
-           register(data)
+            const now = new Date();
+            const expiresAt = new Date(data);
+            console.log("Expires At", expiresAt);
+            const diffInSeconds = Math.floor((expiresAt.getTime() - now.getTime()) / 1000);
+            console.log("Diff In Seconds", diffInSeconds);
+            const remainingSeconds = Math.max(0, diffInSeconds);
+
+           register({ remainingSeconds: remainingSeconds, email: email })
+           if (isMounted.current) {
+                router.push('/verify')
+           }    
         },
         onError: (error) => {
             if (isMounted.current) {
@@ -65,7 +77,7 @@ const SignUp = () => {
             <input type="password" placeholder="Password" className="w-full p-2 mt-4 border rounded" value={password} onChange={(e) => setPassword(e.target.value)}/>
             <button className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded" 
                     onClick={(e) => handleRegister(e)}
-                    disabled={signUpMutation.isPending}>Sign Up</button>
+                    disabled={signUpMutation.isPending}>{ signUpMutation.isPending ? "Signing Up..." : "Sign Up"} </button>
             <p className='text-start text-gray-400 text-sm font-bold mt-5'>Or Sign In with :</p>
             <div className='w-full flex justify-center items-center mt-5'>
                 <button className='mr-5 border border-solid border-gray-300 h-12 w-12 rounded-full flex justify-center items-center text-lg font-bold hover:bg-gray-100'>
