@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { AxiosError } from 'axios';
 
 const SignIn = () => {
-    const { login, setEmailToVerify } = useAppContext();
+    const { setEmailToVerify } = useAppContext();
     const router = useRouter();
 
     const isMounted = useRef(false);
@@ -21,7 +21,6 @@ const SignIn = () => {
         mutationKey: ['login'], 
         mutationFn: authApi.login,
         onSuccess: (data) => {    
-           login(data)
            console.log(data)
            if (isMounted.current) {
                 router.push('/')
@@ -79,7 +78,7 @@ const SignIn = () => {
             </p>
             <input type="email" placeholder="Email" className="w-full p-2 mt-4 border rounded" value={email} onChange={(e) => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" className="w-full p-2 mt-4 border rounded" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <Link href="/ResetPassword" className="text-start mt-3 text-gray-400 text-sm font-bold hover:text-gray-600 transition-colors">Forgot password?</Link>
+            <Link href="/resetPassword" className="text-start mt-3 text-gray-400 text-sm font-bold hover:text-gray-600 transition-colors">Forgot password?</Link>
             <button className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
                     onClick={(e) => handleLogin(e)}
                     disabled={loginMutation.isPending}>

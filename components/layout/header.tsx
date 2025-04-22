@@ -13,10 +13,38 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAppContext } from "../../context/context";
-
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "@/api/auth.api";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 const Header = () => {
-    const { setIsSignUp, isLoged, isInitialized } = useAppContext();
+    const { setIsSignUp, user, logout } = useAppContext();
+    const router = useRouter();
+    const isMounted = useRef(false);
 
+
+    const logoutMutation = useMutation({
+        mutationFn: authApi.logout,
+        onSuccess: () => {
+            logout();
+            if(isMounted.current) {
+                router.push('/auth');
+            }
+        },
+        onError: (error) => {
+            console.log(error);
+            if(isMounted.current) {
+                alert("Error logging out");
+            }
+        }
+    });
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        }
+    }, []);
     
     return (
         <header className="z-[999] w-[90%] h-17 fixed left-[5%] flex flex-row top-5 border border-gray-200 rounded-xl px-5 bg-[var(--color-100)] shadow-sm">
@@ -33,11 +61,7 @@ const Header = () => {
             </nav>
 
             <div className="flex-1 flex flex-row items-center justify-end gap-10">
-                {!isInitialized ? (
-                    <div className="flex items-center justify-start">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--addi-color-400)]"></div>
-                    </div>
-                ) : !isLoged ? (
+                {/* {!user ? (
                     <>
                         <Link href="/auth"
                             className="header-Links" onClick={() => setIsSignUp(false)}>
@@ -49,7 +73,7 @@ const Header = () => {
                             </InteractiveHoverButton>
                         </Link>
                     </>
-                ) : (
+                ) : ( */}
                     <div className="flex flex-row gap-5 items-center ">
                         <div>
                             <button>
@@ -58,10 +82,14 @@ const Header = () => {
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
-                                <p className="font-medium">user Name</p>
+                                <p className="font-medium">
+                                    {/* {user.firstName} {user.lastName} */}
+                                    </p>
                                 <Avatar className="w-10 h-10">
                                     <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback>CN</AvatarFallback>
+                                    <AvatarFallback>
+                                        {/* {user.firstName[0]}{user.lastName[0]} */}
+                                        </AvatarFallback>
                                 </Avatar>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="mt-5 w-56" sideOffset={5} align="end">
@@ -74,14 +102,18 @@ const Header = () => {
                                         <span>Profile</span>
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center">
+                                <DropdownMenuItem 
+                                    className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center"
+                                    onClick={() => logoutMutation.mutate()}
+                                    disabled={logoutMutation.isPending}
+                                >
                                     <LogOut className="w-4 h-4" />
-                                    <span>Sign out</span>
+                                    <span>{logoutMutation.isPending ? 'Signing out...' : 'Sign out'}</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                )}
+                {/* )} */}
             </div>
         </header>
     )

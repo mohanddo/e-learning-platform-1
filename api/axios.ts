@@ -10,16 +10,10 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-    (config) => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-        //   const parsedUser = JSON.parse(savedUser);
-        //   config.headers.Authorization = `Bearer ${parsedUser.jwtToken}`;
-        //   config.withCredentials = true;
-        }
-        return config;
-    },
+    null,
     (error) => {
         return Promise.reject(error);
     }
 );
+
+

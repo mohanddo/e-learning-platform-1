@@ -9,7 +9,7 @@ const verificationCodeExpirationTime = process.env.VERIFICATION_CODE_EXPIRATION_
 
 const Verify = () => {
     const router = useRouter();
-    const { verifyEmail, emailToVerify } = useAppContext();
+    const { emailToVerify } = useAppContext();
     const [verificationCodeArray, setVerificationCodeArray] = useState(['', '', '', '', '', '']);
     const [error, setError] = useState('');
     const [resendTimer, setResendTimer] = useState<number>(parseInt(verificationCodeExpirationTime));
@@ -20,7 +20,7 @@ const Verify = () => {
         mutationKey: ['verify'],
         mutationFn: authApi.verifyEmail,
         onSuccess: (data) => {
-            verifyEmail(data);
+            console.log(data);
             if (isMounted.current) {
                 router.push('/');
             }
