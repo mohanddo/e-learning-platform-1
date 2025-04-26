@@ -1,10 +1,14 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Course } from "../types";
-import { courses } from "@/app/data";
+import { useAppContext } from "@/context/context";
+import { useRouter } from "next/navigation";
 
 const SecPanel = () => {
 
-
+    const { user } = useAppContext()
+    const router = useRouter();
+    const goToPage = (id : number) => {
+        router.replace(`/courseDetails/${id}`)
+    }
 
     return (
         <div className="w-[80%]">
@@ -15,14 +19,17 @@ const SecPanel = () => {
                         Progress
                     </AccordionTrigger>
                     <AccordionContent className="text-sm w-full px-5 py-10">
-                        {courses.slice(0,3).map((crs) => (
-                            <div className="flex flex-row justify-between mb-5 border border-gray-300 items-center py-1 px-5 rounded-lg hover:bg-gray-300">
+                        {user!.courses.filter((crs) => crs.enrolled).map((crs) => (
+                            <div 
+                                key={crs.id} 
+                                className="flex flex-row justify-between mb-5 border border-gray-300 items-center py-1 px-5 rounded-lg hover:bg-gray-300"
+                                onClick={() => goToPage(crs.id)}>
                                 <div className="flex flex-col">
-                                    <p className="font-bold mb-2">{crs.title}</p>
-                                    <p className="">{crs.teacher}</p>
+                                    <p className="font-bold mb-2 truncate max-w-[200px]" title={crs.title}>{crs.title}</p>
+                                    <p className="">{crs.teacher.firstName + " " + crs.teacher.lastName}</p>
                                 </div>
                                 <p className="text-green-500">
-                                    50 %
+                                    {crs.progressPercentage}%
                                 </p>
 
                             </div>
@@ -36,15 +43,6 @@ const SecPanel = () => {
                     </AccordionTrigger>
                     <AccordionContent className="text-sm text-gray-400 w-full px-5 py-10">
                         
-                    </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value ={""} className="border-none shadow-md mb-3 rounded-lg">
-                    <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)]">
-                        
-                    </AccordionTrigger>
-                    <AccordionContent className="text-sm text-gray-400 w-full px-5 py-10">
-            
                     </AccordionContent>
                 </AccordionItem>
 

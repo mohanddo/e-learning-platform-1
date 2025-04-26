@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { ShoppingCart,LogOut, User,ChevronUp } from "lucide-react";
+import { ShoppingCart,LogOut, User } from "lucide-react";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -55,13 +55,13 @@ const Header = () => {
 
             <nav className="flex flex-row flex-2 items-center justify-center gap-8">
                 <Link href="/" className="header-Links flex-[0.2] hover:text-[var(--color-500)] transition-colors duration-200">Accueil</Link>
-                <Link href="/" className="header-Links flex-[0.2] hover:text-[var(--color-500)] transition-colors duration-200">Coures</Link>
+                <Link href="/" className="header-Links flex-[0.2] hover:text-[var(--color-500)] transition-colors duration-200">Courses</Link>
                 <Link href="/" className="header-Links flex-[0.2] hover:text-[var(--color-500)] transition-colors duration-200">Blog</Link>
                 <Link href="/" className="header-Links flex-[0.2] hover:text-[var(--color-500)] transition-colors duration-200">contact</Link>
             </nav>
 
             <div className="flex-1 flex flex-row items-center justify-end gap-10">
-                {/* {!user ? (
+                {!user ? (
                     <>
                         <Link href="/auth"
                             className="header-Links" onClick={() => setIsSignUp(false)}>
@@ -73,7 +73,7 @@ const Header = () => {
                             </InteractiveHoverButton>
                         </Link>
                     </>
-                ) : ( */}
+                ) : (
                     <div className="flex flex-row gap-5 items-center ">
                         <div>
                             <button>
@@ -83,12 +83,12 @@ const Header = () => {
                         <DropdownMenu>
                             <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
                                 <p className="font-medium">
-                                    {/* {user.firstName} {user.lastName} */}
+                                    {user.firstName} {user.lastName}
                                     </p>
                                 <Avatar className="w-10 h-10">
                                     <AvatarImage src="https://github.com/shadcn.png" />
                                     <AvatarFallback>
-                                        {/* {user.firstName[0]}{user.lastName[0]} */}
+                                        {user.firstName[0]}{user.lastName[0]}
                                         </AvatarFallback>
                                 </Avatar>
                             </DropdownMenuTrigger>
@@ -113,7 +113,7 @@ const Header = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                {/* )} */}
+                )} 
             </div>
         </header>
     )

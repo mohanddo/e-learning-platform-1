@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
     // console.log("Token", token)
     const { pathname } = request.nextUrl;
 
-    if (pathname.startsWith('/profile')) {
+    if (pathname.startsWith('/profile') || pathname.startsWith('/changePassword')) {
         
         if (!token) {
             const loginUrl = new URL('/auth', request.url);
@@ -15,6 +15,8 @@ export function middleware(request: NextRequest) {
         }
 
     }
+
+
 
     if (pathname.startsWith('/auth')) {
         if (token) {

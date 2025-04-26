@@ -1,9 +1,9 @@
 import { axiosInstance } from './axios';
-import { LoginCredentials, RegisterCredentials, VerifyUserRequest } from '@/components/types';
+import { LoginCredentials, RegisterCredentials, VerifyUserRequest, Student, ChangePasswordRequest } from '@/components/types';
 
 export const authApi = {
     login: async (credentials: LoginCredentials) => {
-        const { data } = await axiosInstance.post<void>(
+        const { data } = await axiosInstance.post<Student>(
             'auth/student/login',
             credentials
         );
@@ -18,7 +18,7 @@ export const authApi = {
     },
 
     verifyEmail: async (request: VerifyUserRequest) => {
-        const { data } = await axiosInstance.post<void>(
+        const { data } = await axiosInstance.post<Student>(
             'auth/student/verify',
             request
         );
@@ -45,6 +45,19 @@ export const authApi = {
         const { data } = await axiosInstance.post<void>(
             'logout',
             {}
+        );
+        return data;
+    },
+    me: async () => {
+        const { data } = await axiosInstance.get<Student>(
+            'student/me'
+        );
+        return data;
+    },
+    changePassword: async (changePasswordRequest: ChangePasswordRequest) => {
+        const { data } = await axiosInstance.patch<void>(
+            'password/changePassword',
+            changePasswordRequest
         );
         return data;
     }

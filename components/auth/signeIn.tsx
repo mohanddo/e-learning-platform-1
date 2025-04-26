@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { AxiosError } from 'axios';
 
 const SignIn = () => {
-    const { setEmailToVerify } = useAppContext();
+    const { setEmailToVerify, setUser } = useAppContext();
     const router = useRouter();
 
     const isMounted = useRef(false);
@@ -21,9 +21,10 @@ const SignIn = () => {
         mutationKey: ['login'], 
         mutationFn: authApi.login,
         onSuccess: (data) => {    
-           console.log(data)
+            console.log("data", data)
+           setUser(data)
            if (isMounted.current) {
-                router.push('/')
+                router.push('/profile')
            } 
         },
         onError: (error: AxiosError) => {

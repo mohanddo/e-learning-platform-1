@@ -5,6 +5,15 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'mohand.blob.core.windows.net',
+        pathname: '**',
+      }
+    ]
+  }
 };
 
 export default withBundleAnalyzer({

@@ -2,8 +2,10 @@
 
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import type { Student } from "@/components/types" 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { authApi } from '@/api/auth.api';
+
 
 interface AppContextType {
     categorie : string;
@@ -12,6 +14,7 @@ interface AppContextType {
     setIsSignUp : React.Dispatch<React.SetStateAction<boolean>>;
 
     user: Student | null;
+    setUser: (user: Student) => void;
     logout: () => void;
 
     emailToVerify: string | null;
@@ -19,15 +22,16 @@ interface AppContextType {
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
-
+const queryClient = new QueryClient()
 export const AppProvider = ({children} : {children : ReactNode}) => {
-    const queryClient = new QueryClient()
-    // defining functions and const that add theme to AppContextType interface;
     const [categorie, setCategorie] = useState<string>("All");
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
     const [emailToVerify, setEmailToVerify] = useState<string | null>(null);
     const [user, setUser] = useState<Student | null>(null);
+    const [status, setStatus] = useState<"error" | "success" | "pending">("pending");
+    const [errorGettingStudent, setErrorGettingStudent] = useState<Error | null>(null);
 
+    
     const logout = () => {
         setUser(null);
     };
@@ -41,6 +45,7 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
                   isSignUp,
                   setIsSignUp,
                   user,
+                  setUser,
                   logout,
                   emailToVerify,
                   setEmailToVerify
