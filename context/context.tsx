@@ -2,9 +2,10 @@
 
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import type { Student } from "@/components/types" 
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { authApi } from '@/api/auth.api';
+import { useEffect } from "react";
+import Cookie from "js-cookie";
 
 
 interface AppContextType {
@@ -15,6 +16,7 @@ interface AppContextType {
 
     user: Student | null;
     setUser: (user: Student) => void;
+    isLogged: boolean | undefined;
     logout: () => void;
 
     emailToVerify: string | null;
@@ -28,13 +30,21 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
     const [emailToVerify, setEmailToVerify] = useState<string | null>(null);
     const [user, setUser] = useState<Student | null>(null);
-    const [status, setStatus] = useState<"error" | "success" | "pending">("pending");
-    const [errorGettingStudent, setErrorGettingStudent] = useState<Error | null>(null);
-
+    const [isLogged, setIsLogged] = useState<boolean | undefined>(undefined);
     
     const logout = () => {
         setUser(null);
+        setIsLogged(false);
     };
+
+    useEffect(() => {
+        const token = Cookie.get("isLogged");
+        if(!token) {
+            setIsLogged(false);
+        } else {
+            setIsLogged(true);
+        }
+    }, [user]);
 
     return(
             <QueryClientProvider client={queryClient}>
@@ -48,7 +58,8 @@ export const AppProvider = ({children} : {children : ReactNode}) => {
                   setUser,
                   logout,
                   emailToVerify,
-                  setEmailToVerify
+                  setEmailToVerify,
+                  isLogged
                 }}
               >
                 {children}

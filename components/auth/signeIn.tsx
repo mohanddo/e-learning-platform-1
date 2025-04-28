@@ -21,7 +21,6 @@ const SignIn = () => {
         mutationKey: ['login'], 
         mutationFn: authApi.login,
         onSuccess: (data) => {    
-            console.log("data", data)
            setUser(data)
            if (isMounted.current) {
                 router.push('/profile')
