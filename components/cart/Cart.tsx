@@ -1,0 +1,108 @@
+"use client"
+
+import { useAppContext } from "@/context/context";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { authApi } from "@/api/auth.api";
+import CartLoading from "./CartLoading";
+import CartError from "./CartError";
+import { cartApi } from "@/api/cart.api";
+import { useEffect, useRef } from "react";
+import CartItem from "./CartItem";
+
+const Cart = () => {
+    const { user, setUser } = useAppContext();
+    const router = useRouter();
+
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        
+        isMounted.current = true;
+        
+        return () => { isMounted.current = false; } 
+
+    }, []);
+
+    const { data: student, status, refetch } = useQuery({
+        queryKey: ["student"],
+        queryFn: async () => {
+          const data = await authApi.me();
+          setUser(data);
+          console.log("data", data)
+          return data;
+        },
+        enabled: !user,
+    });
+
+
+    const purchaseCourseMutation = useMutation({
+        mutationFn: async () => {
+            const data = await cartApi.purchaseCart();
+            return data;
+        },
+        onSuccess: (data) => {
+            if(isMounted.current) {
+                router.replace(data);
+            }
+        },
+        onError: (error: Error) => {
+            if(isMounted.current) {
+                alert("Error purchasing cart");
+            }
+            console.log(error);
+        },
+    });
+
+    
+    if (status === "pending" && !user) {
+        return <CartLoading />;
+    }
+
+    if (status === "error" && !user) {
+        return <CartError refetch={refetch} />;
+    }
+
+
+    return (
+        <div className="w-full max-w-6xl mx-auto mt-30 px-4 sm:px-6 lg:px-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-12">Cart</h1>
+            
+            {user!.courses.filter((crs) => crs.inCart).length === 0 ? (
+                <div className="w-full text-center py-16 bg-gray-50 rounded-lg">
+                    <p className="text-gray-600 text-lg font-medium">Your cart is empty</p>
+                    <p className="text-gray-500 mt-2">Add some courses to your cart to see them here!</p>
+                </div>
+            ) : (
+                <div className="flex flex-col gap-6">
+                    {user!.courses.filter((crs) => crs.inCart).map((item) => {
+                        return <CartItem key={item.id} item={item} canRemove={purchaseCourseMutation.isPending}/>
+                    })}
+
+                    <div className="flex flex-col items-end gap-6 mt-6 mb-10 p-6 border-t border-gray-200 bg-[var(--addi-color-500)]/10 rounded-lg">
+                        <div className="flex items-center gap-6">
+                            <p className="text-xl text-gray-700">Total:</p>
+                            <p className="text-3xl font-bold text-gray-900">
+                                ${user!.courses.filter((crs) => crs.inCart).reduce((total, item) => total + item.price, 0).toFixed(2)}
+                            </p>
+                        </div>
+                        <Button 
+                            className={`bg-[var(--addi-color-500)] text-white hover:bg-[var(--addi-color-400)] px-8 py-2 text-lg transition-all duration-200 
+                            ${
+                                purchaseCourseMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            onClick={() => purchaseCourseMutation.mutate()}
+                            disabled={purchaseCourseMutation.isPending}
+                        >
+                            {purchaseCourseMutation.isPending ? 'Purchasing...' : 'Proceed to Checkout'}
+                        </Button>
+
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default Cart; 

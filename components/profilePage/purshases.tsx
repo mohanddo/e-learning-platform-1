@@ -14,7 +14,7 @@ const PurshasesTab = () => {
 
     const router = useRouter();
     const goToPage = (id : number) => {
-        router.replace(`/CourseDetails/${id}`)
+        router.replace(`/courseDetails/${id}`)
     }
     return (
         <div className="w-full">

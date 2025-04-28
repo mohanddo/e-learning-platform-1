@@ -13,11 +13,9 @@ import { ErrorState } from "@/components/profilePage/ErrorState";
 
 const Profile = () => {
     const { user, setUser } = useAppContext();
-    const { data: student, status, refetch, fetchStatus } = useQuery({
+    const { data: student, status, refetch } = useQuery({
         queryKey: ["student"],
         queryFn: async () => {
-            console.log("fetching student")
-        
           const data = await authApi.me();
           setUser(data);
           console.log("data", data)

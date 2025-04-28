@@ -87,3 +87,5 @@ export interface CoursePreview {
   inCart: boolean | null;
   progressPercentage: number | null;
 }
+
+export type CheckoutUrl = string;

@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 export const axiosInstance = axios.create({
     baseURL,
@@ -19,10 +18,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            // Handle unauthorized access
-            window.location.href = '/auth';
-        }
         return Promise.reject(error);
     }
 );
