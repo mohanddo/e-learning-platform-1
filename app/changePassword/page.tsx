@@ -1,10 +1,8 @@
-"use client"
+"use client";
 
 import ChangePassword from "@/components/auth/changePassword";
 const ChangePasswordPage = () => {
-    return (
-        <ChangePassword />
-    );
+  return <ChangePassword />;
 };
 
-export default ChangePasswordPage; 
+export default ChangePasswordPage;
