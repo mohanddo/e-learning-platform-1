@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // If the user is logged in, redirect to the appropriate profile page
+  // If the user is logged in and tries to access the auth route, redirect to the appropriate profile page
   if (pathname.startsWith("/auth")) {
     if (token && isLogged) {
       const role = extractRoleFromToken(token!);
@@ -44,10 +44,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // If the user tries to access cart, course details or profile routes and he is not logged in, redirect to the login page
+  // If the user tries to access cart or profile routes and he is not logged in, redirect to the login page
   if (
     pathname.startsWith("/cart") ||
-    pathname.startsWith("/courseDetails") ||
     pathname.startsWith("/profile") ||
     pathname.startsWith("/changePassword")
   ) {
@@ -56,8 +55,17 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Some routes exists for the teacher and student, this is for redirecting to the appropriate  ones
-  if (pathname.startsWith("/cart")) {
+  // Some routes exists for both the teacher and student, this is for redirecting to the appropriate  ones
+  if (pathname == "/") {
+    if (token && isLogged) {
+      const role = extractRoleFromToken(token!);
+      if (role === "ROLE_STUDENT") {
+        return NextResponse.redirect(new URL("/student", request.url));
+      } else {
+        return NextResponse.redirect(new URL("/teacher", request.url));
+      }
+    }
+  } else if (pathname.startsWith("/cart")) {
     const role = extractRoleFromToken(token!);
     if (role === "ROLE_STUDENT") {
       return NextResponse.redirect(new URL("/student/cart", request.url));
@@ -65,15 +73,20 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/auth", request.url));
     }
   } else if (pathname.startsWith("/courseDetails")) {
-    const role = extractRoleFromToken(token!);
-    if (role === "ROLE_STUDENT") {
-      return NextResponse.redirect(
-        new URL("/student/courseDetails", request.url)
-      );
-    } else if (role === "ROLE_TEACHER") {
-      return NextResponse.redirect(
-        new URL("/teacher/courseDetails", request.url)
-      );
+    const match = pathname.match(/^\/courseDetails\/(\d+)/);
+    const courseId = match ? match[1] : null;
+
+    if (token && isLogged) {
+      const role = extractRoleFromToken(token!);
+      if (role === "ROLE_STUDENT") {
+        return NextResponse.redirect(
+          new URL(`/student/courseDetails/${courseId}`, request.url)
+        );
+      } else if (role === "ROLE_TEACHER") {
+        return NextResponse.redirect(
+          new URL(`/teacher/courseDetails/${courseId}`, request.url)
+        );
+      }
     }
   } else if (pathname.startsWith("/profile")) {
     const role = extractRoleFromToken(token!);

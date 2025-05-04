@@ -36,7 +36,7 @@ const FirstSection = () => {
         </div>
       </div>
       <div className="relative flex-2 flex items-center justify-center">
-        <div className="absolute w-40 h-40 bg-[var( --color-400)] rounded-full left-[15vw] top-20 flex flex-col items-center justify-center text-white text-2xl font-bold">
+        <div className="absolute w-40 h-40 bg-[var(--addi-color-400)] rounded-full left-[15vw] top-20 flex flex-col items-center justify-center text-white text-2xl font-bold">
           <p>More Than </p>
           <p>
             <NumberTicker startValue={26} value={40} /> +
@@ -45,11 +45,11 @@ const FirstSection = () => {
         </div>
 
         <div className="absolute w-40 h-40 bg-[var(--addi-color-400)] right-[15vw] bottom-[10vw] rounded-full text-white text-2xl font-bold flex flex-col items-center justify-center">
+          <p>More Than </p>
           <p>
-            + <NumberTicker startValue={60} value={100} />{" "}
+            <NumberTicker startValue={26} value={40} /> +
           </p>
-          <p>student</p>
-          <p>Subscribed</p>
+          <p>Student</p>
         </div>
 
         <img

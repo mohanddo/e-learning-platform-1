@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import type { Student, Teacher } from "@/components/types";
+import type { Course, Student, Teacher } from "@/components/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useEffect } from "react";
@@ -24,6 +24,11 @@ interface AppContextType {
 
   emailToVerify: string | null;
   setEmailToVerify: (emailToVerify: string) => void;
+
+  removeCourseFromCart: (courseId: number) => void;
+  addCourseToCart: (courseId: number) => void;
+  courses: Course[] | null;
+  setCourses: (courses: Course[]) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -35,6 +40,31 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [student, setStudent] = useState<Student | null>(null);
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [isLogged, setIsLogged] = useState<boolean | undefined>(undefined);
+  const [courses, setCourses] = useState<Course[] | null>(null);
+
+  const removeCourseFromCart = (courseId: number) => {
+    setCourses(
+      courses!.map((c) => (c.id === courseId ? { ...c, inCart: false } : c))
+    );
+    setStudent({
+      ...student!,
+      courses: student!.courses.map((c) =>
+        c.id === courseId ? { ...c, inCart: false } : c
+      ),
+    });
+  };
+
+  const addCourseToCart = (courseId: number) => {
+    setCourses(
+      courses!.map((c) => (c.id === courseId ? { ...c, inCart: true } : c))
+    );
+    setStudent({
+      ...student!,
+      courses: student!.courses.map((c) =>
+        c.id === courseId ? { ...c, inCart: true } : c
+      ),
+    });
+  };
 
   const logout = () => {
     setStudent(null);
@@ -67,6 +97,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           isLogged,
           teacher,
           setTeacher,
+          courses,
+          setCourses,
+          removeCourseFromCart,
+          addCourseToCart,
         }}
       >
         {children}

@@ -2,12 +2,15 @@
 
 import { Course } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Radio, Video, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-
-const CourseCard = ({ course }: { course: Course }) => {
+import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { cartApi } from "@/api/cart.api";
+import { useAppContext } from "@/context/context";
+const CourseCard = ({ course, role }: { course: Course; role: string }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -16,17 +19,41 @@ const CourseCard = ({ course }: { course: Course }) => {
     router.push(`/courseDetails/${course.id}`);
   };
 
+  const { setCourses, courses } = useAppContext();
+
+  const addCourseToCartMutation = useMutation({
+    mutationFn: async () => {
+      const data = await cartApi.addCourseToCart(course.id);
+      return data;
+    },
+    onSuccess: () => {
+      setCourses(
+        courses!.map((c) => (c.id === course.id ? { ...c, inCart: true } : c))
+      );
+    },
+  });
+
+  const handleCartButton = () => {
+    if (course.inCart) {
+      router.push("/student/cart");
+    } else {
+      addCourseToCartMutation.mutate();
+    }
+  };
+
   return (
     <div
-      className="flex flex-col p-5 rounded-2xl overflow-hidden shadow-lg bg-white w-xs "
+      className="relative flex flex-col p-5 rounded-2xl overflow-hidden shadow-lg bg-white w-xs"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => isMobile && setIsHovered(!isHovered)}
     >
-      <img
-        src={course.pictureUrl}
+      <Image
+        src={course.imageUrl || ""}
         alt="sorry image non disponble"
         className="w-full h-72 object-cover mb-2 rounded-2xl"
+        width={288}
+        height={128}
       />
       <div className="flex flex-col items-center space-x-3 w-full mb-2">
         <div className="flex flex-row justify-between w-full mb-2">
@@ -35,7 +62,7 @@ const CourseCard = ({ course }: { course: Course }) => {
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <span className="font-semibold">{course.teacher}</span>
+            <span className="font-semibold">{course.teacher.lastName}</span>
           </div>
           <span className="bg-[var(--color-50)] flex items-center rounded-2xl px-2 text-[var(--addi-color-500)] border-[var(--addi-color-500)] border-solid border">
             {course.category}
@@ -43,34 +70,43 @@ const CourseCard = ({ course }: { course: Course }) => {
         </div>
         <p className="text-lg font-bold mb-2 line-clamp-1">{course.title}</p>
         <div className="w-full flex flex-row justify-between font-semibold mb-3">
-          <span className="flex flex-row">
-            {course.type === "live" ? (
-              <Radio className="mr-1 text-red-500" />
-            ) : (
-              <Video className="mr-1 text-green-500" />
-            )}{" "}
-            {course.type}
-          </span>
-          <span>6 chapters</span>
+          <span>{course.chapters.length} chapters</span>
+          <span>{course.numberOfStudents} students</span>
         </div>
 
         {isHovered ? (
           <div className="w-full flex flex-row justify-between py-1">
-            {<Button className="btn-principal">Add To Cart</Button>}
+            {role == "student" && (
+              <Button
+                className="btn-principal"
+                onClick={handleCartButton}
+                disabled={addCourseToCartMutation.isPending}
+              >
+                {addCourseToCartMutation.isPending
+                  ? "Adding..."
+                  : course.inCart
+                  ? "Access cart"
+                  : "Add To Cart"}
+              </Button>
+            )}
             <Button
               variant={"outline"}
-              className="w-full text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)]"
+              className={`
+                ${role !== "student" ? "w-full" : ""}
+                    text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)]`}
               onClick={goToPage}
             >
               See Course details
             </Button>
           </div>
         ) : (
-          <div className="w-full flex flex-row justify-between bg-green-100 py-2 px-1 rounded-2xl">
-            {course.discount ? (
+          <div className="w-full flex flex-row justify-between bg-green-100 py-2 px-3 rounded-2xl">
+            {course.discountPercentage ? (
               <span className="flex flex-row">
                 <p className="text-green-600 text-lg font-bold">
-                  {course.price} DA
+                  {course.price -
+                    course.price * (course.discountPercentage / 100)}{" "}
+                  DA
                 </p>
                 <p className="text-gray-400 text-sm font-semibold line-through ml-2">
                   {course.price} DA
@@ -82,10 +118,23 @@ const CourseCard = ({ course }: { course: Course }) => {
               </span>
             )}
 
-            <span className="flex flex-row items-center">
-              <p className="text-lg mr-1.5 font-semibold">{course.rating}</p>{" "}
-              <Star className="text-yellow-500 font-semibold" />
-            </span>
+            <div className="flex items-center">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star
+                  key={i}
+                  size={16}
+                  fill={i <= Math.round(course.rating) ? "yellow" : "none"}
+                  className={
+                    i <= Math.round(course.rating)
+                      ? "text-yellow-400"
+                      : "text-gray-300"
+                  }
+                />
+              ))}
+              <span className="ml-1 text-sm text-gray-600">
+                ({course.rating})
+              </span>
+            </div>
           </div>
         )}
       </div>

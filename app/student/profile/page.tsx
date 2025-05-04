@@ -21,7 +21,6 @@ const Profile = () => {
       console.log("data", data);
       return data;
     },
-    enabled: !student,
   });
 
   const [currentComp, setCurrentComp] = useState<string>("data");

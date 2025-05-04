@@ -94,6 +94,7 @@ export interface Course {
   inCart: boolean | null;
   progressPercentage: number | null;
   announcements: Announcement[];
+  ownsCourse: boolean;
 }
 
 export type CheckoutUrl = string;
@@ -150,4 +151,10 @@ export interface TeacherPreview extends UserPreview {
   youtubeLink: string | null;
   instagramLink: string | null;
   description: string | null;
+}
+
+export interface UpdateStudentRequest {
+  firstName: string | null;
+  lastName: string | null;
+  profilePicDownloadUrl: string | null;
 }

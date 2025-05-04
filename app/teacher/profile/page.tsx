@@ -20,7 +20,6 @@ const Profile = () => {
       console.log("data", data);
       return data;
     },
-    enabled: !teacher,
   });
 
   const [currentComp, setCurrentComp] = useState<string>("data");

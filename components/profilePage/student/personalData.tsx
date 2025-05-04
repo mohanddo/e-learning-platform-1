@@ -12,6 +12,10 @@ const PersonalData = () => {
     router.push("/changePassword");
   };
 
+  const handleEditProfile = () => {
+    router.push("/student/profile/editProfile");
+  };
+
   return (
     <div className="w-full">
       <p className="text-xl font-semibold mb-10">Personal Information</p>
@@ -29,7 +33,12 @@ const PersonalData = () => {
             {student!.lastName[0]}
           </p>
           <div className="flex gap-2">
-            <Button className="btn-secondary text-lg">Edit Profile</Button>
+            <Button
+              className="btn-secondary text-lg"
+              onClick={handleEditProfile}
+            >
+              Edit Profile
+            </Button>
             <Button
               variant="outline"
               className="text-lg border-[var(--addi-color-500)] text-[var(--addi-color-500)] hover:bg-[var(--color-100)]"

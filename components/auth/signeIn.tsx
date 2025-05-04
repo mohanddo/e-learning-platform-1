@@ -75,6 +75,7 @@ const SignIn = () => {
       <input
         type="email"
         placeholder="Email"
+        autoComplete="email"
         className="w-full p-2 mt-4 border rounded"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -86,6 +87,7 @@ const SignIn = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+
       <Link
         href="/auth/resetPassword"
         className="text-start mt-3 text-gray-400 text-sm font-bold hover:text-gray-600 transition-colors"

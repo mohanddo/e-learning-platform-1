@@ -30,10 +30,8 @@ const Cart = () => {
     queryFn: async () => {
       const data = await authApi.me();
       setStudent(data);
-      console.log("data", data);
       return data;
     },
-    enabled: !student,
   });
 
   const purchaseCourseMutation = useMutation({
@@ -89,7 +87,7 @@ const Cart = () => {
               );
             })}
 
-          <div className="flex flex-col items-end gap-6 mt-6 mb-10 p-6 border-t border-gray-200 bg-[var(--addi-color-500)]/10 rounded-lg">
+          <div className="flex flex-row justify-between items-end gap-6 mt-6 mb-10 p-6 border-t border-gray-200 bg-[var(--addi-color-500)]/10 rounded-lg">
             <div className="flex items-center gap-6">
               <p className="text-xl text-gray-700">Total:</p>
               <p className="text-3xl font-bold text-gray-900">

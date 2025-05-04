@@ -11,7 +11,7 @@ const CourseDetails = () => {
       <section className="flex justify-center pt-[10vh]">
         <div className="w-[85%] flex flex-row">
           <AboutCourse />
-          <JoinCourse role={"teacher"} />
+          <JoinCourse role={"unauthenticated"} />
         </div>
       </section>
     </section>

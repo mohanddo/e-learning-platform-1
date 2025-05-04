@@ -11,7 +11,7 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
 
-const JoinCourse = () => {
+const JoinCourse = ({ role }: { role: string }) => {
   return (
     <div className="flex-2 flex-col flex pt-28 pb-28 pl-28 items-center w-full max-w-xl mx-auto">
       <div className="flex flex-col justify-center shadow-lg  mb-5">

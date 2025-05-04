@@ -1,14 +1,12 @@
-import FilterDiv from "./filterDiv";
 import FirstSection from "./firstSection";
 import HomePageCourses from "./homePageCourses";
 import Join from "./lastSection";
 
-export default function Home() {
+export default function Home({ role }: { role: string }) {
   return (
     <section className="flex flex-col">
       <FirstSection />
-      <FilterDiv />
-      <HomePageCourses />
+      <HomePageCourses role={role} />
       <Join />
     </section>
   );
