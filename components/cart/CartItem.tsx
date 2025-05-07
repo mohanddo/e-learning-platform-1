@@ -6,6 +6,7 @@ import { cartApi } from "@/api/cart.api";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { useAppContext } from "@/context/context";
+import { useRemoveFromCartMutation } from "@/hooks/useRemoveFromCartMutation";
 
 export default function CartItem({
   item,
@@ -16,11 +17,8 @@ export default function CartItem({
 }) {
   const { student, setStudent } = useAppContext();
 
-  const removeCourseFromCartMutation = useMutation({
-    mutationFn: async () => {
-      const data = await cartApi.removeCourseFromCart(item.id);
-      return data;
-    },
+  const removeCourseFromCartMutation = useRemoveFromCartMutation({
+    courseId: item.id,
     onSuccess: () => {
       setStudent({
         ...student!,

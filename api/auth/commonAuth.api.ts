@@ -5,6 +5,8 @@ import {
   VerifyUserRequest,
 } from "@/components/types";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const commonAuthApi = {
   login: async (credentials: LoginCredentials) => {
     const { data } = await axiosInstance.post<void>("auth/login", credentials);
@@ -12,8 +14,17 @@ export const commonAuthApi = {
   },
 
   logout: async () => {
-    const { data } = await axiosInstance.post<void>("auth/logout", {});
-    return data;
+    const res = await fetch(`${baseUrl}/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      throw new Error("Logout request failed");
+    }
   },
 
   resendVerificationEmail: async (email: string) => {

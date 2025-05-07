@@ -25,8 +25,6 @@ interface AppContextType {
   emailToVerify: string | null;
   setEmailToVerify: (emailToVerify: string) => void;
 
-  removeCourseFromCart: (courseId: number) => void;
-  addCourseToCart: (courseId: number) => void;
   courses: Course[] | null;
   setCourses: (courses: Course[]) => void;
 }
@@ -41,30 +39,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [isLogged, setIsLogged] = useState<boolean | undefined>(undefined);
   const [courses, setCourses] = useState<Course[] | null>(null);
-
-  const removeCourseFromCart = (courseId: number) => {
-    setCourses(
-      courses!.map((c) => (c.id === courseId ? { ...c, inCart: false } : c))
-    );
-    setStudent({
-      ...student!,
-      courses: student!.courses.map((c) =>
-        c.id === courseId ? { ...c, inCart: false } : c
-      ),
-    });
-  };
-
-  const addCourseToCart = (courseId: number) => {
-    setCourses(
-      courses!.map((c) => (c.id === courseId ? { ...c, inCart: true } : c))
-    );
-    setStudent({
-      ...student!,
-      courses: student!.courses.map((c) =>
-        c.id === courseId ? { ...c, inCart: true } : c
-      ),
-    });
-  };
 
   const logout = () => {
     setStudent(null);
@@ -99,8 +73,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           setTeacher,
           courses,
           setCourses,
-          removeCourseFromCart,
-          addCourseToCart,
         }}
       >
         {children}

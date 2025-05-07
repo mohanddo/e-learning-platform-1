@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "../ui/button";
 import {
   ShoppingCart,
@@ -10,33 +12,162 @@ import {
 } from "lucide-react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
+import { useAppContext } from "@/context/context";
+import { useRouter } from "next/navigation";
+import { Course } from "../types";
+import { useRemoveFromCartMutation } from "@/hooks/useRemoveFromCartMutation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { paymentApi } from "@/api/payment.api";
+import { useEffect, useRef } from "react";
+import { useAddToCartMutation } from "@/hooks/useAddToCartMutation";
+import { useAddToFavoritesMutation } from "@/hooks/useAddToFavoritesMutation";
+import { useRemoveFromFavoritesMutation } from "@/hooks/useRemoveFromFavoritesMutation";
+const JoinCourse = ({
+  role,
+  id,
+  course,
+}: {
+  role: string;
+  id: number;
+  course: Course;
+}) => {
+  const { isLogged, student, setStudent } = useAppContext();
+  const router = useRouter();
+  const isMounted = useRef(false);
+  const queryClient = useQueryClient();
 
-const JoinCourse = ({ role }: { role: string }) => {
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const purchaseCourseMutation = useMutation({
+    mutationFn: paymentApi.purchaseCourse,
+    onSuccess(data) {
+      router.replace(data);
+    },
+    onError: () => {
+      if (isMounted.current) {
+        alert("Error purchasing course");
+      }
+    },
+  });
+
+  const handleJoinCourse = () => {
+    if (isLogged) {
+      purchaseCourseMutation.mutate(course.id);
+    } else {
+      router.push("/auth");
+    }
+  };
+
+  const handlePlayVideo = () => {
+    console.log("play video");
+  };
+
+  const removeCourseFromCartMutation = useRemoveFromCartMutation({
+    courseId: course.id,
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["course", id],
+        (oldData: Course | undefined) => {
+          if (!oldData) return oldData;
+          return { ...oldData, inCart: false };
+        }
+      );
+    },
+  });
+
+  const addCourseToCartMutation = useAddToCartMutation({
+    courseId: course.id,
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["course", id],
+        (oldData: Course | undefined) => {
+          if (!oldData) return oldData;
+          return { ...oldData, inCart: true };
+        }
+      );
+    },
+  });
+
+  const handleRemoveFromCart = () => {
+    removeCourseFromCartMutation.mutate();
+  };
+
+  const handleAddToCart = () => {
+    addCourseToCartMutation.mutate();
+  };
+
+  const addToFavoritesMutation = useAddToFavoritesMutation({
+    courseId: course.id,
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["course", id],
+        (oldData: Course | undefined) => {
+          if (!oldData) return oldData;
+          return { ...oldData, favourite: true };
+        }
+      );
+    },
+  });
+
+  const removeFromFavoritesMutation = useRemoveFromFavoritesMutation({
+    courseId: course.id,
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["course", id],
+        (oldData: Course | undefined) => {
+          if (!oldData) return oldData;
+          return { ...oldData, favourite: false };
+        }
+      );
+    },
+  });
+
+  const handleAddToFavorites = () => {
+    addToFavoritesMutation.mutate();
+  };
+
+  const handleRemoveFromFavorites = () => {
+    removeFromFavoritesMutation.mutate();
+  };
+
   return (
-    <div className="flex-2 flex-col flex pt-28 pb-28 pl-28 items-center w-full max-w-xl mx-auto">
+    <div className="flex-2 flex-col flex pb-28 pl-28 items-center sticky top-20 self-start w-full max-w-xl mx-auto">
       <div className="flex flex-col justify-center shadow-lg  mb-5">
         <div className="mb-5 relative flex items-center justify-center h-72 w-full">
           <Image
-            src="/exmp1.jpg"
+            src={course!.imageUrl || "/exmp1.jpg"}
             alt="image non disponible"
             fill
             className="rounded-t-xl brightness-50 object-cover"
           />
-          <Button className="absolute flex items-center justify-center w-13 h-13 rounded-full bg-white text-lg">
-            <Play className="text-[var(--addi-color-500)] " />
-          </Button>
+          {course!.introductionVideoUrl && (
+            <Button
+              className="absolute flex items-center justify-center w-13 h-13 rounded-full bg-white text-lg"
+              onClick={handlePlayVideo}
+            >
+              <Play className="text-[var(--addi-color-500)] " />
+            </Button>
+          )}
         </div>
 
         <div className="pb-5 pr-5 pl-5">
           <div className="w-full flex items-center gap-2 py-2">
             <p className="text-lg font-bold text-gray-900">Price:</p>
-            {true ? (
+            {course!.discountPercentage ? (
               <span className="flex items-baseline gap-2">
                 <span className="text-gray-900 text-lg font-bold">
-                  {6000} DA
+                  {course!.price -
+                    course!.price * (course!.discountPercentage / 100)}
+                  DA
                 </span>
                 <span className="text-gray-400 text-sm font-semibold line-through">
-                  {7500} DA
+                  {course!.price} DA
                 </span>
               </span>
             ) : (
@@ -44,39 +175,120 @@ const JoinCourse = ({ role }: { role: string }) => {
             )}
           </div>
 
-          <div className=" flex flex-col mb-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Button
-                variant={"outline"}
-                className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
-              >
-                Add To Card <ShoppingCart />
-              </Button>
-              <Button
-                variant="outline"
-                className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
-              >
-                <FavoriteIcon className="text-[var(--addi-color-500)]" />
-              </Button>
+          {course?.discountExpirationDate && (
+            <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 px-3 py-2 rounded-lg mb-4">
+              <Clock size={16} className="text-yellow-500" />
+              <span className="text-sm font-medium text-yellow-800">
+                Expires on{" "}
+                {new Date(course.discountExpirationDate).toLocaleDateString(
+                  undefined,
+                  {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  }
+                )}
+              </span>
             </div>
+          )}
 
-            <Button className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold">
-              Join Course
-            </Button>
+          <div className=" flex flex-col mb-5">
+            {role === "student" && course.enrolled ? (
+              <Button className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold">
+                Access Course
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2 mb-2">
+                {course!.inCart ? (
+                  <Button
+                    onClick={handleRemoveFromCart}
+                    disabled={removeCourseFromCartMutation.isPending}
+                    variant={"outline"}
+                    className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
+                  >
+                    {removeCourseFromCartMutation.isPending
+                      ? "Removing..."
+                      : "Remove From Card"}
+                    <ShoppingCart />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={addCourseToCartMutation.isPending}
+                    variant={"outline"}
+                    className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
+                  >
+                    {addCourseToCartMutation.isPending
+                      ? "Adding..."
+                      : "Add To Card"}
+                    <ShoppingCart />
+                  </Button>
+                )}
+
+                {course.favourite ? (
+                  <Button
+                    disabled={removeFromFavoritesMutation.isPending}
+                    onClick={handleRemoveFromFavorites}
+                    variant="outline"
+                    className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
+                  >
+                    <FavoriteIcon className="text-[var(--addi-color-500)]" />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleAddToFavorites}
+                    disabled={addToFavoritesMutation.isPending}
+                    variant="outline"
+                    className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
+                  >
+                    <FavoriteIcon className="!fill-none !stroke-current stroke-1 text-[var(--addi-color-500)]" />
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {role === "student" && !course.enrolled && (
+              <Button
+                className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+                onClick={handleJoinCourse}
+              >
+                Join Course
+              </Button>
+            )}
+
+            {role === "unauthenticated" && (
+              <Button
+                className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+                onClick={() => router.push("/auth")}
+              >
+                Sign in to join course
+              </Button>
+            )}
           </div>
 
           <div className="mb-5">
             <p className="flex flex-row gap-3 mb-1 text-sm items-center">
               <Video className="text-[var(--addi-color-500)]" size={20} />{" "}
-              <span className="text-gray-400">24 recorded video</span>
+              <span className="text-gray-400">
+                {course!.numberOfVideos} recorded video
+              </span>
             </p>
+
             <p className="flex flex-row gap-3 mb-1 text-sm items-center">
               <Clock className="text-[var(--addi-color-500)]" size={20} />{" "}
-              <span className="text-gray-400">Full time access</span>
+              <span className="text-gray-400">
+                {course!.pricingModel.toString() === "SUBSCRIPTION"
+                  ? "Subscription"
+                  : course!.pricingModel.toString() === "ONE_TIME_PURCHASE"
+                  ? "Full time access"
+                  : "Free"}
+              </span>
             </p>
             <p className="flex flex-row gap-3 mb-1 text-sm items-center">
               <File className="text-[var(--addi-color-500)]" size={20} />{" "}
-              <span className="text-gray-400">Documents</span>
+              <span className="text-gray-400">
+                {course!.numberOfDocuments} Documents
+              </span>
             </p>
           </div>
 

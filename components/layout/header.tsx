@@ -94,63 +94,65 @@ const Header = () => {
             </Link>
           </>
         ) : (
-          student && (
-            <div className="flex flex-row gap-5 items-center ">
-              <div>
-                <button
-                  onClick={() => {
-                    router.replace("/cart");
-                  }}
-                >
-                  <ShoppingCart />
-                </button>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
-                  <p className="font-medium">
-                    {student.firstName} {student.lastName}
-                  </p>
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>
-                      {student.firstName[0]}
-                      {student.lastName[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="mt-5 w-56"
-                  sideOffset={5}
-                  align="end"
-                >
-                  <DropdownMenuLabel className="font-bold">
-                    My Account
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-
-                  <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
-                    <Link
-                      href={"/profile"}
-                      className="flex flex-row gap-2 w-full items-center"
-                    >
-                      <UserIcon className="w-4 h-4" />
-                      <span>Profile</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center"
-                    onClick={() => logoutMutation.mutate()}
-                    disabled={logoutMutation.isPending}
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>
-                      {logoutMutation.isPending ? "Signing out..." : "Sign out"}
-                    </span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+          <div className="flex flex-row gap-5 items-center ">
+            <div>
+              <button
+                onClick={() => {
+                  router.replace("/cart");
+                }}
+              >
+                <ShoppingCart />
+              </button>
             </div>
-          )
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
+                {student && (
+                  <>
+                    <p className="font-medium">
+                      {student.firstName} {student.lastName}
+                    </p>
+                  </>
+                )}
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>
+                    {student?.firstName[0]}
+                    {student?.lastName[0]}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="mt-5 w-56"
+                sideOffset={5}
+                align="end"
+              >
+                <DropdownMenuLabel className="font-bold">
+                  My Account
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                  <Link
+                    href={"/profile"}
+                    className="flex flex-row gap-2 w-full items-center"
+                  >
+                    <UserIcon className="w-4 h-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center"
+                  onClick={() => logoutMutation.mutate()}
+                  disabled={logoutMutation.isPending}
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>
+                    {logoutMutation.isPending ? "Signing out..." : "Sign out"}
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )}
       </div>
     </header>

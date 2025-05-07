@@ -1,20 +1,10 @@
 "use client";
 import { useParams } from "next/navigation";
-import AboutCourse from "@/components/courseDetails/aboutCourse";
-import JoinCourse from "@/components/courseDetails/joinCourse";
+import CourseDetails from "@/components/courseDetails/courseDetails";
 
-const CourseDetails = () => {
+const CourseDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
 
-  return (
-    <section className="flex flex-col">
-      <section className="flex justify-center pt-[10vh]">
-        <div className="w-[85%] flex flex-row">
-          <AboutCourse />
-          <JoinCourse role={"student"} />
-        </div>
-      </section>
-    </section>
-  );
+  return <CourseDetails id={Number(id)} role={"student"} />;
 };
-export default CourseDetails;
+export default CourseDetailsPage;

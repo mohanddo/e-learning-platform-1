@@ -65,7 +65,7 @@ export interface JwtPayload {
 
 export interface CourseReview {
   id: number;
-  review: number;
+  review: string;
   comment: string;
   dateOfCreation: string;
   student: StudentPreview;
@@ -94,6 +94,8 @@ export interface Course {
   inCart: boolean | null;
   progressPercentage: number | null;
   announcements: Announcement[];
+  numberOfVideos: number;
+  numberOfDocuments: number;
   ownsCourse: boolean;
 }
 

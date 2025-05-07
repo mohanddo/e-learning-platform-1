@@ -6,6 +6,22 @@ export const courseApi = {
     const { data } = await axiosInstance.get<Course[]>(`course/all`);
     return data;
   },
+  getCourseById: async (courseId: number) => {
+    const { data } = await axiosInstance.get<Course>(`course/byId/${courseId}`);
+    return data;
+  },
+  getStudentCourseById: async (courseId: number) => {
+    const { data } = await axiosInstance.get<Course>(
+      `student/course/byId/${courseId}`
+    );
+    return data;
+  },
+  getTeacherCourseById: async (courseId: number) => {
+    const { data } = await axiosInstance.get<Course>(
+      `teacher/course/byId/${courseId}`
+    );
+    return data;
+  },
   getStudentCourses: async () => {
     const { data } = await axiosInstance.get<Course[]>(`student/courses/all`);
     return data;

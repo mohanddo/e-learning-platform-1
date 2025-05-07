@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { cartApi } from "@/api/cart.api";
 import { useAppContext } from "@/context/context";
+import { useAddToCartMutation } from "@/hooks/useAddToCartMutation";
 const CourseCard = ({ course, role }: { course: Course; role: string }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -21,11 +22,8 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
 
   const { setCourses, courses } = useAppContext();
 
-  const addCourseToCartMutation = useMutation({
-    mutationFn: async () => {
-      const data = await cartApi.addCourseToCart(course.id);
-      return data;
-    },
+  const addCourseToCartMutation = useAddToCartMutation({
+    courseId: course.id,
     onSuccess: () => {
       setCourses(
         courses!.map((c) => (c.id === course.id ? { ...c, inCart: true } : c))

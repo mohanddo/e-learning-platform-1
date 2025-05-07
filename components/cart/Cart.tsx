@@ -44,11 +44,10 @@ const Cart = () => {
         router.replace(data);
       }
     },
-    onError: (error: Error) => {
+    onError: () => {
       if (isMounted.current) {
         alert("Error purchasing cart");
       }
-      console.log(error);
     },
   });
 

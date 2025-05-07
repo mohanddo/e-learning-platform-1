@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "@/context/context";
-import dynamic from "next/dynamic";
+import Header from "@/components/layout/header";
+// import dynamic from "next/dynamic";
 
-const Header = dynamic(() => import("@/components/layout/header"));
-
+// const Header = dynamic(() => import("@/components/layout/header"));
 
 export const metadata: Metadata = {
   title: "E-learning Platform",
@@ -15,12 +15,14 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {  
-  
+}>) {
   return (
     <html lang="en">
       <head>
-        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+        <link
+          href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+          rel="stylesheet"
+        />
       </head>
       <body>
         <AppProvider>
@@ -28,9 +30,7 @@ export default async function RootLayout({
 
           <main>{children}</main>
 
-          <footer>
-
-          </footer>
+          <footer></footer>
         </AppProvider>
       </body>
     </html>
