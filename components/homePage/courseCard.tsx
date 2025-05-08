@@ -74,7 +74,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
 
         {isHovered ? (
           <div className="w-full flex flex-row justify-between py-1">
-            {role == "student" && (
+            {role == "student" && !course.enrolled && (
               <Button
                 className="btn-principal"
                 onClick={handleCartButton}
@@ -87,6 +87,15 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
                   : "Add To Cart"}
               </Button>
             )}
+            {role == "student" && course.enrolled && (
+              <Button
+                className="btn-principal"
+                onClick={() => router.push(`/courseDetails/${course.id}`)}
+              >
+                Access Course
+              </Button>
+            )}
+
             <Button
               variant={"outline"}
               className={`

@@ -26,12 +26,14 @@ const JoinCourse = ({
   role,
   id,
   course,
+  setIsVideoPlaying,
 }: {
   role: string;
   id: number;
   course: Course;
+  setIsVideoPlaying: (isVideoPlaying: boolean) => void;
 }) => {
-  const { isLogged, student, setStudent } = useAppContext();
+  const { isLogged } = useAppContext();
   const router = useRouter();
   const isMounted = useRef(false);
   const queryClient = useQueryClient();
@@ -62,10 +64,6 @@ const JoinCourse = ({
     } else {
       router.push("/auth");
     }
-  };
-
-  const handlePlayVideo = () => {
-    console.log("play video");
   };
 
   const removeCourseFromCartMutation = useRemoveFromCartMutation({
@@ -148,8 +146,8 @@ const JoinCourse = ({
           />
           {course!.introductionVideoUrl && (
             <Button
-              className="absolute flex items-center justify-center w-13 h-13 rounded-full bg-white text-lg"
-              onClick={handlePlayVideo}
+              className="absolute flex items-center justify-center w-13 h-13 rounded-full bg-white text-lg transition-all duration-200 shadow-md hover:shadow-xl hover:scale-110 hover:bg-gray-100 cursor-pointer"
+              onClick={() => setIsVideoPlaying(true)}
             >
               <Play className="text-[var(--addi-color-500)] " />
             </Button>
@@ -193,11 +191,7 @@ const JoinCourse = ({
           )}
 
           <div className=" flex flex-col mb-5">
-            {role === "student" && course.enrolled ? (
-              <Button className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold">
-                Access Course
-              </Button>
-            ) : (
+            {role === "student" && !course.enrolled && (
               <div className="flex items-center gap-2 mb-2">
                 {course!.inCart ? (
                   <Button
@@ -244,15 +238,19 @@ const JoinCourse = ({
                     <FavoriteIcon className="!fill-none !stroke-current stroke-1 text-[var(--addi-color-500)]" />
                   </Button>
                 )}
+
+                <Button
+                  className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+                  onClick={handleJoinCourse}
+                >
+                  Join Course
+                </Button>
               </div>
             )}
 
-            {role === "student" && !course.enrolled && (
-              <Button
-                className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
-                onClick={handleJoinCourse}
-              >
-                Join Course
+            {role === "student" && course.enrolled && (
+              <Button className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold">
+                Access Course
               </Button>
             )}
 

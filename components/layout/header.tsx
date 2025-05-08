@@ -47,7 +47,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="z-[999] w-[90%] h-17 fixed left-[5%] flex flex-row top-5 border border-gray-200 rounded-xl px-5 bg-[var(--color-100)] shadow-sm">
+    <header className="z-[900] w-[90%] h-17 fixed left-[5%] flex flex-row top-5 border border-gray-200 rounded-xl px-5 bg-[var(--color-100)] shadow-sm">
       <div className="flex-[1] flex items-center justify-start">
         <img
           src="/logo-e-l.png"
