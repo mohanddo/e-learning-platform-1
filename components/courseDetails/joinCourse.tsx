@@ -249,7 +249,10 @@ const JoinCourse = ({
             )}
 
             {role === "student" && course.enrolled && (
-              <Button className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold">
+              <Button
+                className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+                onClick={() => router.push(`/student/course/${course.id}`)}
+              >
                 Access Course
               </Button>
             )}

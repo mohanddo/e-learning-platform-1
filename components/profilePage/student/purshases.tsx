@@ -1,6 +1,5 @@
 "use client";
 
-import { courses } from "@/app/data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AnimatedList } from "@/components/magicui/animated-list";
 import { useRouter } from "next/navigation";
