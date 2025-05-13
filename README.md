@@ -1,7 +1,5 @@
 # E-Learning Platform
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
 ## Project Overview
 
 The E-Learning Platform is a web application designed to facilitate online learning. It provides features for both students and teachers, including course management, profile management, authentication, and more.
