@@ -14,3 +14,4 @@ The E-Learning Platform is a web application designed to facilitate online learn
 - **Payment Integration**: Payments are handled using **Chargily Pay** for secure transactions.  
 - **Dynamic Routing**: Utilizes Next.js dynamic routing for course and profile pages.   
 
+[Back-end GitHub Repository](https://github.com/mohanddo/School-Managment-System)
