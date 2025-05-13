@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The E-Learning Platform is a web application designed to facilitate online learning. It provides features for both students and teachers, including course management, profile management, authentication, and more.
+The E-Learning Platform is a web application designed to facilitate online learning. It provides features for both students and teachers, including course management, profile management, authentication, and more. It was built using NextJs in the front-end, Spring boot in the back-end.
 
 ### Key Features
 
