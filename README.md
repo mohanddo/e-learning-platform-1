@@ -12,9 +12,5 @@ The E-Learning Platform is a web application designed to facilitate online learn
 - **Cart System**: Students can add courses to their cart for purchase.
 - **Video Storage**: Videos are securely stored in **Microsoft Azure** for high availability and scalability.  
 - **Payment Integration**: Payments are handled using **Chargily Pay** for secure transactions.  
-- **Dynamic Routing**: Utilizes Next.js dynamic routing for course and profile pages.  
-  
-- **Dynamic Routing**: Utilizes Next.js dynamic routing for course and profile pages.  
-
-## Project Structure
+- **Dynamic Routing**: Utilizes Next.js dynamic routing for course and profile pages.   
 
