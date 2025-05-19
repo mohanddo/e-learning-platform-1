@@ -32,7 +32,6 @@ const Header = () => {
       }
     },
     onError: (error) => {
-      console.log(error);
       if (isMounted.current) {
         alert("Error logging out");
       }

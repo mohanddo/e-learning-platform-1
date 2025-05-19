@@ -72,35 +72,37 @@ const SignIn = () => {
   return (
     <div className="p-10 flex-1 flex justify-center flex-col items-start">
       <p className="text-3xl font-bold">Sign In To Your Account</p>
-      <input
-        type="email"
-        placeholder="Email"
-        autoComplete="email"
-        className="w-full p-2 mt-4 border rounded"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        className="w-full p-2 mt-4 border rounded"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <form onSubmit={handleLogin} className="w-full">
+        <input
+          type="email"
+          placeholder="Email"
+          autoComplete="email"
+          className="w-full p-2 mt-4 border rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 mt-4 border rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <Link
-        href="/auth/resetPassword"
-        className="text-start mt-3 text-gray-400 text-sm font-bold hover:text-gray-600 transition-colors"
-      >
-        Forgot password?
-      </Link>
-      <button
-        className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
-        onClick={(e) => handleLogin(e)}
-        disabled={loginMutation.isPending}
-      >
-        {loginMutation.isPending ? "Signing in..." : "Sign In"}
-      </button>
+        <Link
+          href="/auth/resetPassword"
+          className="text-start mt-3 text-gray-400 text-sm font-bold hover:text-gray-600 transition-colors"
+        >
+          Forgot password?
+        </Link>
+        <button
+          type="submit"
+          className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
+          disabled={loginMutation.isPending}
+        >
+          {loginMutation.isPending ? "Signing in..." : "Sign In"}
+        </button>
+      </form>
       <p className="text-start text-gray-400 text-sm font-bold mt-5">
         Or Sign In with :
       </p>

@@ -67,7 +67,7 @@ const ChangePassword = () => {
           </p>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label htmlFor="currentPassword" className="font-medium">
               Current Password
@@ -125,17 +125,16 @@ const ChangePassword = () => {
               Cancel
             </Button>
             <Button
-              type="button"
+              type="submit"
               className="flex-1 bg-[var(--addi-color-400)] text-white hover:bg-[var(--addi-color-500)]"
               disabled={changePasswordMutation.isPending}
-              onClick={handleSubmit}
             >
               {changePasswordMutation.isPending
                 ? "Changing Password..."
                 : "Change Password"}
             </Button>
           </div>
-        </div>
+        </form>
       </section>
     </section>
   );

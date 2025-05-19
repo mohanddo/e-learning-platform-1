@@ -61,6 +61,8 @@ const Verify = () => {
     if (value.length > 1) return; // Prevent multiple characters
     if (!/^\d*$/.test(value)) return; // Only allow numbers
 
+    setError("");
+
     const newCode = [...verificationCodeArray];
     newCode[index] = value;
     setVerificationCodeArray(newCode);
@@ -70,9 +72,20 @@ const Verify = () => {
       const nextInput = document.getElementById(`code-${index + 1}`);
       if (nextInput) nextInput.focus();
     }
+
+    if (index === 5) {
+      const code = newCode.join("");
+      if (code.length === 6) {
+        verifyMutation.mutate({
+          email: emailToVerify!,
+          verificationCode: code,
+        });
+      }
+    }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+    setError("");
     if (e.key === "Backspace" && !verificationCodeArray[index] && index > 0) {
       const prevInput = document.getElementById(`code-${index - 1}`);
       if (prevInput) prevInput.focus();
@@ -122,7 +135,7 @@ const Verify = () => {
           </p>
         </div>
 
-        <div className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-center space-x-4">
             {verificationCodeArray.map((digit, index) => (
               <input
@@ -144,7 +157,6 @@ const Verify = () => {
             type="submit"
             disabled={verifyMutation.isPending}
             className="w-full bg-[var(--addi-color-400)] text-white py-3 rounded-lg hover:bg-[var(--addi-color-500)] transition-colors disabled:opacity-50"
-            onClick={handleSubmit}
           >
             {verifyMutation.isPending ? "Verifying..." : "Verify Email"}
           </button>
@@ -168,7 +180,7 @@ const Verify = () => {
                 : `Resend in ${resendTimer}s`}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </section>
   );

@@ -13,7 +13,7 @@ const FavoritCouses = () => {
   };
   return (
     <div className="w-full">
-      <p className="text-xl font-semibold mb-10">You Courses</p>
+      <p className="text-xl font-semibold mb-10">Favorites Courses</p>
       <AnimatedList className="w-full flex flex-col justify-center gap-5">
         {student!.courses.filter((crs) => crs.favourite).length == 0 ? (
           <div className="w-full text-center py-10">

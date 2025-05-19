@@ -33,7 +33,8 @@ const ResetPassword = () => {
     };
   }, []);
 
-  const handleResetPassword = () => {
+  const handleResetPassword = (e: React.FormEvent) => {
+    e.preventDefault();
     const validation = validateEmail(email);
     if (!validation.isValid) {
       alert(validation.message);
@@ -54,7 +55,7 @@ const ResetPassword = () => {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <form onSubmit={handleResetPassword} className="space-y-6">
         <div>
           <label
             htmlFor="email"
@@ -73,8 +74,8 @@ const ResetPassword = () => {
         </div>
 
         <button
+          type="submit"
           className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--addi-color-400)] transition-colors"
-          onClick={handleResetPassword}
           disabled={resetPasswordMutation.isPending}
         >
           {resetPasswordMutation.isPending
@@ -90,7 +91,7 @@ const ResetPassword = () => {
             Back to Sign In
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

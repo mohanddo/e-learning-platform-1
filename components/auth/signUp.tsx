@@ -57,41 +57,43 @@ const SignUp = () => {
   return (
     <div className="p-10 flex-1 flex justify-center flex-col items-start">
       <p className="text-3xl font-bold">Create Account</p>
-      <input
-        type="text"
-        placeholder="First Name"
-        className="w-full p-2 mt-4 border rounded"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        className="w-full p-2 mt-4 border rounded"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        className="w-full p-2 mt-4 border rounded"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        className="w-full p-2 mt-4 border rounded"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button
-        className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
-        onClick={(e) => handleRegister(e)}
-        disabled={signUpMutation.isPending}
-      >
-        {signUpMutation.isPending ? "Signing Up..." : "Sign Up"}{" "}
-      </button>
+      <form onSubmit={handleRegister} className="w-full">
+        <input
+          type="text"
+          placeholder="First Name"
+          className="w-full p-2 mt-4 border rounded"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          className="w-full p-2 mt-4 border rounded"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 mt-4 border rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 mt-4 border rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
+          disabled={signUpMutation.isPending}
+        >
+          {signUpMutation.isPending ? "Signing Up..." : "Sign Up"}
+        </button>
+      </form>
       <p className="text-start text-gray-400 text-sm font-bold mt-5">
         Or Sign In with :
       </p>

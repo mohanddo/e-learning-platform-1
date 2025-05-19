@@ -8,19 +8,19 @@ const VerifyPage = () => {
   const { emailToVerify } = useAppContext();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!emailToVerify) {
-      router.push("/");
-    }
-  }, [emailToVerify, router]);
+  // useEffect(() => {
+  //   if (!emailToVerify) {
+  //     router.push("/");
+  //   }
+  // }, [emailToVerify, router]);
 
-  if (!emailToVerify) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center">
-        <p>Redirecting...</p>
-      </div>
-    );
-  }
+  // if (!emailToVerify) {
+  //   return (
+  //     <div className="h-screen w-full flex items-center justify-center">
+  //       <p>Redirecting...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <section className="min-h-screen w-full bg-gray-100">
