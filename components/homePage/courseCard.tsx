@@ -7,8 +7,6 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useMutation } from "@tanstack/react-query";
-import { cartApi } from "@/api/cart.api";
 import { useAppContext } from "@/context/context";
 import { useAddToCartMutation } from "@/hooks/useAddToCartMutation";
 const CourseCard = ({ course, role }: { course: Course; role: string }) => {
@@ -76,7 +74,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
           <div className="w-full flex flex-row justify-between py-1">
             {role == "student" && !course.enrolled && (
               <Button
-                className="btn-principal"
+                className="btn-principal cursor-pointer"
                 onClick={handleCartButton}
                 disabled={addCourseToCartMutation.isPending}
               >
@@ -89,7 +87,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
             )}
             {role == "student" && course.enrolled && (
               <Button
-                className="btn-principal"
+                className="btn-principal cursor-pointer"
                 onClick={() => router.push(`/courseDetails/${course.id}`)}
               >
                 Access Course
@@ -100,7 +98,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
               variant={"outline"}
               className={`
                 ${role !== "student" ? "w-full" : ""}
-                    text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)]`}
+                    text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] cursor-pointer`}
               onClick={goToPage}
             >
               See Course details

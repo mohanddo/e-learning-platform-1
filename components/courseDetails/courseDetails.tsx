@@ -8,7 +8,8 @@ import { courseApi } from "@/api/course.api";
 import CourseDetailsSkeleton from "./courseDetailsSkeleton";
 import CourseDetailsError from "./courseDetailsError";
 import VideoPlayer from "../ui/VideoPlayer";
-import { useState } from "react";
+import { Video } from "../types";
+import { useEffect, useState } from "react";
 const CourseDetails = ({ id, role }: { id: number; role: string }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
@@ -32,6 +33,18 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     },
   });
 
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    if (isVideoPlaying) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isVideoPlaying]);
+
   if (isLoading) {
     return <CourseDetailsSkeleton />;
   }
@@ -40,14 +53,35 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     return <CourseDetailsError refetch={refetch} />;
   }
 
+  const freeVideos: Video[] = [
+    ...(course!.introductionVideoUrl
+      ? [
+          {
+            id: -1,
+            title: course!.title,
+            downloadUrl: course!.introductionVideoUrl,
+            free: true,
+            duration: 0,
+            dateOfCreation: "",
+            isFinished: false,
+          },
+        ]
+      : []),
+    ...course!.chapters.flatMap((chapter) =>
+      chapter.videos.filter((video) => video.free)
+    ),
+  ];
+
   return (
     <section className="flex flex-col pt-[15vh]">
       {isVideoPlaying && (
         <VideoPlayer
           open={isVideoPlaying}
           onClose={() => setIsVideoPlaying(false)}
-          videoUrl={course!.introductionVideoUrl!}
-          title={course!.title}
+          freeVideos={freeVideos}
+          onSelectVideo={(video) => {
+            setIsVideoPlaying(true);
+          }}
         />
       )}
       <CourseHeader course={course!} />

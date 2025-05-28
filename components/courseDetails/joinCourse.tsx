@@ -144,7 +144,10 @@ const JoinCourse = ({
             fill
             className="rounded-t-xl brightness-50 object-cover"
           />
-          {course!.introductionVideoUrl && (
+          {(course!.introductionVideoUrl ||
+            course!.chapters.flatMap((chapter) =>
+              chapter.videos.filter((video) => video.free)
+            ).length > 0) && (
             <Button
               className="absolute flex items-center justify-center w-13 h-13 rounded-full bg-white text-lg transition-all duration-200 shadow-md hover:shadow-xl hover:scale-110 hover:bg-gray-100 cursor-pointer"
               onClick={() => setIsVideoPlaying(true)}

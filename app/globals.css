@@ -1,5 +1,5 @@
-@import 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap';
-@import 'https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap';
+@import "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap";
 @import "tailwindcss";
 @import "./definedClasses.css";
 
@@ -7,7 +7,13 @@
   font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100,
-    "YTLC" 500;
+  font-variation-settings: "wdth" 100, "YTLC" 500;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
 }

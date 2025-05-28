@@ -104,6 +104,11 @@ const AboutCourse = ({ id, course }: { id: number; course: Course }) => {
                           size={20}
                         />
                         <p className="text-md text-gray-400">{video.title}</p>
+                        {video.free && (
+                          <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
+                            Free
+                          </span>
+                        )}
                       </div>
                       <p className="text-sm text-gray-400">
                         {formatSecondsToMMSS(video.duration)}
@@ -115,7 +120,16 @@ const AboutCourse = ({ id, course }: { id: number; course: Course }) => {
                       key={document.id}
                       className="flex items-center justify-between gap-2 mt-2 mb-2"
                     >
-                      <p className="text-sm text-gray-400">{document.title}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-gray-400">
+                          {document.title}
+                        </p>
+                        {document.free && (
+                          <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
+                            Free
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </AccordionContent>

@@ -129,6 +129,7 @@ export interface Resource {
   downloadUrl: string;
   dateOfCreation: string;
   isFinished: boolean;
+  free: boolean;
 }
 
 export interface Video extends Resource {

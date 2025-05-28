@@ -1,23 +1,25 @@
-import React, { useEffect } from "react";
+import React, { use, useState } from "react";
 import ReactPlayer from "react-player";
 import { X } from "lucide-react";
 import { Button } from "./button";
+import { formatSecondsToMMSS } from "@/utils/validations";
+import { Video as VideoType } from "@/components/types";
 
 interface VideoPlayerProps {
   open: boolean;
   onClose: () => void;
-  videoUrl: string;
-  title: string;
-  subtitle?: string;
+  freeVideos: VideoType[];
+  onSelectVideo: (video: VideoType) => void;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   open,
   onClose,
-  videoUrl,
-  title,
-  subtitle,
+  freeVideos,
+  onSelectVideo,
 }) => {
+  const [currentVideo, setCurrentVideo] = useState(freeVideos[0]);
+
   if (!open) return null;
 
   return (
@@ -27,44 +29,75 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl mx-4 rounded-xl overflow-hidden shadow-2xl bg-[#18132b] border border-gray-700"
+        className="relative w-full max-w-xl mx-4 rounded-xl overflow-hidden shadow-2xl bg-[#18132b] border border-gray-700 max-h-[90vh] overflow-y-auto hide-scrollbar"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
-          <div>
-            <p className="text-xs text-gray-300 font-semibold">
-              Course Preview
-            </p>
-            <h2 className="text-lg font-bold text-white leading-tight">
-              {title}
-            </h2>
+        <div className="px-6 py-4 border-b border-gray-700">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-white font-semibold">Course preview</p>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-all duration-200 cursor-pointer"
+              aria-label="Close video preview"
+            >
+              <X size={24} />
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-all duration-200 cursor-pointer"
-            aria-label="Close video preview"
-          >
-            <X size={24} />
-          </Button>
+          <h2 className="text-lg font-bold text-white leading-tight mt-1">
+            {currentVideo.title}
+          </h2>
         </div>
         {/* Video */}
         <div className="bg-black flex items-center justify-center aspect-video">
           <ReactPlayer
-            url={videoUrl}
+            url={currentVideo.downloadUrl}
             controls
             width="100%"
             height="360px"
             style={{ maxHeight: 400 }}
           />
         </div>
-        {/* Subtitle / Caption */}
-        {subtitle && (
-          <div className="px-6 py-3 bg-black/60 border-t border-gray-700">
-            <p className="text-sm text-white text-center">{subtitle}</p>
+        {/* Free video samples list */}
+        <div className="bg-[#18132b] px-6 py-4">
+          <p className="text-white font-bold mb-2 text-base">Free videos :</p>
+          <div className="flex flex-col gap-2">
+            {freeVideos.map((video, index) => (
+              <button
+                key={index}
+                className={`flex items-center justify-between w-full rounded-lg px-2 py-2 transition-all duration-150 text-left cursor-pointer
+                  ${
+                    video.id === currentVideo.id
+                      ? "bg-[var(--addi-color-500)]/30 border-l-4 border-[var(--addi-color-500)]"
+                      : "hover:bg-white/10"
+                  }
+                `}
+                onClick={() => {
+                  setCurrentVideo(video);
+                  onSelectVideo(video);
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`text-sm truncate ${
+                      video.id === currentVideo.id
+                        ? "font-bold text-white"
+                        : "text-gray-200"
+                    }`}
+                  >
+                    {video.title}
+                  </span>
+                </div>
+                {index != 0 && (
+                  <span className="text-xs text-gray-300 font-semibold min-w-[40px] text-right">
+                    {formatSecondsToMMSS(video.duration)}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
