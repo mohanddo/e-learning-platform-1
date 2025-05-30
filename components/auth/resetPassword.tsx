@@ -75,7 +75,7 @@ const ResetPassword = () => {
 
         <button
           type="submit"
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--addi-color-400)] transition-colors"
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--addi-color-400)] transition-colors cursor-pointer"
           disabled={resetPasswordMutation.isPending}
         >
           {resetPasswordMutation.isPending

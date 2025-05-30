@@ -45,7 +45,7 @@ const Profile = () => {
                     currentComp === "data"
                       ? "text-black border-b"
                       : "text-gray-400"
-                  } hover:text-black`}
+                  } hover:text-black cursor-pointer`}
                   onClick={() => setCurrentComp("data")}
                 >
                   Personal data
@@ -55,7 +55,7 @@ const Profile = () => {
                     currentComp === "myCourses"
                       ? "text-black border-b"
                       : "text-gray-400"
-                  } hover:text-black`}
+                  } hover:text-black cursor-pointer`}
                   onClick={() => setCurrentComp("myCourses")}
                 >
                   My Courses

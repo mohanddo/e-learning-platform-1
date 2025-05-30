@@ -45,7 +45,7 @@ const FilterDiv = () => {
               placeholder="Search for a course"
               className="focus:outline-none focus:ring-0 focus:border-transparent w-md ml-2"
             />
-            <button className="px-1.5 rounded-lg py-1.5 bg-[var(--color-100)] text-[var(--color-400)] hover:text-[var(--addi-color-500)]">
+            <button className="cursor-pointer px-1.5 rounded-lg py-1.5 bg-[var(--color-100)] text-[var(--color-400)] hover:text-[var(--addi-color-500)]">
               <Search />
             </button>
           </div>

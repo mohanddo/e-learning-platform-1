@@ -156,7 +156,7 @@ const Verify = () => {
           <button
             type="submit"
             disabled={verifyMutation.isPending}
-            className="w-full bg-[var(--addi-color-400)] text-white py-3 rounded-lg hover:bg-[var(--addi-color-500)] transition-colors disabled:opacity-50"
+            className="w-full bg-[var(--addi-color-400)] text-white py-3 rounded-lg hover:bg-[var(--addi-color-500)] transition-colors disabled:opacity-50 cursor-pointer"
           >
             {verifyMutation.isPending ? "Verifying..." : "Verify Email"}
           </button>
@@ -167,7 +167,7 @@ const Verify = () => {
               type="button"
               onClick={handleResendCode}
               disabled={!canResend || resendMutation.isPending}
-              className={`text-[var(--addi-color-400)] hover:text-[var(--addi-color-500)] ${
+              className={`text-[var(--addi-color-400)] hover:text-[var(--addi-color-500)] cursor-pointer ${
                 !canResend || resendMutation.isPending
                   ? "opacity-50 cursor-not-allowed"
                   : ""

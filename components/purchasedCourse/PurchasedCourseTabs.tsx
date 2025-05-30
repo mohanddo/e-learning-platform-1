@@ -27,7 +27,7 @@ const PurchasedCourseTabs: React.FC<PurchasedCourseTabsProps> = ({
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex-1 py-3 px-4 text-center font-semibold transition-colors duration-150
+            className={`flex-1 py-3 px-4 text-center font-semibold transition-colors duration-150 cursor-pointer
               ${
                 activeTab === tab.key
                   ? "border-b-2 border-[var(--addi-color-500)] text-black"

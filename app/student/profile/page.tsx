@@ -46,7 +46,7 @@ const Profile = () => {
                     currentComp === "data"
                       ? "text-black border-b"
                       : "text-gray-400"
-                  } hover:text-black`}
+                  } hover:text-black cursor-pointer`}
                   onClick={() => setCurrentComp("data")}
                 >
                   Personal data
@@ -56,7 +56,7 @@ const Profile = () => {
                     currentComp === "pursh"
                       ? "text-black border-b"
                       : "text-gray-400"
-                  } hover:text-black`}
+                  } hover:text-black cursor-pointer`}
                   onClick={() => setCurrentComp("pursh")}
                 >
                   Purchases
@@ -66,7 +66,7 @@ const Profile = () => {
                     currentComp === "fav"
                       ? "text-black border-b"
                       : "text-gray-400"
-                  } hover:text-black`}
+                  } hover:text-black cursor-pointer`}
                   onClick={() => setCurrentComp("fav")}
                 >
                   Favorites

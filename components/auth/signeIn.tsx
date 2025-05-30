@@ -97,7 +97,7 @@ const SignIn = () => {
         </Link>
         <button
           type="submit"
-          className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded"
+          className="w-full bg-[var(--addi-color-400)] text-white py-2 mt-4 rounded cursor-pointer"
           disabled={loginMutation.isPending}
         >
           {loginMutation.isPending ? "Signing in..." : "Sign In"}

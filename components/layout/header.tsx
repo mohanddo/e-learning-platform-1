@@ -96,6 +96,7 @@ const Header = () => {
           <div className="flex flex-row gap-5 items-center ">
             <div>
               <button
+                className="cursor-pointer"
                 onClick={() => {
                   router.replace("/cart");
                 }}
