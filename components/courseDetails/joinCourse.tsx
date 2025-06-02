@@ -14,26 +14,28 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
 import { useAppContext } from "@/context/context";
 import { useRouter } from "next/navigation";
-import { Course } from "../types";
+import { Course, CourseReview } from "../types/types";
 import { useRemoveFromCartMutation } from "@/hooks/useRemoveFromCartMutation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { paymentApi } from "@/api/payment.api";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo, useState, useContext } from "react";
 import { useAddToCartMutation } from "@/hooks/useAddToCartMutation";
 import { useAddToFavoritesMutation } from "@/hooks/useAddToFavoritesMutation";
 import { useRemoveFromFavoritesMutation } from "@/hooks/useRemoveFromFavoritesMutation";
+import { calculateCourseRating } from "@/utils";
+import ReviewModal from "@/components/ui/ReviewModal";
 const JoinCourse = ({
   role,
-  id,
   course,
+  setCourse,
   setIsVideoPlaying,
 }: {
   role: string;
-  id: number;
   course: Course;
+  setCourse: React.Dispatch<React.SetStateAction<Course | null>>;
   setIsVideoPlaying: (isVideoPlaying: boolean) => void;
 }) => {
-  const { isLogged } = useAppContext();
+  const { isLogged, student } = useAppContext();
   const router = useRouter();
   const isMounted = useRef(false);
   const queryClient = useQueryClient();
@@ -70,7 +72,7 @@ const JoinCourse = ({
     courseId: course.id,
     onSuccess: () => {
       queryClient.setQueryData(
-        ["course", id],
+        ["course", course.id],
         (oldData: Course | undefined) => {
           if (!oldData) return oldData;
           return { ...oldData, inCart: false };
@@ -83,7 +85,7 @@ const JoinCourse = ({
     courseId: course.id,
     onSuccess: () => {
       queryClient.setQueryData(
-        ["course", id],
+        ["course", course.id],
         (oldData: Course | undefined) => {
           if (!oldData) return oldData;
           return { ...oldData, inCart: true };
@@ -104,7 +106,7 @@ const JoinCourse = ({
     courseId: course.id,
     onSuccess: () => {
       queryClient.setQueryData(
-        ["course", id],
+        ["course", course.id],
         (oldData: Course | undefined) => {
           if (!oldData) return oldData;
           return { ...oldData, favourite: true };
@@ -117,7 +119,7 @@ const JoinCourse = ({
     courseId: course.id,
     onSuccess: () => {
       queryClient.setQueryData(
-        ["course", id],
+        ["course", course.id],
         (oldData: Course | undefined) => {
           if (!oldData) return oldData;
           return { ...oldData, favourite: false };
@@ -132,6 +134,74 @@ const JoinCourse = ({
 
   const handleRemoveFromFavorites = () => {
     removeFromFavoritesMutation.mutate();
+  };
+
+  // Find the current user's review if it exists
+  const currentUserReview = useMemo(() => {
+    console.log("course changed");
+    const x = course.courseReviews.find((r) => r.student.id === student?.id);
+    console.log(x);
+    return x;
+  }, [course, student?.id]);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+
+  // Handlers for review actions
+  const handleReviewAdd = (rating: string, comment: string | null) => {
+    setReviewModalOpen(false);
+    const newCourseReview: CourseReview = {
+      id: -1,
+      review: rating,
+      comment: comment,
+      student: {
+        id: student!.id,
+        firstName: student!.firstName,
+        lastName: student!.lastName,
+        profilePicDownloadUrl: student!.profilePicDownloadUrl,
+      },
+      dateOfCreation: new Date().toString(),
+    };
+
+    const newCourseReviews = [...course.courseReviews, newCourseReview];
+    setCourse({
+      ...course,
+      numberOfReviews: course.numberOfReviews + 1,
+      rating: calculateCourseRating(newCourseReviews),
+      courseReviews: newCourseReviews,
+    });
+  };
+  const handleReviewUpdate = (
+    rating: string,
+    comment: string | null,
+    id: number
+  ) => {
+    setReviewModalOpen(false);
+    const newCourseReviews = course.courseReviews.map((review) =>
+      review.id === id
+        ? {
+            ...review,
+            review: rating,
+            dateOfCreation: new Date().toString(),
+            comment,
+          }
+        : review
+    );
+    setCourse({
+      ...course,
+      rating: calculateCourseRating(newCourseReviews),
+      courseReviews: newCourseReviews,
+    });
+  };
+  const handleReviewDelete = () => {
+    setReviewModalOpen(false);
+    const newCourseReviews = course.courseReviews.filter(
+      (r) => r.student.id !== student?.id
+    );
+    setCourse({
+      ...course,
+      numberOfReviews: course.numberOfReviews - 1,
+      rating: calculateCourseRating(newCourseReviews),
+      courseReviews: newCourseReviews,
+    });
   };
 
   return (
@@ -260,6 +330,15 @@ const JoinCourse = ({
               </Button>
             )}
 
+            {role == "student" && course.enrolled && (
+              <Button
+                className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold mt-2"
+                onClick={() => setReviewModalOpen(true)}
+              >
+                {currentUserReview ? "Update review" : "Add a review"}
+              </Button>
+            )}
+
             {role === "unauthenticated" && (
               <Button
                 className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
@@ -315,6 +394,17 @@ const JoinCourse = ({
           </div>
         </div>
       </div>
+
+      {reviewModalOpen && (
+        <ReviewModal
+          courseId={course.id}
+          onClose={() => setReviewModalOpen(false)}
+          review={currentUserReview}
+          onAdd={handleReviewAdd}
+          onUpdate={handleReviewUpdate}
+          onDelete={currentUserReview ? handleReviewDelete : undefined}
+        />
+      )}
     </div>
   );
 };

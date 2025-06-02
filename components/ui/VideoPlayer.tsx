@@ -2,8 +2,8 @@ import React, { use, useState } from "react";
 import ReactPlayer from "react-player";
 import { X } from "lucide-react";
 import { Button } from "./button";
-import { formatSecondsToMMSS } from "@/utils/validations";
-import { Video as VideoType } from "@/components/types";
+import { formatSecondsToMMSS } from "@/utils";
+import { Video as VideoType } from "@/components/types/types";
 
 interface VideoPlayerProps {
   open: boolean;

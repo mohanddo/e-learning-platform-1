@@ -1,9 +1,9 @@
+import { LoginCredentials } from "@/components/types/types";
 import { axiosInstance } from "../axios";
 import {
   ChangePasswordRequest,
-  LoginCredentials,
   VerifyUserRequest,
-} from "@/components/types";
+} from "@/components/types/request";
 
 export const commonAuthApi = {
   login: async (credentials: LoginCredentials) => {

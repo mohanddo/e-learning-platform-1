@@ -1,5 +1,5 @@
 import React from "react";
-import { Course, Video } from "@/components/types";
+import { Course, Video } from "@/components/types/types";
 import ReactPlayer from "react-player";
 
 interface PurchasedCourseVideoProps {

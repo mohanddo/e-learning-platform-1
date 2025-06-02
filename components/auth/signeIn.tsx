@@ -4,7 +4,7 @@ import { useAppContext } from "../../context/context";
 import { useMutation } from "@tanstack/react-query";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
 import { useState, useRef, useEffect } from "react";
-import { validateCredentials } from "@/utils/validations";
+import { validateCredentials } from "@/utils";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AxiosError } from "axios";

@@ -1,5 +1,5 @@
 "use client";
-import { Course } from "../types";
+import { Course } from "../types/types";
 import { useAppContext } from "../../context/context";
 import { useEffect, useState } from "react";
 import CourseCard from "./courseCard";

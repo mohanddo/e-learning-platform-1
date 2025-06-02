@@ -8,8 +8,10 @@ import { courseApi } from "@/api/course.api";
 import CourseDetailsSkeleton from "./courseDetailsSkeleton";
 import CourseDetailsError from "./courseDetailsError";
 import VideoPlayer from "../ui/VideoPlayer";
-import { Video } from "../types";
+import { Video, Course } from "../types/types";
 import { useEffect, useState } from "react";
+import { useAppContext } from "@/context/context";
+import { authApi } from "@/api/auth/studentAuth.api";
 const CourseDetails = ({ id, role }: { id: number; role: string }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
@@ -17,7 +19,7 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     data: course,
     isLoading,
     isError,
-    refetch,
+    refetch: refetchCourses,
   } = useQuery({
     queryKey: ["course", id],
     queryFn: async () => {
@@ -33,6 +35,28 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     },
   });
 
+  const { setStudent } = useAppContext();
+
+  const {
+    isLoading: isLoadingGettingStudent,
+    refetch: refetchStudent,
+    isError: isErrorGettingStudent,
+  } = useQuery({
+    queryKey: ["student"],
+    queryFn: async () => {
+      const data = await authApi.me();
+      setStudent(data);
+      return data;
+    },
+  });
+
+  const [courseState, setCourse] = useState<Course | null>(null);
+  useEffect(() => {
+    if (course) {
+      setCourse(course);
+    }
+  }, [course]);
+
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     if (isVideoPlaying) {
@@ -45,32 +69,45 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     };
   }, [isVideoPlaying]);
 
-  if (isLoading) {
+  if (isLoading || (isLoadingGettingStudent && role == "student")) {
     return <CourseDetailsSkeleton />;
   }
 
-  if (isError) {
-    return <CourseDetailsError refetch={refetch} />;
+  if (isError || (isErrorGettingStudent && role == "student")) {
+    return (
+      <CourseDetailsError
+        refetch={() => {
+          refetchCourses();
+          refetchStudent();
+        }}
+      />
+    );
   }
 
-  const freeVideos: Video[] = [
-    ...(course!.introductionVideoUrl
-      ? [
-          {
-            id: -1,
-            title: course!.title,
-            downloadUrl: course!.introductionVideoUrl,
-            free: true,
-            duration: 0,
-            dateOfCreation: "",
-            isFinished: false,
-          },
-        ]
-      : []),
-    ...course!.chapters.flatMap((chapter) =>
-      chapter.videos.filter((video) => video.free)
-    ),
-  ];
+  let freeVideos: Video[] = [];
+  if (courseState) {
+    freeVideos = [
+      ...(courseState.introductionVideoUrl
+        ? [
+            {
+              id: -1,
+              title: courseState.title,
+              downloadUrl: courseState.introductionVideoUrl!,
+              free: true,
+              duration: 0,
+              dateOfCreation: "",
+              isFinished: false,
+            } as Video,
+          ]
+        : []),
+      ...courseState.chapters.flatMap(
+        (chapter: import("../types/types").Chapter) =>
+          chapter.videos.filter((video: Video) => video.free)
+      ),
+    ];
+  }
+
+  if (!courseState) return null;
 
   return (
     <section className="flex flex-col pt-[15vh]">
@@ -79,19 +116,19 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
           open={isVideoPlaying}
           onClose={() => setIsVideoPlaying(false)}
           freeVideos={freeVideos}
-          onSelectVideo={(video) => {
+          onSelectVideo={() => {
             setIsVideoPlaying(true);
           }}
         />
       )}
-      <CourseHeader course={course!} />
+      <CourseHeader course={courseState} />
       <section className="flex justify-center">
         <div className="w-[85%] flex flex-row">
-          <AboutCourse id={id} course={course!} />
+          <AboutCourse course={courseState} setCourse={setCourse} role={role} />
           <JoinCourse
             role={role}
-            id={id}
-            course={course!}
+            course={courseState}
+            setCourse={setCourse}
             setIsVideoPlaying={setIsVideoPlaying}
           />
         </div>

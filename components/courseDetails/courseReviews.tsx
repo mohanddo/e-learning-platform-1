@@ -1,6 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
-import { CourseReview } from "../types";
+import { CourseReview } from "../types/types";
 import CourseReviewCard from "./CourseReview";
 const CourseReviews = ({
   courseReviews,
@@ -20,9 +20,11 @@ const CourseReviews = ({
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {courseReviews.map((review) => (
-          <CourseReviewCard key={review.id} review={review} />
-        ))}
+        {courseReviews
+          .filter((review) => review.comment != null)
+          .map((review) => (
+            <CourseReviewCard key={review.id} review={review} />
+          ))}
       </div>
     </div>
   );

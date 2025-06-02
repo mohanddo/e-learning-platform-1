@@ -1,5 +1,5 @@
 import React from "react";
-import { CourseReview } from "@/components/types";
+import { CourseReview } from "@/components/types/types";
 import CourseReviewCard from "@/components/courseDetails/CourseReview";
 import { Star } from "lucide-react";
 

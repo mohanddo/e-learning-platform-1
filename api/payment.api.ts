@@ -1,5 +1,5 @@
 import { axiosInstance } from "./axios";
-import { CheckoutUrl } from "@/components/types";
+import { CheckoutUrl } from "@/components/types/types";
 export const paymentApi = {
   purchaseCourse: async (courseId: number) => {
     const { data } = await axiosInstance.post<CheckoutUrl>(

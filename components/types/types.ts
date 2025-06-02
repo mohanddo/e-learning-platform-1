@@ -34,17 +34,6 @@ export interface RegisterCredentials {
   password: string;
 }
 
-export interface VerifyUserRequest {
-  email: string;
-  verificationCode: string;
-}
-
-export interface ChangePasswordRequest {
-  newPassword: string;
-  currentPassword: string;
-  repeatPassword: string;
-}
-
 export enum PricingModel {
   SUBSCRIPTION,
   ONE_TIME_PURCHASE,
@@ -66,7 +55,7 @@ export interface JwtPayload {
 export interface CourseReview {
   id: number;
   review: string;
-  comment: string;
+  comment: string | null;
   dateOfCreation: string;
   student: StudentPreview;
 }
@@ -154,10 +143,4 @@ export interface TeacherPreview extends UserPreview {
   youtubeLink: string | null;
   instagramLink: string | null;
   description: string | null;
-}
-
-export interface UpdateStudentRequest {
-  firstName: string | null;
-  lastName: string | null;
-  profilePicDownloadUrl: string | null;
 }

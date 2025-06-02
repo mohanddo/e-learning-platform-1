@@ -1,5 +1,5 @@
 import { axiosInstance } from "./axios";
-import { CheckoutUrl } from "@/components/types";
+import { CheckoutUrl } from "@/components/types/types";
 export const cartApi = {
   removeCourseFromCart: async (courseId: number) => {
     const { data } = await axiosInstance.delete<void>(

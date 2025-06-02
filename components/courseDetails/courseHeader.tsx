@@ -1,6 +1,6 @@
 import React from "react";
 import { Star, Clock, Globe, Subtitles } from "lucide-react";
-import { Course } from "../types";
+import { Course } from "../types/types";
 
 const CourseHeader = ({ course }: { course: Course }) => {
   return (

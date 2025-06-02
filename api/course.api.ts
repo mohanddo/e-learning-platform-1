@@ -1,5 +1,6 @@
 import { axiosInstance } from "./axios";
-import { Course } from "../components/types";
+import { Course } from "../components/types/types";
+import { AddOrUpdateCourseReviewRequest } from "@/components/types/request";
 
 export const courseApi = {
   getAllCourses: async () => {
@@ -29,5 +30,13 @@ export const courseApi = {
   getTeacherCourses: async () => {
     const { data } = await axiosInstance.get<Course[]>(`teacher/courses/all`);
     return data;
+  },
+
+  addOrUpdateCourseReview: async (review: AddOrUpdateCourseReviewRequest) => {
+    await axiosInstance.put<void>(`course/courseReview/createOrUpdate`, review);
+  },
+
+  deleteCourseReview: async (reviewId: number) => {
+    await axiosInstance.delete<void>(`course/courseReview/delete/${reviewId}`);
   },
 };

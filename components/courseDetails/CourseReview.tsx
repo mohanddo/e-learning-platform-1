@@ -1,5 +1,5 @@
-import { CourseReview } from "@/components/types";
-import { getRelativeTimeFromNow } from "@/utils/validations";
+import { CourseReview } from "@/components/types/types";
+import { getRelativeTimeFromNow } from "@/utils";
 import { Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export default function CourseReviewCard({ review }: { review: CourseReview }) {

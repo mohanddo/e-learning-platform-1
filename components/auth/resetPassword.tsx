@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
-import { validateEmail } from "@/utils/validations";
+import { validateEmail } from "@/utils";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");

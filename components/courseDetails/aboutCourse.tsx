@@ -9,9 +9,16 @@ import {
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CourseReviews from "./courseReviews";
-import { Course } from "../types";
-import { formatSecondsToMMSS } from "@/utils/validations";
-const AboutCourse = ({ id, course }: { id: number; course: Course }) => {
+import { Course } from "../types/types";
+import { formatSecondsToMMSS } from "@/utils";
+
+interface AboutCourseProps {
+  role: string;
+  course: Course;
+  setCourse: React.Dispatch<React.SetStateAction<Course | null>>;
+}
+
+const AboutCourse = ({ role, course, setCourse }: AboutCourseProps) => {
   const learnings: string[] = [
     "Basic communication in English in everyday situations.",
     "You will develop excellent understanding and listening skills for this level.",
@@ -138,11 +145,15 @@ const AboutCourse = ({ id, course }: { id: number; course: Course }) => {
           </Accordion>
         </div>
       </div>
-      <CourseReviews
-        courseReviews={course.courseReviews}
-        courseRating={course.rating}
-        numberOfReviews={course.numberOfReviews}
-      />
+
+      {course.courseReviews.filter((review) => review.comment != null).length >
+        0 && (
+        <CourseReviews
+          courseReviews={course.courseReviews}
+          courseRating={course.rating}
+          numberOfReviews={course.numberOfReviews}
+        />
+      )}
     </div>
   );
 };

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { Course, Video, Document } from "@/components/types";
+import { Course, Video, Document } from "@/components/types/types";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import VideoPlayer from "@/components/ui/VideoPlayer";
 import { Video as VideoIcon, File, Check, X } from "lucide-react";
 
 interface CourseSidebarProps {
@@ -82,7 +80,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course, onClose }) => {
 
   return (
     <aside
-      className={`w-[350px] min-w-[300px] max-w-[400px] h-screen bg-white border-l border-gray-200 flex flex-col shadow-lg fixed right-0 top-0  mt-[15vh] transition-transform duration-300 ${
+      className={`w-[30vw] min-w-[300px] max-w-[30vw] h-screen bg-white border-l border-gray-200 flex flex-col shadow-lg fixed right-0 top-0  mt-[15vh] transition-transform duration-300 ${
         isClosing ? "translate-x-full" : "translate-x-0"
       }`}
       onTransitionEnd={() => {
@@ -135,7 +133,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course, onClose }) => {
                         />
                         <span
                           className={`
-                            w-5 h-5 flex items-center justify-center rounded-md border-2 border-gray-300
+                            w-4 h-4 flex items-center justify-center border-2 border-gray-800
                             transition-all duration-200
                             peer-checked:bg-[var(--addi-color-500)]
                             peer-checked:border-[var(--addi-color-500)]
@@ -143,7 +141,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course, onClose }) => {
                           `}
                         >
                           <Check
-                            className="text-white w-4 h-4 opacity-0 scale-75 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100"
+                            className="text-white w-2.5 h-2.5 opacity-0 scale-75 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100"
                             strokeWidth={3}
                           />
                         </span>
@@ -179,7 +177,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course, onClose }) => {
                         />
                         <span
                           className={`
-                            w-5 h-5 flex items-center justify-center rounded-md border-2 border-gray-300
+                            w-4 h-4 flex items-center justify-center border-2 border-gray-800
                             transition-all duration-200
                             peer-checked:bg-[var(--addi-color-500)]
                             peer-checked:border-[var(--addi-color-500)]
@@ -187,7 +185,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({ course, onClose }) => {
                           `}
                         >
                           <Check
-                            className="text-white w-4 h-4 opacity-0 scale-75 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100"
+                            className="text-white w-2.5 h-2.5 opacity-0 scale-75 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100"
                             strokeWidth={3}
                           />
                         </span>

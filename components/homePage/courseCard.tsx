@@ -1,6 +1,6 @@
 "use client";
 
-import { Course } from "../types";
+import { Course } from "../types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +14,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  const goToPage = () => {
+  const goToCourseDetails = () => {
     router.push(`/courseDetails/${course.id}`);
   };
 
@@ -99,7 +99,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
               className={`
                 ${role !== "student" ? "w-full" : ""}
                     text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] cursor-pointer`}
-              onClick={goToPage}
+              onClick={goToCourseDetails}
             >
               See Course details
             </Button>

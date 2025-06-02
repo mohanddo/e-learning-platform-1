@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Course } from "@/components/types";
+import { Course } from "@/components/types/types";
 import CourseReviews from "@/components/courseDetails/courseReviews";
 import PurchasedCourseReviewsTab from "@/components/purchasedCourse/PurchasedCourseReviewsTab";
 

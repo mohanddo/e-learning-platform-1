@@ -1,6 +1,7 @@
-import { JwtPayload } from "@/components/types";
+import { JwtPayload } from "@/components/types/types";
 
 import { jwtDecode } from "jwt-decode";
+import { CourseReview } from "@/components/types/types";
 
 // utils/validations.ts
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -110,4 +111,52 @@ export function formatSecondsToMMSS(totalSeconds: number): string {
   const paddedSeconds = String(seconds).padStart(2, "0");
 
   return `${paddedMinutes}:${paddedSeconds}`;
+}
+
+export function getRating(review: string): number {
+  let rating = 0;
+  switch (review) {
+    case "FIVE_STARS":
+      rating = 5;
+      break;
+    case "FOUR_STARS":
+      rating = 4;
+      break;
+    case "THREE_STARS":
+      rating = 3;
+      break;
+    case "TWO_STARS":
+      rating = 2;
+      break;
+    case "ONE_STAR":
+      rating = 1;
+      break;
+  }
+  return rating;
+}
+
+export function getReview(rating: number): string {
+  switch (rating) {
+    case 5:
+      return "FIVE_STARS";
+    case 4:
+      return "FOUR_STARS";
+    case 3:
+      return "THREE_STARS";
+    case 2:
+      return "TWO_STARS";
+    case 1:
+      return "ONE_STAR";
+  }
+
+  return "ZERO_STAR";
+}
+
+export function calculateCourseRating(courseReviews: CourseReview[]): number {
+  if (!courseReviews.length) return 0;
+  const total = courseReviews.reduce(
+    (sum, review) => sum + getRating(review.review),
+    0
+  );
+  return parseFloat((total / courseReviews.length).toFixed(2));
 }

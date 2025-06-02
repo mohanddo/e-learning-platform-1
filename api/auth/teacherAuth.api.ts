@@ -1,7 +1,7 @@
 import { axiosInstance } from "../axios";
-import { RegisterCredentials } from "@/components/types";
+import { RegisterCredentials } from "@/components/types/types";
 import { commonAuthApi } from "./commonAuth.api";
-import { Teacher } from "@/components/types";
+import { Teacher } from "@/components/types/types";
 
 export const authApi = {
   ...commonAuthApi,

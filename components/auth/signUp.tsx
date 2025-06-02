@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api/auth/studentAuth.api";
 import { useAppContext } from "@/context/context";
-import { validateCredentials } from "@/utils/validations";
+import { validateCredentials } from "@/utils";
 import { useRouter } from "next/navigation";
 
 const SignUp = () => {

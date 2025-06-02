@@ -31,7 +31,7 @@ export default function PurchasedCourse({ id }: { id: number }) {
     <div className="flex flex-row min-h-screen mt-[15vh]">
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ${
-          isSidebarOpen ? "max-w-[calc(100vw-400px)]" : "max-w-full"
+          isSidebarOpen ? "max-w-[calc(100vw-30vw)]" : "max-w-full"
         }`}
       >
         <PurchasedCourseVideo course={course!} selectedVideo={null} />

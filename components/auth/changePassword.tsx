@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
 import { useMutation } from "@tanstack/react-query";
-import { validatePassword } from "@/utils/validations";
+import { validatePassword } from "@/utils";
 
 const ChangePassword = () => {
   const router = useRouter();
