@@ -1,4 +1,4 @@
-import { CourseReview } from "@/components/types/types";
+import { CourseReview } from "@/types/types";
 import { getRelativeTimeFromNow } from "@/utils";
 import { Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

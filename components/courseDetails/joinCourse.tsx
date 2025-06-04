@@ -14,7 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
 import { useAppContext } from "@/context/context";
 import { useRouter } from "next/navigation";
-import { Course, CourseReview } from "../types/types";
+import { Course, CourseReview } from "../../types/types";
 import { useRemoveFromCartMutation } from "@/hooks/useRemoveFromCartMutation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { paymentApi } from "@/api/payment.api";
@@ -138,10 +138,7 @@ const JoinCourse = ({
 
   // Find the current user's review if it exists
   const currentUserReview = useMemo(() => {
-    console.log("course changed");
-    const x = course.courseReviews.find((r) => r.student.id === student?.id);
-    console.log(x);
-    return x;
+    return course.courseReviews.find((r) => r.student.id === student?.id);
   }, [course, student?.id]);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
@@ -265,55 +262,57 @@ const JoinCourse = ({
 
           <div className=" flex flex-col mb-5">
             {role === "student" && !course.enrolled && (
-              <div className="flex items-center gap-2 mb-2">
-                {course!.inCart ? (
-                  <Button
-                    onClick={handleRemoveFromCart}
-                    disabled={removeCourseFromCartMutation.isPending}
-                    variant={"outline"}
-                    className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
-                  >
-                    {removeCourseFromCartMutation.isPending
-                      ? "Removing..."
-                      : "Remove From Card"}
-                    <ShoppingCart />
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleAddToCart}
-                    disabled={addCourseToCartMutation.isPending}
-                    variant={"outline"}
-                    className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
-                  >
-                    {addCourseToCartMutation.isPending
-                      ? "Adding..."
-                      : "Add To Card"}
-                    <ShoppingCart />
-                  </Button>
-                )}
+              <div className="flex flex-col gap-2 mb-2">
+                <div className="flex items-center gap-2">
+                  {course!.inCart ? (
+                    <Button
+                      onClick={handleRemoveFromCart}
+                      disabled={removeCourseFromCartMutation.isPending}
+                      variant={"outline"}
+                      className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
+                    >
+                      {removeCourseFromCartMutation.isPending
+                        ? "Removing..."
+                        : "Remove From Card"}
+                      <ShoppingCart />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleAddToCart}
+                      disabled={addCourseToCartMutation.isPending}
+                      variant={"outline"}
+                      className="text-[var(--addi-color-500)] font-bold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] flex-1"
+                    >
+                      {addCourseToCartMutation.isPending
+                        ? "Adding..."
+                        : "Add To Card"}
+                      <ShoppingCart />
+                    </Button>
+                  )}
 
-                {course.favourite ? (
-                  <Button
-                    disabled={removeFromFavoritesMutation.isPending}
-                    onClick={handleRemoveFromFavorites}
-                    variant="outline"
-                    className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
-                  >
-                    <FavoriteIcon className="text-[var(--addi-color-500)]" />
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleAddToFavorites}
-                    disabled={addToFavoritesMutation.isPending}
-                    variant="outline"
-                    className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
-                  >
-                    <FavoriteIcon className="!fill-none !stroke-current stroke-1 text-[var(--addi-color-500)]" />
-                  </Button>
-                )}
+                  {course.favourite ? (
+                    <Button
+                      disabled={removeFromFavoritesMutation.isPending}
+                      onClick={handleRemoveFromFavorites}
+                      variant="outline"
+                      className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
+                    >
+                      <FavoriteIcon className="text-[var(--addi-color-500)]" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleAddToFavorites}
+                      disabled={addToFavoritesMutation.isPending}
+                      variant="outline"
+                      className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
+                    >
+                      <FavoriteIcon className="!fill-none !stroke-current stroke-1 text-[var(--addi-color-500)]" />
+                    </Button>
+                  )}
+                </div>
 
                 <Button
-                  className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+                  className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold w-full"
                   onClick={handleJoinCourse}
                 >
                   Join Course

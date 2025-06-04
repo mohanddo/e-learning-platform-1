@@ -1,5 +1,5 @@
 import React from "react";
-import { CourseReview } from "@/components/types/types";
+import { CourseReview } from "@/types/types";
 import CourseReviewCard from "@/components/courseDetails/CourseReview";
 import { Star } from "lucide-react";
 
@@ -98,11 +98,15 @@ const PurchasedCourseReviewsTab: React.FC<PurchasedCourseReviewsTabProps> = ({
         </div>
       </div>
       {/* Reviews list */}
-      <h3 className="text-xl font-bold mb-4 mt-8">Reviews</h3>
+      {courseReviews.filter((review) => review.comment != null).length > 0 && (
+        <h3 className="text-xl font-bold mb-4 mt-8">Reviews</h3>
+      )}
       <div className="space-y-6">
-        {courseReviews.map((review) => (
-          <CourseReviewCard key={review.id} review={review} />
-        ))}
+        {courseReviews
+          .filter((review) => review.comment != null)
+          .map((review) => (
+            <CourseReviewCard key={review.id} review={review} />
+          ))}
       </div>
     </div>
   );

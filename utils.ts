@@ -1,7 +1,7 @@
-import { JwtPayload } from "@/components/types/types";
+import { Chapter, JwtPayload, Course } from "@/types/types";
 
 import { jwtDecode } from "jwt-decode";
-import { CourseReview } from "@/components/types/types";
+import { CourseReview } from "@/types/types";
 
 // utils/validations.ts
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -159,4 +159,14 @@ export function calculateCourseRating(courseReviews: CourseReview[]): number {
     0
   );
   return parseFloat((total / courseReviews.length).toFixed(2));
+}
+
+export function calculateCourseTotalHours(course: Course): number {
+  const totalSeconds = course.chapters.reduce((sum, chapter) => {
+    return (
+      sum +
+      chapter.videos.reduce((vSum, video) => vSum + (video.duration || 0), 0)
+    );
+  }, 0);
+  return parseFloat((totalSeconds / 3600).toFixed(2));
 }

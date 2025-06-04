@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axios";
-import { Course } from "../components/types/types";
-import { AddOrUpdateCourseReviewRequest } from "@/components/types/request";
+import { Course } from "../types/types";
+import { AddOrUpdateCourseReviewRequest } from "@/types/request";
 
 export const courseApi = {
   getAllCourses: async () => {
@@ -38,5 +38,21 @@ export const courseApi = {
 
   deleteCourseReview: async (reviewId: number) => {
     await axiosInstance.delete<void>(`course/courseReview/delete/${reviewId}`);
+  },
+
+  addFinishedResource: async (
+    courseId: number,
+    chapterId: number,
+    resourceId: number
+  ) => {
+    await axiosInstance.post<void>(
+      `resource/addFinishedResource/${courseId}/${chapterId}/${resourceId}`
+    );
+  },
+
+  deleteFinishedResource: async (resourceId: number) => {
+    await axiosInstance.delete<void>(
+      `resource/deleteFinishedResource/${resourceId}`
+    );
   },
 };

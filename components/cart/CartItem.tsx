@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { Course } from "../types/types";
+import { Course } from "../../types/types";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { cartApi } from "@/api/cart.api";

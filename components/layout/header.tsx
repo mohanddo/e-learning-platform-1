@@ -31,7 +31,7 @@ const Header = () => {
         router.push("/auth");
       }
     },
-    onError: (error) => {
+    onError: () => {
       if (isMounted.current) {
         alert("Error logging out");
       }

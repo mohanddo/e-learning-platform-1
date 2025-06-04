@@ -1,6 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
-import { CourseReview } from "../types/types";
+import { CourseReview } from "../../types/types";
 import CourseReviewCard from "./CourseReview";
 const CourseReviews = ({
   courseReviews,

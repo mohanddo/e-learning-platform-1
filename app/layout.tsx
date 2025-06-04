@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "@/context/context";
-import Header from "@/components/layout/header";
-// import dynamic from "next/dynamic";
-
-// const Header = dynamic(() => import("@/components/layout/header"));
 
 export const metadata: Metadata = {
   title: "E-learning Platform",
@@ -26,8 +22,6 @@ export default async function RootLayout({
       </head>
       <body>
         <AppProvider>
-          <Header />
-
           <main>{children}</main>
 
           <footer></footer>

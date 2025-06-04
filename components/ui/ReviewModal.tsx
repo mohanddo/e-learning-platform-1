@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { Button } from "./button";
-import { CourseReview } from "@/components/types/types";
+import { CourseReview } from "@/types/types";
 import { getRating, getReview } from "@/utils";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
@@ -35,7 +35,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   }, []);
 
   const addOrUpdateReviewMutation = useMutation({
-    mutationFn: () =>
+    mutationFn: async () =>
       courseApi.addOrUpdateCourseReview({
         review: rating,
         comment: comment.length > 0 ? comment : null,
@@ -64,7 +64,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const deleteReviewMutation = useMutation({
     mutationFn: review?.id
-      ? () => courseApi.deleteCourseReview(courseId)
+      ? async () => courseApi.deleteCourseReview(courseId)
       : undefined,
     onSuccess: () => {
       if (isMounted.current) {

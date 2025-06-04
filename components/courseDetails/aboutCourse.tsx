@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CourseReviews from "./courseReviews";
-import { Course } from "../types/types";
+import { Course } from "../../types/types";
 import { formatSecondsToMMSS } from "@/utils";
 
 interface AboutCourseProps {

@@ -58,84 +58,82 @@ const ChangePassword = () => {
   }, []);
 
   return (
-    <section className="flex justify-center mt-30">
-      <section className="w-[90%] max-w-md p-5 flex flex-col gap-2.5 bg-white shadow-lg rounded-xl">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold">Change Password</h1>
-          <p className="text-gray-500 mt-2">
-            Update your password to keep your account secure
-          </p>
+    <section className="w-[90%] max-w-md p-5 flex flex-col gap-2.5 bg-white shadow-lg rounded-xl">
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold">Change Password</h1>
+        <p className="text-gray-500 mt-2">
+          Update your password to keep your account secure
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="currentPassword" className="font-medium">
+            Current Password
+          </label>
+          <input
+            type="password"
+            id="currentPassword"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
+            required
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="currentPassword" className="font-medium">
-              Current Password
-            </label>
-            <input
-              type="password"
-              id="currentPassword"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
-              required
-            />
-          </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="newPassword" className="font-medium">
+            New Password
+          </label>
+          <input
+            type="password"
+            id="newPassword"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
+            required
+          />
+        </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="newPassword" className="font-medium">
-              New Password
-            </label>
-            <input
-              type="password"
-              id="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
-              required
-            />
-          </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="verifyPassword" className="font-medium">
+            Verify New Password
+          </label>
+          <input
+            type="password"
+            id="verifyPassword"
+            value={verifyPassword}
+            onChange={(e) => setVerifyPassword(e.target.value)}
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
+            required
+          />
+        </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="verifyPassword" className="font-medium">
-              Verify New Password
-            </label>
-            <input
-              type="password"
-              id="verifyPassword"
-              value={verifyPassword}
-              onChange={(e) => setVerifyPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
-              required
-            />
-          </div>
-
-          <div className="flex gap-2 mt-4">
-            <Button
-              type="button"
-              variant="outline"
-              className={`flex-1 border-[var(--addi-color-500)] text-[var(--addi-color-500)] hover:bg-[var(--color-100)] ${
-                changePasswordMutation.isPending
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              onClick={() => router.push("/profile")}
-              disabled={changePasswordMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1 bg-[var(--addi-color-400)] text-white hover:bg-[var(--addi-color-500)]"
-              disabled={changePasswordMutation.isPending}
-            >
-              {changePasswordMutation.isPending
-                ? "Changing Password..."
-                : "Change Password"}
-            </Button>
-          </div>
-        </form>
-      </section>
+        <div className="flex gap-2 mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className={`flex-1 border-[var(--addi-color-500)] text-[var(--addi-color-500)] hover:bg-[var(--color-100)] ${
+              changePasswordMutation.isPending
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+            onClick={() => router.push("/profile")}
+            disabled={changePasswordMutation.isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="flex-1 bg-[var(--addi-color-400)] text-white hover:bg-[var(--addi-color-500)]"
+            disabled={changePasswordMutation.isPending}
+          >
+            {changePasswordMutation.isPending
+              ? "Changing Password..."
+              : "Change Password"}
+          </Button>
+        </div>
+      </form>
     </section>
   );
 };

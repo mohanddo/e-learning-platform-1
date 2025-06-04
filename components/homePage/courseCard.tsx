@@ -1,6 +1,6 @@
 "use client";
 
-import { Course } from "../types/types";
+import { Course } from "../../types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { useState } from "react";
@@ -88,7 +88,7 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
             {role == "student" && course.enrolled && (
               <Button
                 className="btn-principal cursor-pointer"
-                onClick={() => router.push(`/courseDetails/${course.id}`)}
+                onClick={() => router.push(`student/course/${course.id}`)}
               >
                 Access Course
               </Button>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Course } from "@/components/types/types";
-import CourseReviews from "@/components/courseDetails/courseReviews";
+import { Course } from "@/types/types";
 import PurchasedCourseReviewsTab from "@/components/purchasedCourse/PurchasedCourseReviewsTab";
+import CoursePresentation from "@/components/purchasedCourse/CoursePresentation";
 
 const tabList = [
   { key: "presentation", label: "Presentation" },
@@ -41,9 +41,7 @@ const PurchasedCourseTabs: React.FC<PurchasedCourseTabsProps> = ({
       </div>
       {/* Tab Content */}
       <div className="p-6 min-h-[200px]">
-        {activeTab === "presentation" && (
-          <div>Presentation content goes here.</div>
-        )}
+        {activeTab === "presentation" && <CoursePresentation course={course} />}
         {activeTab === "qa" && <div>Q & A content goes here.</div>}
         {activeTab === "reviews" && (
           <PurchasedCourseReviewsTab

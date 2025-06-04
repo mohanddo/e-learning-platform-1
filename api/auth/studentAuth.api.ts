@@ -3,7 +3,7 @@ import {
   RegisterCredentials,
   Student,
   UpdateStudentRequest,
-} from "@/components/types/types";
+} from "@/types/types";
 import { commonAuthApi } from "./commonAuth.api";
 
 export const authApi = {

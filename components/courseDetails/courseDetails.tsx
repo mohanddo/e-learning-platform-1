@@ -8,7 +8,7 @@ import { courseApi } from "@/api/course.api";
 import CourseDetailsSkeleton from "./courseDetailsSkeleton";
 import CourseDetailsError from "./courseDetailsError";
 import VideoPlayer from "../ui/VideoPlayer";
-import { Video, Course } from "../types/types";
+import { Video, Course } from "../../types/types";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/context";
 import { authApi } from "@/api/auth/studentAuth.api";
@@ -101,7 +101,7 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
           ]
         : []),
       ...courseState.chapters.flatMap(
-        (chapter: import("../types/types").Chapter) =>
+        (chapter: import("../../types/types").Chapter) =>
           chapter.videos.filter((video: Video) => video.free)
       ),
     ];

@@ -69,7 +69,6 @@ export interface Course {
   numberOfStudents: number;
   numberOfReviews: number;
   price: number;
-  numberOfHours: number;
   discountPercentage: number | null;
   discountExpirationDate: string | null;
   pricingModel: PricingModel;
