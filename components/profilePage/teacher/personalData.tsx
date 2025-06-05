@@ -32,7 +32,14 @@ const PersonalData = () => {
             {teacher!.lastName[0]}
           </p>
           <div className="flex gap-2">
-            <Button className="btn-secondary text-lg">Edit Profile</Button>
+            <Button
+              className="btn-secondary text-lg"
+              onClick={() => {
+                router.push("/teacher/profile/editProfile");
+              }}
+            >
+              Edit Profile
+            </Button>
             <Button
               variant="outline"
               className="text-lg border-[var(--addi-color-500)] text-[var(--addi-color-500)] hover:bg-[var(--color-100)]"

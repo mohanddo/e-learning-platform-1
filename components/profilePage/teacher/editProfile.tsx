@@ -11,14 +11,20 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "../../ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { authApi } from "@/api/auth/studentAuth.api";
-import { UpdateStudentRequest } from "@/types/request";
+import { authApi } from "@/api/auth/teacherAuth.api";
+import { UpdateTeacherRequest } from "@/types/request";
 import { validateProfilePic } from "@/utils";
-import { Student } from "@/types/types";
+import { Teacher } from "@/types/types";
 
-export const EditProfile = ({ student }: { student: Student }) => {
-  const [firstName, setFirstName] = useState(student.firstName);
-  const [lastName, setLastName] = useState(student.lastName);
+export const EditProfile = ({ teacher }: { teacher: Teacher }) => {
+  const [firstName, setFirstName] = useState(teacher.firstName);
+  const [lastName, setLastName] = useState(teacher.lastName);
+  const [description, setDescription] = useState(teacher.description || "");
+  const [facebookLink, setFacebookLink] = useState(teacher.facebookLink || "");
+  const [instagramLink, setInstagramLink] = useState(
+    teacher.instagramLink || ""
+  );
+  const [youtubeLink, setYoutubeLink] = useState(teacher.youtubeLink || "");
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
   const router = useRouter();
@@ -41,11 +47,11 @@ export const EditProfile = ({ student }: { student: Student }) => {
   }, []);
 
   const updateProfileMutation = useMutation({
-    mutationFn: async (updateStudentRequest: UpdateStudentRequest) => {
+    mutationFn: async (updateTeacherRequest: UpdateTeacherRequest) => {
       await authApi.update(
-        updateStudentRequest,
-        student.id,
-        student.sasTokenForWritingProfilePic,
+        updateTeacherRequest,
+        teacher.id,
+        teacher.sasTokenForWritingProfilePic,
         profilePic
       );
     },
@@ -71,6 +77,10 @@ export const EditProfile = ({ student }: { student: Student }) => {
       updateProfileMutation.mutate({
         firstName: firstName,
         lastName: lastName,
+        description: description.length > 0 ? description : null,
+        facebookLink: facebookLink.length > 0 ? facebookLink : null,
+        instagramLink: instagramLink.length > 0 ? instagramLink : null,
+        youtubeLink: youtubeLink.length > 0 ? youtubeLink : null,
         hasProfilePic: false,
       });
       return;
@@ -80,6 +90,10 @@ export const EditProfile = ({ student }: { student: Student }) => {
       updateProfileMutation.mutate({
         firstName: firstName,
         lastName: lastName,
+        description: description.length > 0 ? description : null,
+        facebookLink: facebookLink.length > 0 ? facebookLink : null,
+        instagramLink: instagramLink.length > 0 ? instagramLink : null,
+        youtubeLink: youtubeLink.length > 0 ? youtubeLink : null,
         hasProfilePic: true,
       });
     }
@@ -122,6 +136,69 @@ export const EditProfile = ({ student }: { student: Student }) => {
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="description"
+          className="block text-gray-700 font-medium mb-2"
+        >
+          Description
+        </label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:border-blue-300 min-h-[100px]"
+          placeholder="Enter your description..."
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="facebookLink"
+          className="block text-gray-700 font-medium mb-2"
+        >
+          Facebook Link
+        </label>
+        <input
+          id="facebookLink"
+          type="url"
+          value={facebookLink}
+          onChange={(e) => setFacebookLink(e.target.value)}
+          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+          placeholder="https://facebook.com/..."
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="instagramLink"
+          className="block text-gray-700 font-medium mb-2"
+        >
+          Instagram Link
+        </label>
+        <input
+          id="instagramLink"
+          type="url"
+          value={instagramLink}
+          onChange={(e) => setInstagramLink(e.target.value)}
+          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+          placeholder="https://instagram.com/..."
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="youtubeLink"
+          className="block text-gray-700 font-medium mb-2"
+        >
+          YouTube Link
+        </label>
+        <input
+          id="youtubeLink"
+          type="url"
+          value={youtubeLink}
+          onChange={(e) => setYoutubeLink(e.target.value)}
+          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+          placeholder="https://youtube.com/..."
         />
       </div>
       <div className="mb-4">

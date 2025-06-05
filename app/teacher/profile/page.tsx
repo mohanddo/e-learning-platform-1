@@ -17,7 +17,6 @@ const Profile = () => {
     queryFn: async () => {
       const data = await authApi.me();
       setTeacher(data);
-      console.log("data", data);
       return data;
     },
   });

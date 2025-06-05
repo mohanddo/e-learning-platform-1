@@ -4,6 +4,16 @@ export interface UpdateStudentRequest {
   hasProfilePic: boolean;
 }
 
+export interface UpdateTeacherRequest {
+  firstName: string;
+  lastName: string;
+  hasProfilePic: boolean;
+  description?: string | null;
+  facebookLink?: string | null;
+  instagramLink?: string | null;
+  youtubeLink?: string | null;
+}
+
 export interface VerifyUserRequest {
   email: string;
   verificationCode: string;
