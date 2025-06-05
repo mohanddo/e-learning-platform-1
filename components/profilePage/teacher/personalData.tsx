@@ -7,6 +7,9 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
+
 const PersonalData = () => {
   const { teacher } = useAppContext();
   const router = useRouter();
@@ -20,8 +23,10 @@ const PersonalData = () => {
       <p className="text-xl font-semibold mb-10">Personal Information</p>
       <div className="flex flex-row gap-5">
         <Avatar className="w-25 h-25 mr-2">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>
+          <AvatarImage
+            src={`${profilePicsEndPoint}/${teacher?.id}?${teacher?.sasTokenForReadingProfilePic}`}
+          />
+          <AvatarFallback className="bg-black text-white text-3xl">
             {teacher!.firstName[0]}
             {teacher!.lastName[0]}
           </AvatarFallback>

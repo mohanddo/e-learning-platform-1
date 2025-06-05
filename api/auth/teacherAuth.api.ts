@@ -5,7 +5,8 @@ import { Teacher } from "@/types/types";
 import axios from "axios";
 import { UpdateTeacherRequest } from "@/types/request";
 
-const azureStorageEndpoint = process.env.NEXT_PUBLIC_AZURE_STORAGE_ENDPOINT;
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
 export const authApi = {
   ...commonAuthApi,
@@ -36,7 +37,7 @@ export const authApi = {
 
     try {
       await axios.put(
-        `${azureStorageEndpoint}/profilepics/${teacherId}?${sasTokenForWritingProfilePic}`,
+        `${profilePicsEndPoint}/${teacherId}?${sasTokenForWritingProfilePic}`,
         profilePic,
         {
           headers: {

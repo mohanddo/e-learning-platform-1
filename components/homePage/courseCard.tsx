@@ -9,6 +9,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAppContext } from "@/context/context";
 import { useAddToCartMutation } from "@/hooks/useAddToCartMutation";
+
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
+
 const CourseCard = ({ course, role }: { course: Course; role: string }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -55,8 +59,13 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
         <div className="flex flex-row justify-between w-full mb-2">
           <div className="flex flex-row items-center">
             <Avatar className="w-10 h-10 mr-2">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage
+                src={`${profilePicsEndPoint}/${course.teacher.id}?${course.teacher.sasTokenForReadingProfilePic}`}
+              />
+              <AvatarFallback className="bg-black text-white text-xl">
+                {course.teacher.firstName[0]}
+                {course.teacher.lastName[0]}
+              </AvatarFallback>
             </Avatar>
             <span className="font-semibold">{course.teacher.lastName}</span>
           </div>

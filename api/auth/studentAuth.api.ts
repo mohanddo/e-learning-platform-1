@@ -4,7 +4,8 @@ import { UpdateStudentRequest } from "@/types/request";
 import { commonAuthApi } from "./commonAuth.api";
 import axios from "axios";
 
-const azureStorageEndpoint = process.env.NEXT_PUBLIC_AZURE_STORAGE_ENDPOINT;
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
 export const authApi = {
   ...commonAuthApi,
@@ -35,7 +36,7 @@ export const authApi = {
 
     try {
       await axios.put(
-        `${azureStorageEndpoint}/profilepics/${studentId}?${sasTokenForWritingProfilePic}`,
+        `${profilePicsEndPoint}/${studentId}?${sasTokenForWritingProfilePic}`,
         profilePic,
         {
           headers: {

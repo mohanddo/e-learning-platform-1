@@ -8,6 +8,9 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
+
 interface CoursePresentationProps {
   course: Course;
 }
@@ -40,10 +43,12 @@ const CoursePresentation: React.FC<CoursePresentationProps> = ({ course }) => {
       {/* Teacher Info */}
       <div className="flex items-center gap-6 bg-gray-50 p-4 rounded">
         <Avatar className="w-15 h-15 mr-2">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>
-            {teacher!.firstName[0]}
-            {teacher!.lastName[0]}
+          <AvatarImage
+            src={`${profilePicsEndPoint}/${teacher.id}?${teacher.sasTokenForReadingProfilePic}`}
+          />
+          <AvatarFallback className="bg-black text-white text-2xl">
+            {teacher.firstName[0]}
+            {teacher.lastName[0]}
           </AvatarFallback>
         </Avatar>
         <div>

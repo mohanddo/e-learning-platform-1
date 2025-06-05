@@ -4,6 +4,9 @@ import { Button } from "../../ui/button";
 import { useAppContext } from "@/context/context";
 import { useRouter } from "next/navigation";
 
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
+
 const PersonalData = () => {
   const { student } = useAppContext();
   const router = useRouter();
@@ -21,8 +24,12 @@ const PersonalData = () => {
       <p className="text-xl font-semibold mb-10">Personal Information</p>
       <div className="flex flex-row gap-5">
         <Avatar className="w-25 h-25 mr-2">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>
+          <AvatarImage
+            src={`${profilePicsEndPoint}/${student!.id}?${
+              student!.sasTokenForReadingProfilePic
+            }`}
+          />
+          <AvatarFallback className="bg-black text-white text-3xl">
             {student!.firstName[0]}
             {student!.lastName[0]}
           </AvatarFallback>

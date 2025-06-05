@@ -18,6 +18,9 @@ interface AboutCourseProps {
   setCourse: React.Dispatch<React.SetStateAction<Course | null>>;
 }
 
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
+
 const AboutCourse = ({ role, course, setCourse }: AboutCourseProps) => {
   const learnings: string[] = [
     "Basic communication in English in everyday situations.",
@@ -40,8 +43,13 @@ const AboutCourse = ({ role, course, setCourse }: AboutCourseProps) => {
         </p>
         <div className="flex flex-row mb-3 py-1 px-2 items-center rounded-xl hover:bg-gray-200 cursor-alias w-[100%]">
           <Avatar className="w-10 h-10 mr-2">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={`${profilePicsEndPoint}/${course.teacher.id}?${course.teacher.sasTokenForReadingProfilePic}`}
+            />
+            <AvatarFallback className="bg-black text-white text-xl">
+              {course.teacher.firstName[0]}
+              {course.teacher.lastName[0]}
+            </AvatarFallback>
           </Avatar>
           <p className="text-lg font-semibold">
             {course.teacher.firstName} {course.teacher.lastName}

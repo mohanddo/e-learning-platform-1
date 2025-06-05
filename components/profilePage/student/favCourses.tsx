@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context/context";
 import Image from "next/image";
 
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
+
 const FavoritCouses = () => {
   const { student } = useAppContext();
 
@@ -51,8 +54,13 @@ const FavoritCouses = () => {
                     {crs.teacher.firstName + " " + crs.teacher.lastName}
                   </p>
                   <Avatar className="w-10 h-10 mr-2">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage
+                      src={`${profilePicsEndPoint}/${crs.teacher.id}?${crs.teacher.sasTokenForReadingProfilePic}`}
+                    />
+                    <AvatarFallback className="bg-black text-white text-xl">
+                      {crs.teacher.firstName[0]}
+                      {crs.teacher.lastName[0]}
+                    </AvatarFallback>
                   </Avatar>
                 </div>
               </div>

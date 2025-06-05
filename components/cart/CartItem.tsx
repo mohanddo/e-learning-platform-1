@@ -2,8 +2,6 @@ import { useRouter } from "next/navigation";
 import { Course } from "../../types/types";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { cartApi } from "@/api/cart.api";
-import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { useAppContext } from "@/context/context";
 import { useRemoveFromCartMutation } from "@/hooks/useRemoveFromCartMutation";
