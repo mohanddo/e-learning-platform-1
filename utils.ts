@@ -170,3 +170,20 @@ export function calculateCourseTotalHours(course: Course): number {
   }, 0);
   return parseFloat((totalSeconds / 3600).toFixed(2));
 }
+
+export function validateProfilePic(file: File): boolean {
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+  const MAX_FILE_SIZE_MB = 2;
+
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    alert("Invalid file type. Please upload JPG, PNG, or WebP.");
+    return false;
+  }
+
+  if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+    alert(`File is too large. Max allowed size is ${MAX_FILE_SIZE_MB} MB.`);
+    return false;
+  }
+
+  return true;
+}

@@ -1,7 +1,7 @@
 export interface UpdateStudentRequest {
-  firstName: string | null;
-  lastName: string | null;
-  profilePicDownloadUrl: string | null;
+  firstName: string;
+  lastName: string;
+  hasProfilePic: boolean;
 }
 
 export interface VerifyUserRequest {

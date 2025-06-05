@@ -1,12 +1,25 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useRef,
+  useEffect,
+} from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "../../ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "@/api/auth/studentAuth.api";
+import { UpdateStudentRequest } from "@/types/request";
+import { BlockBlobClient } from "@azure/storage-blob";
+import { validateProfilePic } from "@/utils";
+import { Student } from "@/types/types";
 
-export const EditProfile = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+export const EditProfile = ({ student }: { student: Student }) => {
+  const [firstName, setFirstName] = useState(student.firstName);
+  const [lastName, setLastName] = useState(student.lastName);
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
   const router = useRouter();
@@ -20,8 +33,57 @@ export const EditProfile = () => {
     }
   };
 
+  const isMounted = useRef<boolean>(null);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (updateStudentRequest: UpdateStudentRequest) => {
+      await authApi.update(
+        updateStudentRequest,
+        student.id,
+        student.sasTokenForWritingProfilePic,
+        profilePic
+      );
+    },
+    onSuccess: () => {
+      if (isMounted) {
+        router.replace("/profile");
+      }
+    },
+    onError: (error) => {
+      if (isMounted) {
+        alert("There was an error please try again");
+      }
+    },
+  });
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (firstName.length < 1 || lastName.length < 1) {
+      alert("First name and Last name must not be empty");
+    }
+
+    if (profilePic == null) {
+      updateProfileMutation.mutate({
+        firstName: firstName,
+        lastName: lastName,
+        hasProfilePic: false,
+      });
+      return;
+    }
+
+    if (validateProfilePic(profilePic)) {
+      updateProfileMutation.mutate({
+        firstName: firstName,
+        lastName: lastName,
+        hasProfilePic: true,
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -71,7 +133,9 @@ export const EditProfile = () => {
           Profile Picture
         </label>
         {preview && (
-          <img
+          <Image
+            width={20}
+            height={20}
             src={preview}
             alt="Profile Preview"
             className="w-24 h-24 rounded-full mb-2 object-cover"
@@ -87,9 +151,17 @@ export const EditProfile = () => {
       </div>
       <Button
         type="submit"
-        className="w-full bg-[var(--addi-color-400)] text-white hover:bg-[var(--addi-color-500)]"
+        disabled={updateProfileMutation.isPending}
+        className="w-full bg-[var(--addi-color-400)] text-white hover:bg-[var(--addi-color-500)] flex items-center justify-center gap-2"
       >
-        Save Changes
+        {updateProfileMutation.isPending ? (
+          <>
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            Saving...
+          </>
+        ) : (
+          "Save Changes"
+        )}
       </Button>
       <Button
         type="button"

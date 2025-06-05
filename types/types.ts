@@ -3,7 +3,9 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  profilePicDownloadUrl: string | null;
+  hasProfilePic: boolean;
+  sasTokenForReadingProfilePic: string;
+  sasTokenForWritingProfilePic: string;
 }
 
 export interface Student extends User {
@@ -130,7 +132,8 @@ export interface UserPreview {
   id: number;
   firstName: string;
   lastName: string;
-  profilePicDownloadUrl: string | null;
+  hasProfilePic: boolean;
+  sasTokenForReadingProfilePic: string;
 }
 
 export type StudentPreview = UserPreview;
