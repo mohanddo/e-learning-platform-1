@@ -30,3 +30,10 @@ export interface AddOrUpdateCourseReviewRequest {
   comment: string | null;
   courseId: number;
 }
+
+export interface CreateOrUpdateAnnouncementComment {
+  comment: string;
+  commentId: number | null;
+  announcementId: number;
+  courseId: number;
+}

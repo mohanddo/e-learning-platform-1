@@ -1,7 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
-import { Course } from "@/types/types";
 import PurchasedCourseReviewsTab from "@/components/purchasedCourse/PurchasedCourseReviewsTab";
 import CoursePresentation from "@/components/purchasedCourse/CoursePresentation";
+import CourseAnnouncementsList from "@/components/purchasedCourse/CourseAnnouncement";
+import CourseQAList from "@/components/purchasedCourse/CourseQAList";
 
 const tabList = [
   { key: "presentation", label: "Presentation" },
@@ -10,13 +13,7 @@ const tabList = [
   { key: "announcements", label: "Announcements" },
 ];
 
-interface PurchasedCourseTabsProps {
-  course: Course;
-}
-
-const PurchasedCourseTabs: React.FC<PurchasedCourseTabsProps> = ({
-  course,
-}) => {
+const PurchasedCourseTabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("presentation");
 
   return (
@@ -41,18 +38,10 @@ const PurchasedCourseTabs: React.FC<PurchasedCourseTabsProps> = ({
       </div>
       {/* Tab Content */}
       <div className="p-6 min-h-[200px]">
-        {activeTab === "presentation" && <CoursePresentation course={course} />}
-        {activeTab === "qa" && <div>Q & A content goes here.</div>}
-        {activeTab === "reviews" && (
-          <PurchasedCourseReviewsTab
-            courseReviews={course.courseReviews}
-            courseRating={course.rating}
-            numberOfReviews={course.numberOfReviews}
-          />
-        )}
-        {activeTab === "announcements" && (
-          <div>Announcements content goes here.</div>
-        )}
+        {activeTab === "presentation" && <CoursePresentation />}
+        {activeTab === "qa" && <CourseQAList />}
+        {activeTab === "reviews" && <PurchasedCourseReviewsTab />}
+        {activeTab === "announcements" && <CourseAnnouncementsList />}
       </div>
     </div>
   );

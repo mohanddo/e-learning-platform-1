@@ -5,14 +5,20 @@ import PurchasedCourseVideo from "@/components/purchasedCourse/PurchasedCourseVi
 import PurchasedCourseTabs from "@/components/purchasedCourse/PurchasedCourseTabs";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Video } from "@/types/types";
+import { Course, Video } from "@/types/types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
+import OpenSidebarButton from "./OpenSidebarButton";
+import { useAppContext } from "@/context/context";
+import { authApi } from "@/api/auth/studentAuth.api";
+import PurchasedCourseLoading from "./PurchasedCourseLoading";
+import PurchasedCourseError from "./PurchasedCourseError";
+import { CourseProvider, useCourse } from "@/context/CourseContext";
 
 function Header({ title, isVisible }: { title: string; isVisible: boolean }) {
   return (
     <div
-      className={`w-full h-[64px] bg-[var(--color-100)] flex items-center px-6 fixed top-0 left-0 z-50 border-b border-[#2d2d2d] transition-transform duration-300 shadow-lg ${
+      className={`w-full h-[64px] bg-[#060527] flex items-center px-6 fixed top-0 left-0 z-50 border-b border-[#2d2d2d] transition-transform duration-300 shadow-lg ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
       id="header-course"
@@ -47,23 +53,16 @@ function Header({ title, isVisible }: { title: string; isVisible: boolean }) {
   );
 }
 
-export default function PurchasedCourse({ id }: { id: number }) {
+function PurchasedCourseContent({ course }: { course: Course }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-
-  const {
-    data: course,
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["course", id],
-    queryFn: async () => {
-      return await courseApi.getStudentCourseById(Number(id));
-    },
-  });
-
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+
+  const { setCourse } = useCourse();
+
+  useEffect(() => {
+    setCourse(course);
+  }, [course, setCourse]);
 
   useEffect(() => {
     setSelectedVideo(course?.chapters.flatMap((c) => c.videos)[0] || null);
@@ -87,14 +86,6 @@ export default function PurchasedCourse({ id }: { id: number }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (isLoading) {
-    return <h1>isLoading</h1>;
-  }
-
-  if (isError) {
-    return <h1>isError</h1>;
-  }
-
   return (
     <>
       <Header
@@ -104,19 +95,69 @@ export default function PurchasedCourse({ id }: { id: number }) {
       <div className="flex flex-row min-h-screen mt-[64px]">
         <div
           className={`flex flex-col flex-1 transition-all duration-300 ${
-            isSidebarOpen ? "max-w-[calc(100vw-30vw)]" : "max-w-full"
+            isSidebarOpen ? "max-w-[calc(100vw-31vw)]" : "max-w-full"
           }`}
         >
+          {!isSidebarOpen && (
+            <OpenSidebarButton onOpen={() => setIsSidebarOpen(true)} />
+          )}
           <PurchasedCourseVideo selectedVideo={selectedVideo} />
-          <PurchasedCourseTabs course={course!} />
+          <PurchasedCourseTabs />
         </div>
+
         <CourseSidebar
-          course={course!}
           onClose={() => setIsSidebarOpen(false)}
+          isSidebarOpen={isSidebarOpen}
           setSelectedVideo={setSelectedVideo}
           selectedVideo={selectedVideo}
+          isHeaderVisible={isHeaderVisible}
         />
       </div>
     </>
+  );
+}
+
+export default function PurchasedCourse({ id }: { id: number }) {
+  const {
+    data: course,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["course", id],
+    queryFn: async () => {
+      return await courseApi.getStudentCourseById(Number(id));
+    },
+  });
+
+  const { setStudent } = useAppContext();
+  const { status: studentStatus, refetch: refetchStudent } = useQuery({
+    queryKey: ["student"],
+    queryFn: async () => {
+      const data = await authApi.me();
+      setStudent(data);
+      return data;
+    },
+  });
+
+  if (isLoading || studentStatus === "pending") {
+    return <PurchasedCourseLoading />;
+  }
+
+  if (isError || studentStatus === "error") {
+    return (
+      <PurchasedCourseError
+        onRetry={() => {
+          refetch();
+          refetchStudent();
+        }}
+      />
+    );
+  }
+
+  return (
+    <CourseProvider initialCourse={course || null} refetch={refetch}>
+      <PurchasedCourseContent course={course!} />
+    </CourseProvider>
   );
 }

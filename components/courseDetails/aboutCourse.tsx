@@ -104,7 +104,7 @@ const AboutCourse = ({ role, course, setCourse }: AboutCourseProps) => {
                 value={chapter.id.toString()}
                 className="border-none shadow-md mb-3 rounded-lg"
               >
-                <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)]">
+                <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)] cursor-pointer">
                   {chapter.title}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-gray-400 w-full px-5 py-5">

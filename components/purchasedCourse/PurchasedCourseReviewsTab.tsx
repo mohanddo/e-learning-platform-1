@@ -2,12 +2,7 @@ import React from "react";
 import { CourseReview } from "@/types/types";
 import CourseReviewCard from "@/components/courseDetails/CourseReview";
 import { Star } from "lucide-react";
-
-interface PurchasedCourseReviewsTabProps {
-  courseReviews: CourseReview[];
-  courseRating: number;
-  numberOfReviews: number;
-}
+import { useCourse } from "@/context/CourseContext";
 
 const starLabels = [
   { value: 5, label: "FIVE_STARS" },
@@ -20,15 +15,14 @@ const starLabels = [
 const getStarCount = (reviews: CourseReview[], label: string) =>
   reviews.filter((r) => r.review === label).length;
 
-const PurchasedCourseReviewsTab: React.FC<PurchasedCourseReviewsTabProps> = ({
-  courseReviews,
-  courseRating,
-}) => {
+const PurchasedCourseReviewsTab: React.FC = () => {
+  const { course } = useCourse();
+
   // Calculate star breakdown
   const starCounts = starLabels.map(({ label }) =>
-    getStarCount(courseReviews, label)
+    getStarCount(course!.courseReviews, label)
   );
-  const total = courseReviews.length || 1;
+  const total = course!.courseReviews.length || 1;
   const starPercentages = starCounts.map((count) =>
     Math.round((count / total) * 100)
   );
@@ -44,7 +38,7 @@ const PurchasedCourseReviewsTab: React.FC<PurchasedCourseReviewsTabProps> = ({
           {/* Left: Average rating */}
           <div className="flex flex-col items-center min-w-[100px]">
             <span className="text-6xl font-bold text-orange-500 leading-none">
-              {courseRating.toFixed(1)}
+              {course!.rating.toFixed(1)}
             </span>
             <div className="flex items-center mt-1 mb-1">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -52,11 +46,11 @@ const PurchasedCourseReviewsTab: React.FC<PurchasedCourseReviewsTabProps> = ({
                   key={i}
                   size={22}
                   className={
-                    i <= Math.round(courseRating)
+                    i <= Math.round(course!.rating)
                       ? "text-orange-500"
                       : "text-gray-300"
                   }
-                  fill={i <= Math.round(courseRating) ? "#f59e42" : "none"}
+                  fill={i <= Math.round(course!.rating) ? "#f59e42" : "none"}
                 />
               ))}
             </div>
@@ -98,11 +92,10 @@ const PurchasedCourseReviewsTab: React.FC<PurchasedCourseReviewsTabProps> = ({
         </div>
       </div>
       {/* Reviews list */}
-      {courseReviews.filter((review) => review.comment != null).length > 0 && (
-        <h3 className="text-xl font-bold mb-4 mt-8">Reviews</h3>
-      )}
+      {course!.courseReviews.filter((review) => review.comment != null).length >
+        0 && <h3 className="text-xl font-bold mb-4 mt-8">Reviews</h3>}
       <div className="space-y-6">
-        {courseReviews
+        {course!.courseReviews
           .filter((review) => review.comment != null)
           .map((review) => (
             <CourseReviewCard key={review.id} review={review} />

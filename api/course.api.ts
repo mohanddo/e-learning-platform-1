@@ -1,6 +1,9 @@
 import { axiosInstance } from "./axios";
 import { Course } from "../types/types";
-import { AddOrUpdateCourseReviewRequest } from "@/types/request";
+import {
+  AddOrUpdateCourseReviewRequest,
+  CreateOrUpdateAnnouncementComment,
+} from "@/types/request";
 
 export const courseApi = {
   getAllCourses: async () => {
@@ -53,6 +56,25 @@ export const courseApi = {
   deleteFinishedResource: async (resourceId: number) => {
     await axiosInstance.delete<void>(
       `resource/deleteFinishedResource/${resourceId}`
+    );
+  },
+
+  postAnnouncementComment: async (
+    createOrUpdateAnnouncementComment: CreateOrUpdateAnnouncementComment
+  ) => {
+    await axiosInstance.put<void>(
+      `course/announcementComment/createOrUpdate`,
+      createOrUpdateAnnouncementComment
+    );
+  },
+
+  deleteAnnouncementComment: async (
+    courseId: number,
+    announcementId: number,
+    commentId: number
+  ) => {
+    await axiosInstance.delete<void>(
+      `course/announcementComment/delete/${commentId}/${announcementId}/${courseId}`
     );
   },
 };

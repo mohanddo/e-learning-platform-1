@@ -10,24 +10,25 @@ import { Video as VideoIcon, File, Check, X } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
 import { formatSecondsToMMSS } from "@/utils";
+import { useCourse } from "@/context/CourseContext";
 
 interface CourseSidebarProps {
-  course: Course;
   onClose?: () => void;
   selectedVideo: Video | null;
   setSelectedVideo: (video: Video) => void;
+  isHeaderVisible: boolean;
+  isSidebarOpen: boolean;
 }
 
 const CourseSidebar: React.FC<CourseSidebarProps> = ({
-  course,
   onClose,
   selectedVideo,
   setSelectedVideo,
+  isHeaderVisible,
+  isSidebarOpen,
 }) => {
-  const [chapters, setChapters] = useState(course.chapters);
-
-  const [isClosing, setIsClosing] = useState(false);
-
+  const { course } = useCourse();
+  const [chapters, setChapters] = useState(course!.chapters);
   const handleVideoClick = (video: Video) => {
     setSelectedVideo(video);
   };
@@ -88,25 +89,20 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
     );
   };
 
-  // Handle close with animation
-  const handleClose = () => {
-    setIsClosing(true);
-  };
-
   return (
     <aside
-      className={`w-[30vw] min-w-[300px] max-w-[30vw] h-screen bg-white border-l border-gray-200 flex flex-col shadow-lg fixed right-0 top-0  mt-[15vh] transition-transform duration-300 ${
-        isClosing ? "translate-x-full" : "translate-x-0"
-      }`}
+      className={`w-[30vw] min-w-[300px] max-w-[30vw] h-screen bg-white border-l border-gray-200 flex flex-col shadow-lg fixed right-0 top-0 transition-all duration-300 ${
+        isHeaderVisible ? "mt-[64px]" : "mt-0"
+      } ${!isSidebarOpen ? "translate-x-full" : "translate-x-0"} `}
       onTransitionEnd={() => {
-        if (isClosing && onClose) onClose();
+        if (!isSidebarOpen && onClose) onClose();
       }}
     >
       {/* Header */}
       <div className="flex-0 p-4 border-b border-gray-200 flex items-center justify-between">
         <h2 className="text-base font-bold">Course Content</h2>
         <button
-          onClick={handleClose}
+          onClick={onClose}
           className="ml-2 p-1 rounded hover:bg-gray-100 transition-colors cursor-pointer"
           aria-label="Close sidebar"
           type="button"
@@ -177,7 +173,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
                                 deleteFinishedResourceMutation.mutate(video.id);
                               } else {
                                 addFinishedResourceMutation.mutate({
-                                  courseId: course.id,
+                                  courseId: course!.id,
                                   chapterId: chapter.id,
                                   resourceId: video.id,
                                 });

@@ -153,7 +153,8 @@ const JoinCourse = ({
         id: student!.id,
         firstName: student!.firstName,
         lastName: student!.lastName,
-        profilePicDownloadUrl: student!.profilePicDownloadUrl,
+        hasProfilePic: student!.hasProfilePic,
+        sasTokenForReadingProfilePic: student!.sasTokenForReadingProfilePic,
       },
       dateOfCreation: new Date().toString(),
     };
@@ -392,18 +393,17 @@ const JoinCourse = ({
             </Button>
           </div>
         </div>
+        {reviewModalOpen && (
+          <ReviewModal
+            courseId={course.id}
+            onClose={() => setReviewModalOpen(false)}
+            review={currentUserReview}
+            onAdd={handleReviewAdd}
+            onUpdate={handleReviewUpdate}
+            onDelete={currentUserReview ? handleReviewDelete : undefined}
+          />
+        )}
       </div>
-
-      {reviewModalOpen && (
-        <ReviewModal
-          courseId={course.id}
-          onClose={() => setReviewModalOpen(false)}
-          review={currentUserReview}
-          onAdd={handleReviewAdd}
-          onUpdate={handleReviewUpdate}
-          onDelete={currentUserReview ? handleReviewDelete : undefined}
-        />
-      )}
     </div>
   );
 };
