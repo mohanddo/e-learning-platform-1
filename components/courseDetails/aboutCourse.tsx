@@ -13,15 +13,13 @@ import { Course } from "../../types/types";
 import { formatSecondsToMMSS } from "@/utils";
 
 interface AboutCourseProps {
-  role: string;
   course: Course;
-  setCourse: React.Dispatch<React.SetStateAction<Course | null>>;
 }
 
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
-const AboutCourse = ({ role, course, setCourse }: AboutCourseProps) => {
+const AboutCourse = ({ course }: AboutCourseProps) => {
   const learnings: string[] = [
     "Basic communication in English in everyday situations.",
     "You will develop excellent understanding and listening skills for this level.",
