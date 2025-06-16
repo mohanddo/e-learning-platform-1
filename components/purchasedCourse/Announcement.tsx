@@ -1,21 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Announcement, AnnouncementComment, Course } from "@/types/types";
+import { Announcement, AnnouncementComment } from "@/types/types";
 import { getRelativeTimeFromNow } from "@/utils";
 import AnnouncementComments from "./AnnouncementComments";
 import CommentInput from "./CommentInput";
-// import { useAppContext } from "@/context/context";
-import DeleteAnnouncementComment from "./DeleteAnnouncementComment";
+import { courseApi } from "@/api/course.api";
 import UpdateAnnouncementComment from "./UpdateAnnouncementComment";
 import { useCourse } from "@/context/CourseContext";
+import DeleteComponent from "../ui/DeleteComponent";
+import { useMutation } from "@tanstack/react-query";
 
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
 function AnnouncementC({ announcement }: { announcement: Announcement }) {
   const [showComments, setShowComments] = useState(false);
-  // const [announcementState, setAnnouncement] = useState(announcement);
-  // const { student } = useAppContext();
+
   const { refetch, course } = useCourse();
   const isMounted = useRef<boolean | undefined>(undefined);
   const [showDeleteComponent, setShowDeleteComponent] = useState(false);
@@ -32,11 +32,27 @@ function AnnouncementC({ announcement }: { announcement: Announcement }) {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (isMounted.current) {
-  //     setAnnouncement(announcement);
-  //   }
-  // }, [announcement]);
+  const deleteAnnouncementCommentMutation = useMutation({
+    mutationFn: async () =>
+      courseApi.deleteAnnouncementComment(
+        course!.id,
+        announcement.id,
+        commentToBeDeleted!.id
+      ),
+
+    onSuccess: async () => {
+      if (isMounted.current) {
+        setShowDeleteComponent(false);
+        setCommentToBeDeleted(null);
+      }
+      await refetch();
+    },
+    onError: () => {
+      if (isMounted.current) {
+        alert("Error deleting comment");
+      }
+    },
+  });
 
   return (
     <div
@@ -73,29 +89,7 @@ function AnnouncementC({ announcement }: { announcement: Announcement }) {
       <div className="mt-4">
         {/* This is where the comment input and comments would go */}
         <CommentInput
-          onPost={async (comment) => {
-            // const announcementComment: AnnouncementComment = {
-            //   id: -1,
-            //   text: comment,
-            //   dateOfCreation: new Date().toString(),
-            //   user: {
-            //     id: student!.id,
-            //     firstName: student!.firstName,
-            //     lastName: student!.lastName,
-            //     hasProfilePic: student!.hasProfilePic,
-            //     sasTokenForReadingProfilePic:
-            //       student!.sasTokenForReadingProfilePic,
-            //   },
-            // };
-
-            // const newAnnouncementComments = [
-            //   ...announcementState.announcementComments,
-            //   announcementComment,
-            // ];
-            // setAnnouncement({
-            //   ...announcementState,
-            //   announcementComments: newAnnouncementComments,
-            // });
+          onPost={async () => {
             await refetch();
           }}
           announcementId={announcement.id}
@@ -131,24 +125,18 @@ function AnnouncementC({ announcement }: { announcement: Announcement }) {
           />
         )}
       </div>
+
       {showDeleteComponent && (
-        <DeleteAnnouncementComment
-          comment={commentToBeDeleted!}
-          announcementId={announcement.id}
-          courseId={course!.id}
+        <DeleteComponent
           onClose={() => {
-            if (isMounted) {
+            if (isMounted.current) {
               setShowDeleteComponent(false);
               setCommentToBeDeleted(null);
             }
           }}
-          onDelete={async () => {
-            if (isMounted) {
-              setShowDeleteComponent(false);
-              setCommentToBeDeleted(null);
-            }
-            await refetch();
-          }}
+          text="Are you sure you want to delete this comment?"
+          title="Delete Comment"
+          mutation={deleteAnnouncementCommentMutation}
         />
       )}
       {showUpdateComponent && (
@@ -157,13 +145,13 @@ function AnnouncementC({ announcement }: { announcement: Announcement }) {
           announcementId={announcement.id}
           courseId={course!.id}
           onClose={() => {
-            if (isMounted) {
+            if (isMounted.current) {
               setShowUpdateComponent(false);
               setCommentToBeUpdated(null);
             }
           }}
           onUpdate={async () => {
-            if (isMounted) {
+            if (isMounted.current) {
               setShowUpdateComponent(false);
               setCommentToBeUpdated(null);
             }

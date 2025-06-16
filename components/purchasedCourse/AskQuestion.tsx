@@ -1,25 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { courseApi } from "@/api/course.api";
-import { AnnouncementComment } from "@/types/types";
+import { useCourse } from "@/context/CourseContext";
+import { findChapterId } from "@/utils";
+import { useCreateOrUpdateCommentMutation } from "@/hooks/useCreateOrUpdateCommentMutation";
 interface ReviewModalProps {
   onClose: () => void;
-  onDelete: () => void;
-  courseId: number;
-  announcementId: number;
-  comment: AnnouncementComment;
+  onPost: () => void;
 }
 
-const DeleteAnnouncementComment: React.FC<ReviewModalProps> = ({
-  onClose,
-  onDelete,
-  courseId,
-  announcementId,
-  comment,
-}) => {
+const AskQuestion: React.FC<ReviewModalProps> = ({ onClose, onPost }) => {
   const isMounted = useRef(false);
+
+  const [question, setQuestion] = useState<string>("");
+
+  const { course, activeResource } = useCourse();
 
   useEffect(() => {
     isMounted.current = true;
@@ -28,17 +23,21 @@ const DeleteAnnouncementComment: React.FC<ReviewModalProps> = ({
     };
   }, []);
 
-  const deleteAnnouncementCommentMutation = useMutation({
-    mutationFn: async () =>
-      courseApi.deleteAnnouncementComment(courseId, announcementId, comment.id),
-
+  const createCommentMutation = useCreateOrUpdateCommentMutation({
     onSuccess: () => {
-      onDelete();
+      onPost();
     },
     onError: () => {
       if (isMounted.current) {
-        alert("Error deleting comment");
+        alert("Error posting question");
       }
+    },
+    createOrUpdateCommentRequest: {
+      text: question,
+      resourceId: activeResource!.id,
+      chapterId: findChapterId(activeResource, course?.chapters)!,
+      courseId: course!.id,
+      commentId: null,
     },
   });
 
@@ -53,7 +52,7 @@ const DeleteAnnouncementComment: React.FC<ReviewModalProps> = ({
       >
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <p className="text-lg font-bold">Delete Comment</p>
+          <p className="text-lg font-bold">Ask Question</p>
           <Button
             variant="ghost"
             size="icon"
@@ -67,9 +66,12 @@ const DeleteAnnouncementComment: React.FC<ReviewModalProps> = ({
 
         {/* Content */}
         <div className="px-6 py-4">
-          <p className="text-gray-600">
-            Are you sure you want to delete this comment?
-          </p>
+          <textarea
+            className="w-full min-h-[100px] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your question..."
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+          />
         </div>
 
         {/* Actions */}
@@ -84,21 +86,19 @@ const DeleteAnnouncementComment: React.FC<ReviewModalProps> = ({
 
           <Button
             className={`bg-[var(--addi-color-500)] text-white font-bold hover:bg-[var(--addi-color-400)]
-                ${
-                  deleteAnnouncementCommentMutation.isPending
-                    ? "opacity-50"
-                    : ""
-                }
+                ${createCommentMutation.isPending ? "opacity-50" : ""}
               `}
             onClick={() => {
-              deleteAnnouncementCommentMutation.mutate();
+              if (question.length > 1) {
+                createCommentMutation.mutate();
+              }
             }}
-            disabled={deleteAnnouncementCommentMutation.isPending}
+            disabled={createCommentMutation.isPending}
           >
-            {deleteAnnouncementCommentMutation.isPending ? (
+            {createCommentMutation.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : null}
-            Delete Comment
+            Post
           </Button>
         </div>
       </div>
@@ -106,4 +106,4 @@ const DeleteAnnouncementComment: React.FC<ReviewModalProps> = ({
   );
 };
 
-export default DeleteAnnouncementComment;
+export default AskQuestion;

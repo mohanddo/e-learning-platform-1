@@ -1,4 +1,4 @@
-import { Chapter, JwtPayload, Course } from "@/types/types";
+import { JwtPayload, Course, Resource, Chapter } from "@/types/types";
 
 import { jwtDecode } from "jwt-decode";
 import { CourseReview } from "@/types/types";
@@ -187,3 +187,21 @@ export function validateProfilePic(file: File): boolean {
 
   return true;
 }
+
+export const findChapterId = (
+  resource: Resource | null,
+  chapters: Chapter[] | undefined
+) => {
+  if (!chapters || !resource) return null;
+
+  for (const chapter of chapters) {
+    // Check in videos
+    const videoFound = chapter.videos.find((video) => video.id === resource.id);
+    if (videoFound) return chapter.id;
+
+    // Check in documents
+    const docFound = chapter.documents.find((doc) => doc.id === resource.id);
+    if (docFound) return chapter.id;
+  }
+  return null;
+};

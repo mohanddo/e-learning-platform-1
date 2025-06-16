@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Course, Video, Document } from "@/types/types";
+import { Course, Video, Document, Resource } from "@/types/types";
 import {
   Accordion,
   AccordionItem,
@@ -14,28 +14,24 @@ import { useCourse } from "@/context/CourseContext";
 
 interface CourseSidebarProps {
   onClose?: () => void;
-  selectedVideo: Video | null;
-  setSelectedVideo: (video: Video) => void;
   isHeaderVisible: boolean;
   isSidebarOpen: boolean;
 }
 
 const CourseSidebar: React.FC<CourseSidebarProps> = ({
   onClose,
-  selectedVideo,
-  setSelectedVideo,
   isHeaderVisible,
   isSidebarOpen,
 }) => {
-  const { course } = useCourse();
+  const { course, setActiveResource, activeResource } = useCourse();
   const [chapters, setChapters] = useState(course!.chapters);
-  const handleVideoClick = (video: Video) => {
-    setSelectedVideo(video);
+  const handleResourceClick = (resource: Resource) => {
+    setActiveResource(resource);
   };
 
-  const handleDocumentClick = (doc: Document) => {
-    window.open(doc.downloadUrl, "_blank");
-  };
+  // const handleDocumentClick = (doc: Document) => {
+  //   window.open(doc.downloadUrl, "_blank");
+  // };
 
   const addFinishedResourceMutation = useMutation({
     mutationFn: async ({
@@ -156,12 +152,12 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
                         key={video.id}
                         className={`flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-[var(--color-100)]
                           ${
-                            selectedVideo == video
+                            activeResource == video
                               ? "bg-[var(--color-100)]"
                               : ""
                           }
                         `}
-                        onClick={() => handleVideoClick(video)}
+                        onClick={() => handleResourceClick(video)}
                       >
                         <label className="relative flex items-center cursor-pointer">
                           <input
@@ -214,7 +210,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
                       <div
                         key={doc.id}
                         className="flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-[var(--color-100)] text-gray-700"
-                        onClick={() => handleDocumentClick(doc)}
+                        onClick={() => handleResourceClick(doc)}
                       >
                         <label className="relative flex items-center cursor-pointer">
                           <input

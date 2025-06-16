@@ -50,12 +50,12 @@ export const EditProfile = ({ student }: { student: Student }) => {
       );
     },
     onSuccess: () => {
-      if (isMounted) {
+      if (isMounted.current) {
         router.replace("/profile");
       }
     },
     onError: (error) => {
-      if (isMounted) {
+      if (isMounted.current) {
         alert("There was an error please try again");
       }
     },

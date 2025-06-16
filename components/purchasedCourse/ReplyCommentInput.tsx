@@ -2,34 +2,30 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAppContext } from "@/context/context";
-import { useMutation } from "@tanstack/react-query";
-import { courseApi } from "@/api/course.api";
-import { CreateOrUpdateAnnouncementComment } from "@/types/request";
+import { useCourse } from "@/context/CourseContext";
+import { useCreateOrUpdateReplyCommentMutation } from "@/hooks/useCreateOrUpdateReplyCommentMutation";
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
-interface CommentInputProps {
+interface ReplyCommentInputProps {
   onPost: (comment: string) => void;
-  announcementId: number;
-  courseId: number;
+  commentId: number;
+  resourceId: number;
+  chapterId: number;
 }
 
-const CommentInput: React.FC<CommentInputProps> = ({
+const ReplyCommentInput: React.FC<ReplyCommentInputProps> = ({
   onPost,
-  announcementId,
-  courseId,
+  commentId,
+  resourceId,
+  chapterId,
 }) => {
   const [comment, setComment] = useState("");
   const { student } = useAppContext();
+  const { course } = useCourse();
   const handleSubmit = () => {
     if (comment.trim()) {
-      const request: CreateOrUpdateAnnouncementComment = {
-        comment: comment,
-        announcementId: announcementId,
-        courseId: courseId,
-        commentId: null,
-      };
-      postAnnouncementCommentMutation.mutate(request);
+      postReplyCommentMutation.mutate();
     }
   };
 
@@ -41,13 +37,14 @@ const CommentInput: React.FC<CommentInputProps> = ({
     };
   }, []);
 
-  const postAnnouncementCommentMutation = useMutation({
-    mutationFn: async (
-      createOrUpdateAnnouncementComment: CreateOrUpdateAnnouncementComment
-    ) => {
-      await courseApi.postAnnouncementComment(
-        createOrUpdateAnnouncementComment
-      );
+  const postReplyCommentMutation = useCreateOrUpdateReplyCommentMutation({
+    createOrUpdateReplyCommentRequest: {
+      text: comment,
+      commentId: commentId,
+      replyCommentId: null,
+      resourceId: resourceId,
+      chapterId: chapterId,
+      courseId: course!.id,
     },
     onSuccess() {
       onPost(comment);
@@ -90,9 +87,9 @@ const CommentInput: React.FC<CommentInputProps> = ({
       <Button
         className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-sm font-semibold h-8"
         onClick={handleSubmit}
-        disabled={postAnnouncementCommentMutation.isPending}
+        disabled={postReplyCommentMutation.isPending}
       >
-        {postAnnouncementCommentMutation.isPending ? (
+        {postReplyCommentMutation.isPending ? (
           <>
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             Posting
@@ -105,4 +102,4 @@ const CommentInput: React.FC<CommentInputProps> = ({
   );
 };
 
-export default CommentInput;
+export default ReplyCommentInput;

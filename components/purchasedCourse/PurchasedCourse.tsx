@@ -56,17 +56,23 @@ function Header({ title, isVisible }: { title: string; isVisible: boolean }) {
 function PurchasedCourseContent({ course }: { course: Course }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
-  const { setCourse } = useCourse();
+  const { setCourse, setActiveResource, activeResource } = useCourse();
 
   useEffect(() => {
     setCourse(course);
   }, [course, setCourse]);
 
   useEffect(() => {
-    setSelectedVideo(course?.chapters.flatMap((c) => c.videos)[0] || null);
-  }, [course]);
+    if (!activeResource) {
+      setActiveResource(course?.chapters.flatMap((c) => c.videos)[0] || null);
+    } else {
+      const newActiveResource = course?.chapters
+        .flatMap((c) => c.videos)
+        .find((video) => video.id == activeResource.id);
+      setActiveResource(newActiveResource || null);
+    }
+  }, [course, setActiveResource, activeResource]);
 
   useEffect(() => {
     const header = document.querySelector("#header-course") as HTMLElement;
@@ -101,15 +107,13 @@ function PurchasedCourseContent({ course }: { course: Course }) {
           {!isSidebarOpen && (
             <OpenSidebarButton onOpen={() => setIsSidebarOpen(true)} />
           )}
-          <PurchasedCourseVideo selectedVideo={selectedVideo} />
+          <PurchasedCourseVideo />
           <PurchasedCourseTabs />
         </div>
 
         <CourseSidebar
           onClose={() => setIsSidebarOpen(false)}
           isSidebarOpen={isSidebarOpen}
-          setSelectedVideo={setSelectedVideo}
-          selectedVideo={selectedVideo}
           isHeaderVisible={isHeaderVisible}
         />
       </div>

@@ -37,3 +37,35 @@ export interface CreateOrUpdateAnnouncementComment {
   announcementId: number;
   courseId: number;
 }
+
+export interface CreateOrUpdateComment {
+  text: string;
+  commentId: number | null;
+  resourceId: number;
+  chapterId: number;
+  courseId: number;
+}
+
+export interface UpVoteComment {
+  commentId: number;
+  resourceId: number;
+  chapterId: number;
+  courseId: number;
+}
+
+export interface CreateOrUpdateReplyComment {
+  text: string;
+  commentId: number;
+  replyCommentId: number | null;
+  resourceId: number;
+  chapterId: number;
+  courseId: number;
+}
+
+export interface UpVoteReplyComment {
+  commentId: number;
+  replyCommentId: number;
+  resourceId: number;
+  chapterId: number;
+  courseId: number;
+}

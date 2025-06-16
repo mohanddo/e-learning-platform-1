@@ -89,6 +89,27 @@ export interface Course {
   ownsCourse: boolean;
 }
 
+export interface ReplyComment {
+  id: number;
+  text: string;
+  dateOfCreation: string;
+  user: UserPreview;
+  upVotes: number;
+  hasCurrentUserUpVotedThisReplyComment: boolean;
+  userOwnsThisReplyComment: boolean;
+}
+
+export interface Comment {
+  id: number;
+  text: string;
+  dateOfCreation: string;
+  user: UserPreview;
+  upVotes: number;
+  hasCurrentUserUpVotedThisComment: boolean;
+  replyComments: ReplyComment[];
+  userOwnsThisComment: boolean;
+}
+
 export type CheckoutUrl = string;
 
 export interface Announcement {
@@ -120,6 +141,7 @@ export interface Resource {
   dateOfCreation: string;
   isFinished: boolean;
   free: boolean;
+  comments: Comment[];
 }
 
 export interface Video extends Resource {

@@ -3,6 +3,10 @@ import { Course } from "../types/types";
 import {
   AddOrUpdateCourseReviewRequest,
   CreateOrUpdateAnnouncementComment,
+  CreateOrUpdateComment,
+  CreateOrUpdateReplyComment,
+  UpVoteComment,
+  UpVoteReplyComment,
 } from "@/types/request";
 
 export const courseApi = {
@@ -76,5 +80,44 @@ export const courseApi = {
     await axiosInstance.delete<void>(
       `course/announcementComment/delete/${commentId}/${announcementId}/${courseId}`
     );
+  },
+
+  postComment: async (createOrUpdateComment: CreateOrUpdateComment) => {
+    await axiosInstance.put<void>(`comment/addOrUpdate`, createOrUpdateComment);
+  },
+
+  upVoteComment: async (upVoteComment: UpVoteComment) => {
+    await axiosInstance.put<void>(`comment/upVote`, upVoteComment);
+  },
+
+  removeUpVoteComment: async (commentId: number) => {
+    await axiosInstance.delete<void>(`comment/removeUpVote/${commentId}`);
+  },
+
+  postReplyComment: async (
+    createOrUpdateReplyComment: CreateOrUpdateReplyComment
+  ) => {
+    await axiosInstance.put<void>(
+      `replyComment/addOrUpdate`,
+      createOrUpdateReplyComment
+    );
+  },
+
+  upVoteReplyComment: async (upVoteReplyComment: UpVoteReplyComment) => {
+    await axiosInstance.put<void>(`replyComment/upVote`, upVoteReplyComment);
+  },
+
+  removeUpVoteReplyComment: async (replyCommentId: number) => {
+    await axiosInstance.delete<void>(
+      `replyComment/removeUpVote/${replyCommentId}`
+    );
+  },
+
+  deleteComment: async (commentId: number) => {
+    await axiosInstance.delete<void>(`comment/delete/${commentId}`);
+  },
+
+  deleteReplyComment: async (replyCommentId: number) => {
+    await axiosInstance.delete<void>(`replyComment/delete/${replyCommentId}`);
   },
 };

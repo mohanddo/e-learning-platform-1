@@ -1,15 +1,11 @@
+import { useCourse } from "@/context/CourseContext";
 import React from "react";
-import { Video } from "@/types/types";
 import ReactPlayer from "react-player";
 
-interface PurchasedCourseVideoProps {
-  selectedVideo: Video | null;
-}
+const PurchasedCourseVideo: React.FC = () => {
+  const { activeResource } = useCourse();
 
-const PurchasedCourseVideo: React.FC<PurchasedCourseVideoProps> = ({
-  selectedVideo,
-}) => {
-  if (!selectedVideo) {
+  if (!activeResource) {
     return (
       <div className="w-full aspect-video bg-gray-200 flex items-center justify-center rounded-lg text-gray-400">
         No video available
@@ -19,7 +15,7 @@ const PurchasedCourseVideo: React.FC<PurchasedCourseVideoProps> = ({
 
   return (
     <ReactPlayer
-      url={selectedVideo.downloadUrl}
+      url={activeResource.downloadUrl}
       controls
       width="100%"
       height="100%"
