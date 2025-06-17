@@ -146,6 +146,7 @@ export interface Resource {
 
 export interface Video extends Resource {
   duration: number;
+  videoProgress: number;
 }
 
 export type Document = Resource;

@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { useCourse } from "@/context/CourseContext";
 
 const profilePicsEndPoint =
@@ -40,15 +40,13 @@ const CoursePresentation: React.FC = () => {
 
       {/* Teacher Info */}
       <div className="flex items-center gap-6 bg-gray-50 p-4 rounded">
-        <Avatar className="w-15 h-15 mr-2">
-          <AvatarImage
-            src={`${profilePicsEndPoint}/${teacher.id}?${teacher.sasTokenForReadingProfilePic}`}
-          />
-          <AvatarFallback className="bg-black text-white text-2xl">
-            {teacher.firstName[0]}
-            {teacher.lastName[0]}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileImage
+          src={`${profilePicsEndPoint}/${teacher.id}?${teacher.sasTokenForReadingProfilePic}`}
+          firstName={teacher.firstName}
+          lastName={teacher.lastName}
+          className="mr-2"
+          size="lg"
+        />
         <div>
           <div className="font-bold text-lg">
             {teacher.firstName} {teacher.lastName}

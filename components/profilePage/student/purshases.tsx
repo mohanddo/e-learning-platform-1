@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { AnimatedList } from "@/components/magicui/animated-list";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -26,7 +26,7 @@ const PurshasesTab = () => {
             .map((crs) => (
               <div
                 key={crs.id}
-                className="w-[100%] flex flex-row items-center mb-2 p-5 border border-gray-200 rounded-lg hover:bg-gray-200"
+                className="w-[100%] flex flex-row items-center mb-2 p-5 border border-gray-200 rounded-lg hover:bg-gray-200 cursor-pointer"
                 onClick={() => goToPage(crs.id)}
               >
                 <Image
@@ -46,15 +46,15 @@ const PurshasesTab = () => {
                   <p className="flex-1">
                     {crs.teacher.firstName + " " + crs.teacher.lastName}
                   </p>
-                  <Avatar className="w-10 h-10 mr-2">
-                    <AvatarImage
-                      src={`${profilePicsEndPoint}/${crs.teacher.id}?${crs.teacher.sasTokenForReadingProfilePic}`}
-                    />
-                    <AvatarFallback className="bg-black text-white text-xl">
-                      {crs.teacher.firstName[0]}
-                      {crs.teacher.lastName[0]}
-                    </AvatarFallback>
-                  </Avatar>
+
+                  <ProfileImage
+                    src={`${profilePicsEndPoint}/${student!.id}?${
+                      student!.sasTokenForReadingProfilePic
+                    }`}
+                    firstName={student!.firstName}
+                    lastName={student!.lastName}
+                    className="mr-2"
+                  />
                 </div>
               </div>
             ))

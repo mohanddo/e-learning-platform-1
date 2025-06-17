@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { Button } from "../../ui/button";
 import { useAppContext } from "@/context/context";
 import { useRouter } from "next/navigation";
@@ -22,15 +22,15 @@ const PersonalData = () => {
     <div className="w-full">
       <p className="text-xl font-semibold mb-10">Personal Information</p>
       <div className="flex flex-row gap-5">
-        <Avatar className="w-25 h-25 mr-2">
-          <AvatarImage
-            src={`${profilePicsEndPoint}/${teacher?.id}?${teacher?.sasTokenForReadingProfilePic}`}
-          />
-          <AvatarFallback className="bg-black text-white text-3xl">
-            {teacher!.firstName[0]}
-            {teacher!.lastName[0]}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileImage
+          src={`${profilePicsEndPoint}/${teacher!.id}?${
+            teacher!.sasTokenForReadingProfilePic
+          }`}
+          firstName={teacher!.firstName}
+          lastName={teacher!.lastName}
+          className="mr-2"
+          size="elg"
+        />
         <div className="w-full">
           <p className="text-lg font-bold mb-2">
             {teacher!.firstName[0]}

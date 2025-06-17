@@ -90,11 +90,11 @@ const Cart = () => {
             <div className="flex items-center gap-6">
               <p className="text-xl text-gray-700">Total:</p>
               <p className="text-3xl font-bold text-gray-900">
-                $
                 {student!.courses
                   .filter((crs) => crs.inCart)
                   .reduce((total, item) => total + item.price, 0)
-                  .toFixed(2)}
+                  .toFixed(2)}{" "}
+                DA
               </p>
             </div>
             <Button

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { useAppContext } from "@/context/context";
 import { useCourse } from "@/context/CourseContext";
 import { useCreateOrUpdateReplyCommentMutation } from "@/hooks/useCreateOrUpdateReplyCommentMutation";
@@ -62,15 +62,15 @@ const ReplyCommentInput: React.FC<ReplyCommentInputProps> = ({
       <div className="flex-shrink-0">
         {/* Placeholder for user avatar - you can replace with actual avatar */}
 
-        <Avatar className="w-8 h-8 mr-2">
-          <AvatarImage
-            src={`${profilePicsEndPoint}/${student?.id}?${student?.sasTokenForReadingProfilePic}`}
-          />
-          <AvatarFallback className="bg-black text-white text-md">
-            {student?.firstName[0]}
-            {student?.lastName[0]}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileImage
+          src={`${profilePicsEndPoint}/${student!.id}?${
+            student!.sasTokenForReadingProfilePic
+          }`}
+          firstName={student!.firstName}
+          lastName={student!.lastName}
+          className="mr-2"
+          size="sm"
+        />
       </div>
       <input
         type="text"

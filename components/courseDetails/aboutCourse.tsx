@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import CourseReviews from "./courseReviews";
 import { Course } from "../../types/types";
 import { formatSecondsToMMSS } from "@/utils";
@@ -40,15 +40,12 @@ const AboutCourse = ({ course }: AboutCourseProps) => {
           This course is presented by
         </p>
         <div className="flex flex-row mb-3 py-1 px-2 items-center rounded-xl hover:bg-gray-200 cursor-alias w-[100%]">
-          <Avatar className="w-10 h-10 mr-2">
-            <AvatarImage
-              src={`${profilePicsEndPoint}/${course.teacher.id}?${course.teacher.sasTokenForReadingProfilePic}`}
-            />
-            <AvatarFallback className="bg-black text-white text-xl">
-              {course.teacher.firstName[0]}
-              {course.teacher.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
+          <ProfileImage
+            src={`${profilePicsEndPoint}/${course.teacher.id}?${course.teacher.sasTokenForReadingProfilePic}`}
+            firstName={course.teacher.firstName}
+            lastName={course.teacher.lastName}
+            className="mr-2"
+          />
           <p className="text-lg font-semibold">
             {course.teacher.firstName} {course.teacher.lastName}
           </p>

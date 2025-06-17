@@ -23,7 +23,7 @@ const SecPanel = () => {
           value={"Progress"}
           className="border-none shadow-md mb-3 rounded-lg"
         >
-          <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)]">
+          <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)] cursor-pointer">
             Progress
           </AccordionTrigger>
           <AccordionContent className="text-sm w-full px-5 py-10">
@@ -35,7 +35,7 @@ const SecPanel = () => {
               enrolledCourses.map((crs) => (
                 <div
                   key={crs.id}
-                  className="flex flex-row justify-between mb-5 border border-gray-300 items-center py-1 px-5 rounded-lg hover:bg-gray-300"
+                  className="flex flex-row justify-between mb-5 border border-gray-300 items-center py-1 px-5 rounded-lg hover:bg-gray-300 cursor-pointer"
                   onClick={() => goToPage(crs.id)}
                 >
                   <div className="flex flex-col">
@@ -60,10 +60,14 @@ const SecPanel = () => {
           value={"notifications"}
           className="border-none shadow-md mb-3 rounded-lg"
         >
-          <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)]">
+          <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)] cursor-pointer">
             Notifications
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-gray-400 w-full px-5 py-10"></AccordionContent>
+          <AccordionContent className="text-sm text-gray-400 w-full px-5 py-10">
+            <div className="text-center text-gray-500">
+              You don't have any notifications.
+            </div>
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>

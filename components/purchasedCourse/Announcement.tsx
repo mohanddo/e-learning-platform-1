@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { Announcement, AnnouncementComment } from "@/types/types";
 import { getRelativeTimeFromNow } from "@/utils";
 import AnnouncementComments from "./AnnouncementComments";
@@ -60,17 +60,14 @@ function AnnouncementC({ announcement }: { announcement: Announcement }) {
       key={announcement.id}
     >
       <div className="flex items-center gap-2">
-        <Avatar className="w-8 h-8">
-          <AvatarImage
-            src={`${profilePicsEndPoint}/${course!.teacher.id}?${
-              course!.teacher.sasTokenForReadingProfilePic
-            }`}
-          />
-          <AvatarFallback className="bg-black text-white text-md">
-            {course!.teacher.firstName[0]}
-            {course!.teacher.lastName[0]}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileImage
+          src={`${profilePicsEndPoint}/${course!.teacher.id}?${
+            course!.teacher.sasTokenForReadingProfilePic
+          }`}
+          firstName={course!.teacher.firstName}
+          lastName={course!.teacher.lastName}
+          className="mr-2"
+        />
         <div className="text-sm">
           <span className="text-[var(--addi-color-400)] font-semibold underline">
             {course!.teacher.firstName} {course!.teacher.lastName}

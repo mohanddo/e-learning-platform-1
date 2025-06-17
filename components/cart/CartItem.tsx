@@ -50,7 +50,7 @@ export default function CartItem({
   return (
     <div
       key={item.id}
-      className="flex flex-row items-center p-6 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+      className="flex flex-row items-center p-6 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
       onClick={() => goToPage(item.id)}
     >
       <Image

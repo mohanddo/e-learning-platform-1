@@ -69,3 +69,10 @@ export interface UpVoteReplyComment {
   chapterId: number;
   courseId: number;
 }
+
+export interface UpdateVideoProgressRequest {
+  progress: number;
+  courseId: number;
+  chapterId: number;
+  videoId: number;
+}

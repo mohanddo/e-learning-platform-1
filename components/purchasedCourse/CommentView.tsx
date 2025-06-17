@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { X, CircleArrowUp, MoreVertical } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { Comment, ReplyComment, Resource } from "@/types/types";
 import { getRelativeTimeFromNow } from "@/utils";
 import { Button } from "../ui/button";
@@ -217,15 +217,12 @@ const CommentView: React.FC<CommentViewProps> = ({
       <div className="mt-4">
         {/* Original Comment */}
         <div className="flex items-start space-x-4">
-          <Avatar className="w-8 h-8">
-            <AvatarImage
-              src={`${profilePicsEndPoint}/${comment.user.id}?${comment.user.sasTokenForReadingProfilePic}`}
-            />
-            <AvatarFallback className="bg-black text-white text-xs">
-              {comment.user.firstName[0]}
-              {comment.user.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
+          <ProfileImage
+            src={`${profilePicsEndPoint}/${comment.user.id}?${comment.user.sasTokenForReadingProfilePic}`}
+            firstName={comment.user.firstName}
+            lastName={comment.user.lastName}
+            className="mr-2"
+          />
           <div className="flex-1">
             <p className="font-semibold text-gray-800">
               {comment.user.firstName} {comment.user.lastName} •{" "}
@@ -312,15 +309,12 @@ const CommentView: React.FC<CommentViewProps> = ({
           ) : (
             comment.replyComments.map((reply) => (
               <div key={reply.id} className="flex items-start space-x-4 mt-4">
-                <Avatar className="w-7 h-7">
-                  <AvatarImage
-                    src={`${profilePicsEndPoint}/${reply.user.id}?${reply.user.sasTokenForReadingProfilePic}`}
-                  />
-                  <AvatarFallback className="bg-black text-white text-xs">
-                    {reply.user.firstName[0]}
-                    {reply.user.lastName[0]}
-                  </AvatarFallback>
-                </Avatar>
+                <ProfileImage
+                  src={`${profilePicsEndPoint}/${reply.user.id}?${reply.user.sasTokenForReadingProfilePic}`}
+                  firstName={reply.user.firstName}
+                  lastName={reply.user.lastName}
+                  className="mr-2"
+                />
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800">
                     {reply.user.firstName} {reply.user.lastName} •{" "}

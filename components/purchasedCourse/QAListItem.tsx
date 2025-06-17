@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { MessagesSquare, CircleArrowUp } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { Comment, Resource } from "@/types/types";
 import { findChapterId, getRelativeTimeFromNow } from "@/utils";
 import { useCourse } from "@/context/CourseContext";
@@ -69,15 +69,12 @@ const QAListItem: React.FC<QAListItemProps> = ({
         className="flex items-start space-x-4 w-full"
         onClick={() => onCommentClick(comment, resource)}
       >
-        <Avatar className="w-7 h-7">
-          <AvatarImage
-            src={`${profilePicsEndPoint}/${comment.user.id}?${comment.user.sasTokenForReadingProfilePic}`}
-          />
-          <AvatarFallback className="bg-black text-white text-xs">
-            {comment.user.firstName[0]}
-            {comment.user.lastName[0]}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileImage
+          src={`${profilePicsEndPoint}/${comment.user.id}?${comment.user.sasTokenForReadingProfilePic}`}
+          firstName={comment.user.firstName}
+          lastName={comment.user.lastName}
+          className="mr-2"
+        />
         <div className="flex-1">
           <p className="font-semibold text-gray-800">{comment.text}</p>
           <p className="text-xs text-gray-500 mt-2">

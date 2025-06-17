@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { AnimatedList } from "@/components/magicui/animated-list";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context/context";
@@ -53,15 +53,13 @@ const FavoritCouses = () => {
                   <p className="flex-1 text-center">
                     {crs.teacher.firstName + " " + crs.teacher.lastName}
                   </p>
-                  <Avatar className="w-10 h-10 mr-2">
-                    <AvatarImage
-                      src={`${profilePicsEndPoint}/${crs.teacher.id}?${crs.teacher.sasTokenForReadingProfilePic}`}
-                    />
-                    <AvatarFallback className="bg-black text-white text-xl">
-                      {crs.teacher.firstName[0]}
-                      {crs.teacher.lastName[0]}
-                    </AvatarFallback>
-                  </Avatar>
+
+                  <ProfileImage
+                    src={`${profilePicsEndPoint}/${crs.teacher.id}?${crs.teacher.sasTokenForReadingProfilePic}`}
+                    firstName={crs.teacher.firstName}
+                    lastName={crs.teacher.lastName}
+                    className="mr-2"
+                  />
                 </div>
               </div>
             ))

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Course, Video, Document, Resource } from "@/types/types";
+import { Resource } from "@/types/types";
 import {
   Accordion,
   AccordionItem,
@@ -152,7 +152,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
                         key={video.id}
                         className={`flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-[var(--color-100)]
                           ${
-                            activeResource == video
+                            activeResource?.id == video.id
                               ? "bg-[var(--color-100)]"
                               : ""
                           }

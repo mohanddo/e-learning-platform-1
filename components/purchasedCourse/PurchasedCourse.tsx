@@ -5,7 +5,7 @@ import PurchasedCourseVideo from "@/components/purchasedCourse/PurchasedCourseVi
 import PurchasedCourseTabs from "@/components/purchasedCourse/PurchasedCourseTabs";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Course, Video } from "@/types/types";
+import { Course } from "@/types/types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
 import OpenSidebarButton from "./OpenSidebarButton";
@@ -64,15 +64,15 @@ function PurchasedCourseContent({ course }: { course: Course }) {
   }, [course, setCourse]);
 
   useEffect(() => {
-    if (!activeResource) {
-      setActiveResource(course?.chapters.flatMap((c) => c.videos)[0] || null);
-    } else {
+    if (activeResource) {
       const newActiveResource = course?.chapters
         .flatMap((c) => c.videos)
         .find((video) => video.id == activeResource.id);
       setActiveResource(newActiveResource || null);
+    } else {
+      setActiveResource(course?.chapters.flatMap((c) => c.videos)[0] || null);
     }
-  }, [course, setActiveResource, activeResource]);
+  }, [course, setActiveResource]);
 
   useEffect(() => {
     const header = document.querySelector("#header-course") as HTMLElement;

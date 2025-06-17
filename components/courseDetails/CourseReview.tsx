@@ -1,7 +1,7 @@
 import { CourseReview } from "@/types/types";
 import { getRelativeTimeFromNow } from "@/utils";
 import { Star } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 export default function CourseReviewCard({ review }: { review: CourseReview }) {
@@ -10,15 +10,12 @@ export default function CourseReviewCard({ review }: { review: CourseReview }) {
       <hr className="w-full border-gray-300 mb-4" />
       <div className="flex flex-col gap-1">
         <div className="flex items-start gap-4">
-          <Avatar className="w-10 h-10 mr-2">
-            <AvatarImage
-              src={`${profilePicsEndPoint}/${review.student.id}?${review.student.sasTokenForReadingProfilePic}`}
-            />
-            <AvatarFallback className="bg-black text-white text-xl">
-              {review.student.firstName[0]}
-              {review.student.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
+          <ProfileImage
+            src={`${profilePicsEndPoint}/${review.student.id}?${review.student.sasTokenForReadingProfilePic}`}
+            firstName={review.student.firstName}
+            lastName={review.student.lastName}
+            className="mr-2"
+          />
           <div>
             <p className="text-lg font-semibold">
               {review.student.firstName} {review.student.lastName}

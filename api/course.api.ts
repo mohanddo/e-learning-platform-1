@@ -5,6 +5,7 @@ import {
   CreateOrUpdateAnnouncementComment,
   CreateOrUpdateComment,
   CreateOrUpdateReplyComment,
+  UpdateVideoProgressRequest,
   UpVoteComment,
   UpVoteReplyComment,
 } from "@/types/request";
@@ -119,5 +120,9 @@ export const courseApi = {
 
   deleteReplyComment: async (replyCommentId: number) => {
     await axiosInstance.delete<void>(`replyComment/delete/${replyCommentId}`);
+  },
+
+  updateVideoProgress: async (request: UpdateVideoProgressRequest) => {
+    await axiosInstance.put<void>(`resource/updateVideoProgress`, request);
   },
 };

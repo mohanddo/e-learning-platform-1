@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import { Announcement, AnnouncementComment } from "@/types/types";
 import { getRelativeTimeFromNow } from "@/utils";
 import { Button } from "../ui/button";
@@ -38,15 +38,13 @@ function AnnouncementComments({
     <div className="mt-4 space-y-4 transition-all duration-700 ease-in-out transform translate-y-0 opacity-100">
       {announcement.announcementComments.map((comment) => (
         <div key={comment.id} className="flex items-start gap-2">
-          <Avatar className="w-7 h-7">
-            <AvatarImage
-              src={`${profilePicsEndPoint}/${comment.user.id}?${comment.user.sasTokenForReadingProfilePic}`}
-            />
-            <AvatarFallback className="bg-black text-white text-xs">
-              {comment.user.firstName[0]}
-              {comment.user.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
+          <ProfileImage
+            src={`${profilePicsEndPoint}/${comment.user.id}?${comment.user.sasTokenForReadingProfilePic}`}
+            firstName={comment.user.firstName}
+            lastName={comment.user.lastName}
+            className="mr-2"
+            size="sm"
+          />
           <div className="flex-1 text-sm bg-gray-100 p-3 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex gap-2 items-center">
