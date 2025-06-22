@@ -1,6 +1,6 @@
 import CourseSidebar from "@/components/purchasedCourse/CourseSidebar";
 import { courseApi } from "@/api/course.api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import PurchasedCourseVideo from "@/components/purchasedCourse/PurchasedCourseVideo";
 import PurchasedCourseTabs from "@/components/purchasedCourse/PurchasedCourseTabs";
 import { ChevronDown } from "lucide-react";
@@ -14,6 +14,7 @@ import { authApi } from "@/api/auth/studentAuth.api";
 import PurchasedCourseLoading from "./PurchasedCourseLoading";
 import PurchasedCourseError from "./PurchasedCourseError";
 import { CourseProvider, useCourse } from "@/context/CourseContext";
+import { findChapterId } from "@/utils";
 
 function Header({ title, isVisible }: { title: string; isVisible: boolean }) {
   return (
@@ -64,15 +65,40 @@ function PurchasedCourseContent({ course }: { course: Course }) {
   }, [course, setCourse]);
 
   useEffect(() => {
+    setActiveResource(
+      course.activeResource
+        ? course.activeResource
+        : course?.chapters.flatMap((c) => c.videos)[0] || null
+    );
+  }, [course]);
+
+  const updateActiveResourceMutation = useMutation({
+    mutationFn: async ({
+      courseId,
+      resourceId,
+      chapterId,
+    }: {
+      courseId: number;
+      chapterId: number;
+      resourceId: number;
+    }) => {
+      await courseApi.updateActiveResource({
+        courseId: courseId,
+        resourceId: resourceId,
+        chapterId: chapterId,
+      });
+    },
+  });
+
+  useEffect(() => {
     if (activeResource) {
-      const newActiveResource = course?.chapters
-        .flatMap((c) => c.videos)
-        .find((video) => video.id == activeResource.id);
-      setActiveResource(newActiveResource || null);
-    } else {
-      setActiveResource(course?.chapters.flatMap((c) => c.videos)[0] || null);
+      updateActiveResourceMutation.mutate({
+        courseId: course.id,
+        resourceId: activeResource!.id,
+        chapterId: findChapterId(activeResource, course?.chapters)!,
+      });
     }
-  }, [course, setActiveResource]);
+  }, [activeResource]);
 
   useEffect(() => {
     const header = document.querySelector("#header-course") as HTMLElement;

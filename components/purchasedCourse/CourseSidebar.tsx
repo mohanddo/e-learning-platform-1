@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Resource } from "@/types/types";
+import { Course, Resource } from "@/types/types";
 import {
   Accordion,
   AccordionItem,
@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
 import { formatSecondsToMMSS } from "@/utils";
 import { useCourse } from "@/context/CourseContext";
+import { useAddFinishedResourceMutation } from "@/hooks/useAddFinishedResourceMutation";
 
 interface CourseSidebarProps {
   onClose?: () => void;
@@ -23,8 +24,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
   isHeaderVisible,
   isSidebarOpen,
 }) => {
-  const { course, setActiveResource, activeResource } = useCourse();
-  const [chapters, setChapters] = useState(course!.chapters);
+  const { course, setActiveResource, activeResource, setCourse } = useCourse();
   const handleResourceClick = (resource: Resource) => {
     setActiveResource(resource);
   };
@@ -33,28 +33,12 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
   //   window.open(doc.downloadUrl, "_blank");
   // };
 
-  const addFinishedResourceMutation = useMutation({
-    mutationFn: async ({
-      courseId,
-      chapterId,
-      resourceId,
-    }: {
-      courseId: number;
-      chapterId: number;
-      resourceId: number;
-    }) => {
-      courseApi.addFinishedResource(courseId, chapterId, resourceId);
-    },
-    onSuccess: () => {},
-    onError: () => {},
-  });
+  const addFinishedResourceMutation = useAddFinishedResourceMutation();
 
   const deleteFinishedResourceMutation = useMutation({
     mutationFn: async (resourceId: number) => {
       courseApi.deleteFinishedResource(resourceId);
     },
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   // Toggle studied status for video or document
@@ -63,26 +47,41 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
     resourceType: "video" | "document",
     resourceId: number
   ) => {
-    setChapters((prev) =>
-      prev.map((chapter) => {
-        if (chapter.id !== chapterId) return chapter;
-        if (resourceType === "video") {
-          return {
-            ...chapter,
-            videos: chapter.videos.map((v) =>
-              v.id === resourceId ? { ...v, isFinished: !v.isFinished } : v
-            ),
-          };
-        } else {
-          return {
-            ...chapter,
-            documents: chapter.documents.map((d) =>
-              d.id === resourceId ? { ...d, isFinished: !d.isFinished } : d
-            ),
-          };
-        }
-      })
-    );
+    if (resourceId == activeResource?.id) {
+      setActiveResource((prevActiveResource: Resource | null) => {
+        if (!prevActiveResource) return prevActiveResource;
+        return {
+          ...prevActiveResource,
+          isFinished: !prevActiveResource.isFinished,
+        };
+      });
+    }
+    setCourse((prevCourse: Course | null) => {
+      if (!prevCourse) return prevCourse;
+
+      return {
+        ...prevCourse,
+        chapters: prevCourse.chapters.map((chapter) => {
+          if (chapter.id !== chapterId) return chapter;
+
+          if (resourceType === "video") {
+            return {
+              ...chapter,
+              videos: chapter.videos.map((v) =>
+                v.id === resourceId ? { ...v, isFinished: !v.isFinished } : v
+              ),
+            };
+          } else {
+            return {
+              ...chapter,
+              documents: chapter.documents.map((d) =>
+                d.id === resourceId ? { ...d, isFinished: !d.isFinished } : d
+              ),
+            };
+          }
+        }),
+      };
+    });
   };
 
   return (
@@ -109,7 +108,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 
       <div className="flex-1 overflow-y-auto p-4">
         <Accordion type="single" collapsible className="w-full">
-          {[...chapters].map((chapter) => {
+          {[...course!.chapters].map((chapter) => {
             // Calculate chapter stats
             const chapterTotalResources =
               chapter.videos.length + chapter.documents.length;

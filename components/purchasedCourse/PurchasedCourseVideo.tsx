@@ -5,10 +5,13 @@ import React, { useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 import { UpdateVideoProgressRequest } from "@/types/request";
 import { findChapterId } from "@/utils";
-import { Video } from "@/types/types";
+import { Course, Resource, Video } from "@/types/types";
+import { useAddFinishedResourceMutation } from "@/hooks/useAddFinishedResourceMutation";
 
 const PurchasedCourseVideo: React.FC = () => {
-  const { activeResource } = useCourse();
+  const { activeResource, setCourse, setActiveResource } = useCourse();
+
+  const addFinishedResourceMutation = useAddFinishedResourceMutation();
 
   const playerRef = useRef<ReactPlayer>(null);
   const { course } = useCourse();
@@ -18,31 +21,55 @@ const PurchasedCourseVideo: React.FC = () => {
       await courseApi.updateVideoProgress(request);
     },
   });
+  const prevActiveResource = useRef<Resource>(activeResource);
+  const currentProgressRef = useRef<number>(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const current = playerRef.current?.getCurrentTime?.();
-      if (current) {
+      if (current && activeResource) {
         updateVideoProgressMutation.mutate({
           courseId: course!.id,
           videoId: activeResource!.id,
           chapterId: findChapterId(activeResource, course?.chapters)!,
           progress: current,
         });
+        currentProgressRef.current = current;
       }
-    }, 5000); // every 5s
+    }, 10000); // every 10s
 
     return () => clearInterval(interval);
-  }, [activeResource, course]);
+  }, [activeResource]);
 
+  // useEffect(() => {
+  //   if (
+  //     prevActiveResource.current &&
+  //     prevActiveResource.current.id != activeResource?.id
+  //   ) {
+  //     setCourse((prevCourse: Course | null) => {
+  //       if (!prevCourse) return prevCourse;
+  //       // console.log("Active Resource", prevActiveResource);
+  //       // console.log("progress", currentProgressRef.current);
+  //       return {
+  //         ...prevCourse,
+  //         chapters: prevCourse.chapters.map((chapter) => ({
+  //           ...chapter,
+  //           videos: chapter.videos.map((video) =>
+  //             video.id === prevActiveResource.current?.id
+  //               ? { ...video, progress: currentProgressRef.current }
+  //               : video
+  //           ),
+  //         })),
+  //       };
+  //     });
+  //   }
+  //   prevActiveResource.current = activeResource;
+  // }, [activeResource, setCourse]);
+
+  const hasSeekedRef = useRef(false);
   useEffect(() => {
-    if (activeResource) {
-      playerRef.current?.seekTo(
-        (activeResource as Video).videoProgress,
-        "seconds"
-      );
-    }
-  }, [activeResource, course]);
+    hasSeekedRef.current = false; // Reset when resource changes
+  }, [activeResource]);
 
   if (!activeResource) {
     return (
@@ -54,12 +81,60 @@ const PurchasedCourseVideo: React.FC = () => {
 
   return (
     <ReactPlayer
+      key={activeResource.id}
       url={activeResource.downloadUrl}
       controls
       width="100%"
       height="100%"
       ref={playerRef}
       style={{ maxHeight: 500 }}
+      onReady={() => {
+        if (activeResource && !hasSeekedRef.current) {
+          playerRef.current?.seekTo(
+            (activeResource as Video).videoProgress,
+            "seconds"
+          );
+          hasSeekedRef.current = true;
+        }
+      }}
+      onEnded={() => {
+        if (!activeResource.isFinished) {
+          addFinishedResourceMutation.mutate({
+            courseId: course!.id,
+            chapterId: findChapterId(activeResource, course?.chapters)!,
+            resourceId: activeResource.id,
+          });
+          setActiveResource((prevActiveResource: Resource | null) => {
+            if (!prevActiveResource) return prevActiveResource;
+
+            return {
+              ...activeResource,
+              isFinished: true,
+            };
+          });
+          setCourse((prevCourse: Course | null) => {
+            if (!prevCourse) return prevCourse;
+
+            return {
+              ...prevCourse,
+              chapters: prevCourse.chapters.map((chapter) => {
+                if (
+                  chapter.id !== findChapterId(activeResource, course?.chapters)
+                )
+                  return chapter;
+                return {
+                  ...chapter,
+                  videos: chapter.videos.map((v) =>
+                    v.id === activeResource.id
+                      ? { ...v, isFinished: !v.isFinished }
+                      : v
+                  ),
+                };
+              }),
+            };
+          });
+        }
+      }}
     />
   );
 };

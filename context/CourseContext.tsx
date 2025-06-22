@@ -4,10 +4,10 @@ import { QueryObserverResult } from "@tanstack/react-query";
 
 interface CourseContextType {
   course: Course | null;
-  setCourse: (course: Course | null) => void;
+  setCourse: React.Dispatch<React.SetStateAction<Course | null>>;
   refetch: () => Promise<QueryObserverResult<Course, Error>>;
   activeResource: Resource | null;
-  setActiveResource: (id: Resource | null) => void;
+  setActiveResource: React.Dispatch<React.SetStateAction<Resource | null>>;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);

@@ -8,6 +8,7 @@ import {
   UpdateVideoProgressRequest,
   UpVoteComment,
   UpVoteReplyComment,
+  UpdateActiveResourceRequest,
 } from "@/types/request";
 
 export const courseApi = {
@@ -124,5 +125,9 @@ export const courseApi = {
 
   updateVideoProgress: async (request: UpdateVideoProgressRequest) => {
     await axiosInstance.put<void>(`resource/updateVideoProgress`, request);
+  },
+
+  updateActiveResource: async (request: UpdateActiveResourceRequest) => {
+    await axiosInstance.put<void>(`resource/updateActiveResource`, request);
   },
 };

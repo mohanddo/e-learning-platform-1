@@ -76,3 +76,9 @@ export interface UpdateVideoProgressRequest {
   chapterId: number;
   videoId: number;
 }
+
+export interface UpdateActiveResourceRequest {
+  courseId: number;
+  chapterId: number;
+  resourceId: number;
+}

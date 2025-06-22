@@ -87,6 +87,7 @@ export interface Course {
   numberOfVideos: number;
   numberOfDocuments: number;
   ownsCourse: boolean;
+  activeResource: Resource | null;
 }
 
 export interface ReplyComment {
