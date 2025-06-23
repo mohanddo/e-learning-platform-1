@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { MessagesSquare, CircleArrowUp } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import ProfileImage from "@/components/ui/profile-image";
-import { Comment, Resource } from "@/types/types";
+import { Comment, Course, Resource } from "@/types/types";
 import { findChapterId, getRelativeTimeFromNow } from "@/utils";
 import { useCourse } from "@/context/CourseContext";
 import { courseApi } from "@/api/course.api";
@@ -16,12 +16,56 @@ interface QAListItemProps {
   onCommentClick: (comment: Comment, resource: Resource) => void;
 }
 
+function updateCommentInCourse(
+  course: Course,
+  commentId: number,
+  updater: (c: Comment) => void
+) {
+  // Deep copy chapters, resources, and comments
+  return {
+    ...course,
+    chapters: course.chapters.map((chapter) => ({
+      ...chapter,
+      videos: chapter.videos.map((resource) => ({
+        ...resource,
+        comments: resource.comments.map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                ...(() => {
+                  const updated = { ...comment };
+                  updater(updated);
+                  return updated;
+                })(),
+              }
+            : comment
+        ),
+      })),
+      documents: chapter.documents.map((resource) => ({
+        ...resource,
+        comments: resource.comments.map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                ...(() => {
+                  const updated = { ...comment };
+                  updater(updated);
+                  return updated;
+                })(),
+              }
+            : comment
+        ),
+      })),
+    })),
+  };
+}
+
 const QAListItem: React.FC<QAListItemProps> = ({
   comment,
   resource,
   onCommentClick,
 }) => {
-  const { course, setActiveResource, refetch } = useCourse();
+  const { course, setCourse, setActiveResource } = useCourse();
   const isMounted = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
@@ -30,6 +74,7 @@ const QAListItem: React.FC<QAListItemProps> = ({
       isMounted.current = false;
     };
   }, []);
+
   const upVoteCommentMutation = useMutation({
     mutationFn: async () => {
       await courseApi.upVoteComment({
@@ -39,8 +84,14 @@ const QAListItem: React.FC<QAListItemProps> = ({
         chapterId: findChapterId(resource, course?.chapters)!,
       });
     },
-    onSuccess: async () => {
-      await refetch();
+    onSuccess: () => {
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return updateCommentInCourse(prevCourse, comment.id, (c) => {
+          c.upVotes = c.upVotes + 1;
+          c.hasCurrentUserUpVotedThisComment = true;
+        });
+      });
     },
     onError() {
       if (isMounted.current) {
@@ -53,8 +104,14 @@ const QAListItem: React.FC<QAListItemProps> = ({
     mutationFn: async () => {
       await courseApi.removeUpVoteComment(comment.id);
     },
-    onSuccess: async () => {
-      await refetch();
+    onSuccess: () => {
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return updateCommentInCourse(prevCourse, comment.id, (c) => {
+          c.upVotes = c.upVotes - 1;
+          c.hasCurrentUserUpVotedThisComment = false;
+        });
+      });
     },
     onError() {
       if (isMounted.current) {

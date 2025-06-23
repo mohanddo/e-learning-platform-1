@@ -30,7 +30,13 @@ interface AppContextType {
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [categorie, setCategorie] = useState<string>("All");
   const [isSignUp, setIsSignUp] = useState<boolean>(false);

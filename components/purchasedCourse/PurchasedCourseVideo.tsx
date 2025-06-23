@@ -41,30 +41,27 @@ const PurchasedCourseVideo: React.FC = () => {
     return () => clearInterval(interval);
   }, [activeResource]);
 
-  // useEffect(() => {
-  //   if (
-  //     prevActiveResource.current &&
-  //     prevActiveResource.current.id != activeResource?.id
-  //   ) {
-  //     setCourse((prevCourse: Course | null) => {
-  //       if (!prevCourse) return prevCourse;
-  //       // console.log("Active Resource", prevActiveResource);
-  //       // console.log("progress", currentProgressRef.current);
-  //       return {
-  //         ...prevCourse,
-  //         chapters: prevCourse.chapters.map((chapter) => ({
-  //           ...chapter,
-  //           videos: chapter.videos.map((video) =>
-  //             video.id === prevActiveResource.current?.id
-  //               ? { ...video, progress: currentProgressRef.current }
-  //               : video
-  //           ),
-  //         })),
-  //       };
-  //     });
-  //   }
-  //   prevActiveResource.current = activeResource;
-  // }, [activeResource, setCourse]);
+  useEffect(() => {
+    const prevResource = prevActiveResource.current;
+    const prevProgress = currentProgressRef.current;
+    if (prevResource && prevProgress) {
+      setCourse((prevCourse: Course | null): Course | null => {
+        if (!prevCourse) return prevCourse;
+        return {
+          ...prevCourse,
+          chapters: prevCourse.chapters.map((chapter) => ({
+            ...chapter,
+            videos: chapter.videos.map((video) =>
+              video.id === prevResource.id
+                ? { ...video, videoProgress: prevProgress }
+                : video
+            ),
+          })),
+        };
+      });
+    }
+    prevActiveResource.current = activeResource;
+  }, [activeResource]);
 
   const hasSeekedRef = useRef(false);
   useEffect(() => {
