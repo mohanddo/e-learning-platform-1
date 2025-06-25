@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
 import { AnnouncementComment } from "@/types/types";
+import showAlert from "../ui/AlertC";
 interface ReviewModalProps {
   onClose: () => void;
   onUpdate: () => void;
@@ -43,9 +44,8 @@ const UpdateAnnouncementComment: React.FC<ReviewModalProps> = ({
       onUpdate();
     },
     onError: () => {
-      if (isMounted.current) {
-        alert("Error deleting comment");
-      }
+      onClose();
+      showAlert("warning", "Failed to update your comment. Please try again.");
     },
   });
 

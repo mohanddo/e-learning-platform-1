@@ -4,6 +4,7 @@ import ProfileImage from "@/components/ui/profile-image";
 import { useAppContext } from "@/context/context";
 import { useCourse } from "@/context/CourseContext";
 import { useCreateOrUpdateReplyCommentMutation } from "@/hooks/useCreateOrUpdateReplyCommentMutation";
+import showAlert from "../ui/AlertC";
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
@@ -51,9 +52,7 @@ const ReplyCommentInput: React.FC<ReplyCommentInputProps> = ({
       setComment("");
     },
     onError() {
-      if (isMounted.current) {
-        alert("There is a problem, please try again");
-      }
+      showAlert("warning", "Failed to post your reply. Please try again.");
     },
   });
 

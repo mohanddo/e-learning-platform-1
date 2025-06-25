@@ -5,6 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
 import { useAppContext } from "@/context/context";
 
+import showAlert from "../ui/AlertC";
+import { AxiosError } from "axios";
+
 const verificationCodeExpirationTime =
   process.env.VERIFICATION_CODE_EXPIRATION_TIME || "300";
 
@@ -29,14 +32,22 @@ const Verify = () => {
   const verifyMutation = useMutation({
     mutationFn: commonAuthApi.verifyEmail,
     onSuccess: () => {
+      showAlert("success", "Your account has been successfully verified.");
+
       if (isMounted.current) {
         router.push("/profile");
       }
     },
-    onError: (error) => {
-      if (isMounted.current) {
-        setError("Invalid verification code. Please try again.");
-        console.log(JSON.stringify(error));
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 400) {
+        showAlert("error", "Invalid verification code. Please try again.");
+      } else if (error.response?.status === 410) {
+        showAlert(
+          "error",
+          "This verification code has expired. Please request a new one."
+        );
+      } else {
+        showAlert("error", "Something went wrong. Please try again.");
       }
     },
   });
@@ -49,10 +60,9 @@ const Verify = () => {
         setCanResend(false);
       }
     },
-    onError: (error) => {
+    onError: () => {
       if (isMounted.current) {
         setError("Failed to resend verification code. Please try again.");
-        console.error(error);
       }
     },
   });

@@ -5,12 +5,14 @@ import { CourseReview } from "@/types/types";
 import { getRating, getReview } from "@/utils";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
+import showAlert from "./AlertC";
 interface ReviewModalProps {
   onClose: () => void;
   review: CourseReview | undefined;
   onAdd: (rating: string, comment: string | null) => void;
   onUpdate: (rating: string, comment: string | null, id: number) => void;
   onDelete?: () => void;
+  onFail: () => void;
   courseId: number;
 }
 
@@ -20,6 +22,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   onAdd,
   onUpdate,
   onDelete,
+  onFail,
   courseId,
 }) => {
   const [rating, setRating] = useState(review ? getRating(review.review) : 0);
@@ -56,9 +59,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       }
     },
     onError: () => {
-      if (isMounted.current) {
-        alert("Error adding or updating review");
-      }
+      onFail();
+      showAlert("warning", "Failed to post the review. Please try again.");
     },
   });
 
@@ -72,9 +74,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       }
     },
     onError: () => {
-      if (isMounted.current) {
-        alert("Error deleting review");
-      }
+      onFail();
+      showAlert("warning", "Failed to delete the review. Please try again.");
     },
   });
 

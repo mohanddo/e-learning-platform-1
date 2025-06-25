@@ -15,6 +15,7 @@ import { authApi } from "@/api/auth/studentAuth.api";
 import { UpdateStudentRequest } from "@/types/request";
 import { validateProfilePic } from "@/utils";
 import { Student } from "@/types/types";
+import showAlert from "@/components/ui/AlertC";
 
 export const EditProfile = ({ student }: { student: Student }) => {
   const [firstName, setFirstName] = useState(student.firstName);
@@ -50,14 +51,13 @@ export const EditProfile = ({ student }: { student: Student }) => {
       );
     },
     onSuccess: () => {
+      showAlert("success", "Your profile has been updated successfully.");
       if (isMounted.current) {
         router.replace("/profile");
       }
     },
-    onError: (error) => {
-      if (isMounted.current) {
-        alert("There was an error please try again");
-      }
+    onError: () => {
+      showAlert("error", "Something went wrong. Please try again.");
     },
   });
 

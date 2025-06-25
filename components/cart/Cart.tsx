@@ -10,6 +10,7 @@ import CartError from "./CartError";
 import { cartApi } from "@/api/cart.api";
 import { useEffect, useRef } from "react";
 import CartItem from "./CartItem";
+import showAlert from "../ui/AlertC";
 
 const Cart = () => {
   const { student, setStudent } = useAppContext();
@@ -45,9 +46,10 @@ const Cart = () => {
       }
     },
     onError: () => {
-      if (isMounted.current) {
-        alert("Error purchasing cart");
-      }
+      showAlert(
+        "warning",
+        "Failed to complete your purchase. Please try again."
+      );
     },
   });
 

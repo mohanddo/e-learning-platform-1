@@ -4,6 +4,8 @@ import { authApi } from "@/api/auth/studentAuth.api";
 import { useAppContext } from "@/context/context";
 import { validateCredentials } from "@/utils";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+import showAlert from "../ui/AlertC";
 
 const SignUp = () => {
   const { setEmailToVerify } = useAppContext();
@@ -22,10 +24,11 @@ const SignUp = () => {
         router.push("/auth/verify");
       }
     },
-    onError: (error) => {
-      if (isMounted.current) {
-        alert("There was an error please try again");
-        console.log(JSON.stringify(error));
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 409) {
+        showAlert("error", "An account with this email already exists.");
+      } else {
+        showAlert("error", "Something went wrong. Please try again.");
       }
     },
   });

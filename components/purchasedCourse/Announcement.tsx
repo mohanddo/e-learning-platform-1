@@ -9,6 +9,7 @@ import UpdateAnnouncementComment from "./UpdateAnnouncementComment";
 import { useCourse } from "@/context/CourseContext";
 import DeleteComponent from "../ui/DeleteComponent";
 import { useMutation } from "@tanstack/react-query";
+import showAlert from "../ui/AlertC";
 
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
@@ -49,8 +50,10 @@ function AnnouncementC({ announcement }: { announcement: Announcement }) {
     },
     onError: () => {
       if (isMounted.current) {
-        alert("Error deleting comment");
+        setShowDeleteComponent(false);
+        setCommentToBeDeleted(null);
       }
+      showAlert("warning", "Failed to delete the comment. Please try again.");
     },
   });
 

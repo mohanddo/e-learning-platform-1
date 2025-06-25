@@ -139,6 +139,9 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
             setReviewModalOpen(false);
             refetchCourse();
           }}
+          onFail={() => {
+            setReviewModalOpen(false);
+          }}
         />
       )}
       <CourseHeader course={course} />

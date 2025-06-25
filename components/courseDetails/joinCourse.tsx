@@ -22,6 +22,7 @@ import { useEffect, useRef } from "react";
 import { useAddToCartMutation } from "@/hooks/useAddToCartMutation";
 import { useAddToFavoritesMutation } from "@/hooks/useAddToFavoritesMutation";
 import { useRemoveFromFavoritesMutation } from "@/hooks/useRemoveFromFavoritesMutation";
+import showAlert from "../ui/AlertC";
 const JoinCourse = ({
   role,
   course,
@@ -54,9 +55,7 @@ const JoinCourse = ({
       router.replace(data);
     },
     onError: () => {
-      if (isMounted.current) {
-        alert("Error purchasing course");
-      }
+      showAlert("warning", "Failed to purchase course. Please try again.");
     },
   });
 

@@ -8,6 +8,7 @@ import { validateCredentials } from "@/utils";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AxiosError } from "axios";
+import showAlert from "../ui/AlertC";
 
 const SignIn = () => {
   const { setEmailToVerify } = useAppContext();
@@ -20,6 +21,7 @@ const SignIn = () => {
   const loginMutation = useMutation({
     mutationFn: commonAuthApi.login,
     onSuccess: () => {
+      showAlert("success", "Welcome back! You’re now logged in.");
       if (isMounted.current) {
         router.push("/profile");
       }
@@ -27,9 +29,6 @@ const SignIn = () => {
     onError: (error: AxiosError) => {
       if (isMounted.current) {
         if (error.response?.status === 403) {
-          alert(
-            "Your account is not verified. Press ok to redirect to the verification page."
-          );
           setEmailToVerify(email);
           if (isMounted.current) {
             router.push("/auth/verify");
@@ -38,13 +37,13 @@ const SignIn = () => {
           error.response?.status === 401 ||
           error.response?.status === 404
         ) {
-          alert(
+          showAlert(
+            "error",
             "Invalid email or password. Please check your credentials and try again."
           );
         } else {
-          alert("There was an error. Please try again later.");
+          showAlert("error", "Something went wrong. Please try again.");
         }
-        console.log(JSON.stringify(error));
       }
     },
   });

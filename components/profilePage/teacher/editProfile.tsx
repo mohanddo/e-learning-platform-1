@@ -15,6 +15,7 @@ import { authApi } from "@/api/auth/teacherAuth.api";
 import { UpdateTeacherRequest } from "@/types/request";
 import { validateProfilePic } from "@/utils";
 import { Teacher } from "@/types/types";
+import showAlert from "@/components/ui/AlertC";
 
 export const EditProfile = ({ teacher }: { teacher: Teacher }) => {
   const [firstName, setFirstName] = useState(teacher.firstName);
@@ -60,10 +61,8 @@ export const EditProfile = ({ teacher }: { teacher: Teacher }) => {
         router.replace("/profile");
       }
     },
-    onError: (error) => {
-      if (isMounted.current) {
-        alert("There was an error please try again");
-      }
+    onError: () => {
+      showAlert("error", "Something went wrong. Please try again.");
     },
   });
 

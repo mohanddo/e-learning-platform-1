@@ -2,10 +2,11 @@ import React, { useRef, useEffect } from "react";
 import { MessagesSquare, CircleArrowUp } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import ProfileImage from "@/components/ui/profile-image";
-import { Comment, Course, Resource } from "@/types/types";
+import { Comment, Resource } from "@/types/types";
 import { findChapterId, getRelativeTimeFromNow } from "@/utils";
 import { useCourse } from "@/context/CourseContext";
 import { courseApi } from "@/api/course.api";
+import { updateCommentInCourse } from "@/utils";
 
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
@@ -14,50 +15,6 @@ interface QAListItemProps {
   comment: Comment;
   resource: Resource;
   onCommentClick: (comment: Comment, resource: Resource) => void;
-}
-
-function updateCommentInCourse(
-  course: Course,
-  commentId: number,
-  updater: (c: Comment) => void
-) {
-  // Deep copy chapters, resources, and comments
-  return {
-    ...course,
-    chapters: course.chapters.map((chapter) => ({
-      ...chapter,
-      videos: chapter.videos.map((resource) => ({
-        ...resource,
-        comments: resource.comments.map((comment) =>
-          comment.id === commentId
-            ? {
-                ...comment,
-                ...(() => {
-                  const updated = { ...comment };
-                  updater(updated);
-                  return updated;
-                })(),
-              }
-            : comment
-        ),
-      })),
-      documents: chapter.documents.map((resource) => ({
-        ...resource,
-        comments: resource.comments.map((comment) =>
-          comment.id === commentId
-            ? {
-                ...comment,
-                ...(() => {
-                  const updated = { ...comment };
-                  updater(updated);
-                  return updated;
-                })(),
-              }
-            : comment
-        ),
-      })),
-    })),
-  };
 }
 
 const QAListItem: React.FC<QAListItemProps> = ({
@@ -93,11 +50,6 @@ const QAListItem: React.FC<QAListItemProps> = ({
         });
       });
     },
-    onError() {
-      if (isMounted.current) {
-        alert("Error up voting question");
-      }
-    },
   });
 
   const removeUpVoteCommentMutation = useMutation({
@@ -112,11 +64,6 @@ const QAListItem: React.FC<QAListItemProps> = ({
           c.hasCurrentUserUpVotedThisComment = false;
         });
       });
-    },
-    onError() {
-      if (isMounted.current) {
-        alert("Error removing upVote");
-      }
     },
   });
 

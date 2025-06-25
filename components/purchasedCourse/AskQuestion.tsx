@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useCourse } from "@/context/CourseContext";
 import { findChapterId } from "@/utils";
 import { useCreateOrUpdateCommentMutation } from "@/hooks/useCreateOrUpdateCommentMutation";
-interface ReviewModalProps {
+import showAlert from "../ui/AlertC";
+interface AskQuestionProps {
   onClose: () => void;
   onPost: () => void;
 }
 
-const AskQuestion: React.FC<ReviewModalProps> = ({ onClose, onPost }) => {
+const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
   const isMounted = useRef(false);
 
   const [question, setQuestion] = useState<string>("");
@@ -28,9 +29,8 @@ const AskQuestion: React.FC<ReviewModalProps> = ({ onClose, onPost }) => {
       onPost();
     },
     onError: () => {
-      if (isMounted.current) {
-        alert("Error posting question");
-      }
+      onClose();
+      showAlert("warning", "Failed to create the question. Please try again.");
     },
     createOrUpdateCommentRequest: {
       text: question,

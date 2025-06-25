@@ -1,7 +1,7 @@
 import { JwtPayload, Course, Resource, Chapter } from "@/types/types";
 
 import { jwtDecode } from "jwt-decode";
-import { CourseReview } from "@/types/types";
+import { CourseReview, Comment, ReplyComment } from "@/types/types";
 
 // utils/validations.ts
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -205,3 +205,85 @@ export const findChapterId = (
   }
   return null;
 };
+
+export function updateCommentInCourse(
+  course: Course,
+  commentId: number,
+  updater: (c: Comment) => void
+) {
+  // Deep copy chapters, resources, and comments
+  return {
+    ...course,
+    chapters: course.chapters.map((chapter) => ({
+      ...chapter,
+      videos: chapter.videos.map((resource) => ({
+        ...resource,
+        comments: resource.comments.map((comment) =>
+          comment.id === commentId
+            ? (() => {
+                const updated: Comment = { ...comment };
+                updater(updated);
+                return updated;
+              })()
+            : comment
+        ),
+      })),
+      documents: chapter.documents.map((resource) => ({
+        ...resource,
+        comments: resource.comments.map((comment) =>
+          comment.id === commentId
+            ? (() => {
+                const updated = { ...comment };
+                updater(updated);
+                return updated;
+              })()
+            : comment
+        ),
+      })),
+    })),
+  };
+}
+
+export function updateReplyCommentInCourse(
+  course: Course,
+  replyCommentId: number,
+  updater: (r: ReplyComment) => void
+) {
+  // Deep copy chapters, resources, and comments
+  return {
+    ...course,
+    chapters: course.chapters.map((chapter) => ({
+      ...chapter,
+      videos: chapter.videos.map((resource) => ({
+        ...resource,
+        comments: resource.comments.map((comment) => ({
+          ...comment,
+          replyComments: comment.replyComments.map((replyComment) =>
+            replyComment.id == replyCommentId
+              ? (() => {
+                  const updated = { ...replyComment };
+                  updater(updated);
+                  return updated;
+                })()
+              : replyComment
+          ),
+        })),
+      })),
+      documents: chapter.documents.map((resource) => ({
+        ...resource,
+        comments: resource.comments.map((comment) => ({
+          ...comment,
+          replyComments: comment.replyComments.map((replyComment) =>
+            replyComment.id == replyCommentId
+              ? (() => {
+                  const updated = { ...replyComment };
+                  updater(updated);
+                  return updated;
+                })()
+              : replyComment
+          ),
+        })),
+      })),
+    })),
+  };
+}

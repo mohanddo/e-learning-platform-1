@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
 import { validateEmail } from "@/utils";
-
+import showAlert from "../ui/AlertC";
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const isMounted = useRef(false);
@@ -13,15 +13,10 @@ const ResetPassword = () => {
   const resetPasswordMutation = useMutation({
     mutationFn: commonAuthApi.resetPassword,
     onSuccess: () => {
-      if (isMounted.current) {
-        alert("Password reset link sent");
-      }
+      showAlert("success", "Check your email for the reset link.");
     },
-    onError: (error) => {
-      if (isMounted.current) {
-        console.log(error);
-        alert("There was an error please try again");
-      }
+    onError: () => {
+      showAlert("error", "Failed to send reset link. Please try again.");
     },
   });
 

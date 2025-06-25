@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "@/context/context";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "E-learning Platform",
@@ -23,7 +24,7 @@ export default async function RootLayout({
       <body>
         <AppProvider>
           <main>{children}</main>
-
+          <Toaster position="bottom-right" />
           <footer></footer>
         </AppProvider>
       </body>

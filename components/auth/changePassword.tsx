@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
 import { useMutation } from "@tanstack/react-query";
 import { validatePassword } from "@/utils";
+import { toast } from "react-hot-toast";
+import showAlert from "../ui/AlertC";
 
 const ChangePassword = () => {
   const router = useRouter();
@@ -17,14 +19,15 @@ const ChangePassword = () => {
   const changePasswordMutation = useMutation({
     mutationFn: commonAuthApi.changePassword,
     onSuccess: () => {
-      alert("Password changed successfully!");
+      showAlert("success", "Password changed successfully!");
+
       if (isMounted.current) {
         router.push("/profile");
       }
     },
     onError: () => {
       if (isMounted.current) {
-        alert("Failed to change password");
+        showAlert("error", "Failed to update password. Please try again.");
       }
     },
   });

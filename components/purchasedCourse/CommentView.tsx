@@ -2,7 +2,11 @@ import React, { useRef, useEffect, useState } from "react";
 import { X, CircleArrowUp, MoreVertical } from "lucide-react";
 import ProfileImage from "@/components/ui/profile-image";
 import { Comment, ReplyComment, Resource } from "@/types/types";
-import { getRelativeTimeFromNow } from "@/utils";
+import {
+  getRelativeTimeFromNow,
+  updateCommentInCourse,
+  updateReplyCommentInCourse,
+} from "@/utils";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
@@ -19,6 +23,7 @@ import DeleteComponent from "../ui/DeleteComponent";
 import UpdateComponent from "../ui/UpdateComponent";
 import { useCreateOrUpdateReplyCommentMutation } from "@/hooks/useCreateOrUpdateReplyCommentMutation";
 import { useCreateOrUpdateCommentMutation } from "@/hooks/useCreateOrUpdateCommentMutation";
+import showAlert from "../ui/AlertC";
 
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
@@ -36,7 +41,7 @@ const CommentView: React.FC<CommentViewProps> = ({
   onClose,
   onReplyCommentPosted,
 }) => {
-  const { course, refetch } = useCourse();
+  const { course, refetch, setCourse } = useCourse();
   const isMounted = useRef<boolean | undefined>(undefined);
   const [commentToDelete, setCommentToDelete] = useState<Comment | null>(null);
   const [replyCommentToDelete, setReplyCommentToDelete] =
@@ -63,13 +68,14 @@ const CommentView: React.FC<CommentViewProps> = ({
         chapterId: findChapterId(resource, course?.chapters)!,
       });
     },
-    onSuccess: async () => {
-      await refetch();
-    },
-    onError() {
-      if (isMounted.current) {
-        alert("Error up voting question");
-      }
+    onSuccess: () => {
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return updateCommentInCourse(prevCourse, comment.id, (c) => {
+          c.upVotes = c.upVotes + 1;
+          c.hasCurrentUserUpVotedThisComment = true;
+        });
+      });
     },
   });
 
@@ -77,13 +83,14 @@ const CommentView: React.FC<CommentViewProps> = ({
     mutationFn: async () => {
       await courseApi.removeUpVoteComment(comment.id);
     },
-    onSuccess: async () => {
-      await refetch();
-    },
-    onError() {
-      if (isMounted.current) {
-        alert("Error removing upVote");
-      }
+    onSuccess: () => {
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return updateCommentInCourse(prevCourse, comment.id, (c) => {
+          c.upVotes = c.upVotes - 1;
+          c.hasCurrentUserUpVotedThisComment = false;
+        });
+      });
     },
   });
 
@@ -97,13 +104,14 @@ const CommentView: React.FC<CommentViewProps> = ({
         chapterId: findChapterId(resource, course?.chapters)!,
       });
     },
-    onSuccess: async () => {
-      await refetch();
-    },
-    onError() {
-      if (isMounted.current) {
-        alert("Error up voting question");
-      }
+    onSuccess: (_data, replyCommentId) => {
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return updateReplyCommentInCourse(prevCourse, replyCommentId, (c) => {
+          c.upVotes = c.upVotes + 1;
+          c.hasCurrentUserUpVotedThisReplyComment = true;
+        });
+      });
     },
   });
 
@@ -111,13 +119,14 @@ const CommentView: React.FC<CommentViewProps> = ({
     mutationFn: async (replyCommentId: number) => {
       await courseApi.removeUpVoteReplyComment(replyCommentId);
     },
-    onSuccess: async () => {
-      await refetch();
-    },
-    onError() {
-      if (isMounted.current) {
-        alert("Error removing upVote");
-      }
+    onSuccess: (_data, replyCommendId) => {
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return updateReplyCommentInCourse(prevCourse, replyCommendId, (c) => {
+          c.upVotes = c.upVotes - 1;
+          c.hasCurrentUserUpVotedThisReplyComment = false;
+        });
+      });
     },
   });
 
@@ -134,9 +143,7 @@ const CommentView: React.FC<CommentViewProps> = ({
       await refetch();
     },
     onError() {
-      if (isMounted.current) {
-        alert("Error removing upVote");
-      }
+      showAlert("warning", "Failed to delete the question. Please try again.");
     },
   });
 
@@ -152,12 +159,13 @@ const CommentView: React.FC<CommentViewProps> = ({
     },
     onError() {
       if (isMounted.current) {
-        alert("Error removing upVote");
+        setReplyCommentToDelete(null);
       }
+      showAlert("warning", "Failed to delete the question. Please try again.");
     },
   });
 
-  const createCommentMutation = useCreateOrUpdateCommentMutation({
+  const updateCommentMutation = useCreateOrUpdateCommentMutation({
     onSuccess: async () => {
       if (isMounted.current) {
         setCommentToUpdate(null);
@@ -167,8 +175,10 @@ const CommentView: React.FC<CommentViewProps> = ({
     },
     onError: () => {
       if (isMounted.current) {
-        alert("Error posting question");
+        setCommentToUpdate(null);
       }
+
+      showAlert("warning", "Failed to update question. Please try again.");
     },
     createOrUpdateCommentRequest: {
       text: question!,
@@ -195,9 +205,7 @@ const CommentView: React.FC<CommentViewProps> = ({
       await refetch();
     },
     onError() {
-      if (isMounted.current) {
-        alert("There is a problem, please try again");
-      }
+      showAlert("warning", "Failed to post a reply. Please try again");
     },
   });
 
@@ -431,7 +439,7 @@ const CommentView: React.FC<CommentViewProps> = ({
           onClose={() => {
             setCommentToUpdate(null);
           }}
-          mutation={createCommentMutation}
+          mutation={updateCommentMutation}
           onChange={(text: string) => setQuestion(text)}
         />
       )}

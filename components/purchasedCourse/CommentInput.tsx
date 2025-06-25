@@ -5,6 +5,7 @@ import { useAppContext } from "@/context/context";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
 import { CreateOrUpdateAnnouncementComment } from "@/types/request";
+import showAlert from "../ui/AlertC";
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 
@@ -54,17 +55,13 @@ const CommentInput: React.FC<CommentInputProps> = ({
       setComment("");
     },
     onError() {
-      if (isMounted.current) {
-        alert("There is a problem, please try again");
-      }
+      showAlert("warning", "Failed to post your comment. Please try again.");
     },
   });
 
   return (
     <div className="flex items-center space-x-2 border rounded p-2 focus-within:ring-1">
       <div className="flex-shrink-0">
-        {/* Placeholder for user avatar - you can replace with actual avatar */}
-
         <ProfileImage
           src={`${profilePicsEndPoint}/${student?.id}?${student?.sasTokenForReadingProfilePic}`}
           firstName={student!.firstName}
