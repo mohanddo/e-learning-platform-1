@@ -83,6 +83,7 @@ const SignIn = () => {
         <input
           type="password"
           placeholder="Password"
+          autoComplete="current-password"
           className="w-full p-2 mt-4 border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

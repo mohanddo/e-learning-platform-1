@@ -6,6 +6,7 @@ export interface User {
   hasProfilePic: boolean;
   sasTokenForReadingProfilePic: string;
   sasTokenForWritingProfilePic: string;
+  role: "ROLE_STUDENT" | "ROLE_TEACHER" | "ROLE_ADMIN";
 }
 
 export interface Student extends User {
@@ -88,6 +89,7 @@ export interface Course {
   numberOfDocuments: number;
   ownsCourse: boolean;
   activeResource: Resource | null;
+  studentReview: CourseReview | null;
 }
 
 export interface ReplyComment {

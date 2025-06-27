@@ -78,6 +78,7 @@ const SignUp = () => {
         <input
           type="email"
           placeholder="Email"
+          autoComplete="email"
           className="w-full p-2 mt-4 border rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -85,6 +86,7 @@ const SignUp = () => {
         <input
           type="password"
           placeholder="Password"
+          autoComplete="new-password"
           className="w-full p-2 mt-4 border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

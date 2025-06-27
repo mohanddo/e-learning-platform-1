@@ -28,13 +28,11 @@ const JoinCourse = ({
   course,
   setIsVideoPlaying,
   setReviewModalOpen,
-  currentUserReview,
 }: {
   role: string;
   course: Course;
   setIsVideoPlaying: (isVideoPlaying: boolean) => void;
   setReviewModalOpen: (isReviewModalOpen: boolean) => void;
-  currentUserReview: CourseReview | undefined;
 }) => {
   const { isLogged } = useAppContext();
   const router = useRouter();
@@ -268,7 +266,7 @@ const JoinCourse = ({
                 className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold mt-2"
                 onClick={() => setReviewModalOpen(true)}
               >
-                {currentUserReview ? "Update review" : "Add a review"}
+                {course.studentReview ? "Update review" : "Add a review"}
               </Button>
             )}
 

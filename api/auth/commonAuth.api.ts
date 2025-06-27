@@ -1,4 +1,4 @@
-import { LoginCredentials } from "@/types/types";
+import { LoginCredentials, User } from "@/types/types";
 import { axiosInstance } from "../axios";
 import { ChangePasswordRequest, VerifyUserRequest } from "@/types/request";
 
@@ -10,6 +10,11 @@ export const commonAuthApi = {
 
   logout: async () => {
     await axiosInstance.post("auth/logout");
+  },
+
+  getUser: async () => {
+    const { data } = await axiosInstance.get<User>("auth/me");
+    return data;
   },
 
   resendVerificationEmail: async (email: string) => {

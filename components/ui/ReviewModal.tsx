@@ -8,7 +8,7 @@ import { courseApi } from "@/api/course.api";
 import showAlert from "./AlertC";
 interface ReviewModalProps {
   onClose: () => void;
-  review: CourseReview | undefined;
+  review: CourseReview | null;
   onAdd: (rating: string, comment: string | null) => void;
   onUpdate: (rating: string, comment: string | null, id: number) => void;
   onDelete?: () => void;

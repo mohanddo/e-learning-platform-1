@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ShoppingCart, LogOut, User as UserIcon } from "lucide-react";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProfileImage from "@/components/ui/profile-image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,18 +13,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAppContext } from "../../context/context";
-import { useMutation } from "@tanstack/react-query";
-import { authApi } from "@/api/auth/studentAuth.api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { commonAuthApi } from "@/api/auth/commonAuth.api";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
+const profilePicsEndPoint =
+  process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 const Header = () => {
-  const { setIsSignUp, logout, isLogged, student } = useAppContext();
+  const { setIsSignUp, logout, isLogged, showHeader } = useAppContext();
   const router = useRouter();
   const isMounted = useRef(false);
 
   const logoutMutation = useMutation({
-    mutationFn: authApi.logout,
+    mutationFn: commonAuthApi.logout,
     onSuccess: () => {
       logout();
       if (isMounted.current) {
@@ -38,12 +40,31 @@ const Header = () => {
     },
   });
 
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const user = await commonAuthApi.getUser();
+      return user;
+    },
+    enabled: isLogged === true,
+  });
+
   useEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;
     };
   }, []);
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (!isLogged) {
+      queryClient.setQueryData(["user"], null);
+    }
+  }, [isLogged]);
+
+  if (!showHeader) {
+    return null;
+  }
 
   return (
     <header className="z-[900] w-[90%] h-17 fixed left-[5%] flex flex-row top-5 border border-gray-200 rounded-xl px-5 bg-[var(--color-100)] shadow-sm">
@@ -93,66 +114,63 @@ const Header = () => {
             </Link>
           </>
         ) : (
-          <div className="flex flex-row gap-5 items-center ">
-            <div>
-              <button
-                className="cursor-pointer"
-                onClick={() => {
-                  router.replace("/cart");
-                }}
-              >
-                <ShoppingCart />
-              </button>
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
-                {student && (
-                  <>
-                    <p className="font-medium">
-                      {student.firstName} {student.lastName}
-                    </p>
-                  </>
-                )}
-                <Avatar className="w-10 h-10">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>
-                    {student?.firstName[0]}
-                    {student?.lastName[0]}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="mt-5 w-56"
-                sideOffset={5}
-                align="end"
-              >
-                <DropdownMenuLabel className="font-bold">
-                  My Account
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
-                  <Link
-                    href={"/profile"}
-                    className="flex flex-row gap-2 w-full items-center"
+          user && (
+            <div className="flex flex-row gap-5 items-center ">
+              {user.role == "ROLE_STUDENT" && (
+                <div>
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => {
+                      router.replace("/cart");
+                    }}
                   >
-                    <UserIcon className="w-4 h-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center"
-                  onClick={() => logoutMutation.mutate()}
-                  disabled={logoutMutation.isPending}
+                    <ShoppingCart />
+                  </button>
+                </div>
+              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
+                  <p className="font-medium">
+                    {user.firstName} {user.lastName}
+                  </p>
+                  <ProfileImage
+                    src={`${profilePicsEndPoint}/${user.id}?${user.sasTokenForReadingProfilePic}`}
+                    firstName={user.firstName}
+                    lastName={user.lastName}
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="mt-5 w-56"
+                  sideOffset={5}
+                  align="end"
                 >
-                  <LogOut className="w-4 h-4" />
-                  <span>
-                    {logoutMutation.isPending ? "Signing out..." : "Sign out"}
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                  <DropdownMenuLabel className="font-bold">
+                    My Account
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                    <Link
+                      href={"/profile"}
+                      className="flex flex-row gap-2 w-full items-center"
+                    >
+                      <UserIcon className="w-4 h-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center"
+                    onClick={() => logoutMutation.mutate()}
+                    disabled={logoutMutation.isPending}
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>
+                      {logoutMutation.isPending ? "Signing out..." : "Sign out"}
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )
         )}
       </div>
     </header>

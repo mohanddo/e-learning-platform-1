@@ -9,9 +9,7 @@ import CourseDetailsSkeleton from "./courseDetailsSkeleton";
 import CourseDetailsError from "./courseDetailsError";
 import VideoPlayer from "../ui/VideoPlayer";
 import { Video } from "../../types/types";
-import { useEffect, useMemo, useState } from "react";
-import { useAppContext } from "@/context/context";
-import { authApi } from "@/api/auth/studentAuth.api";
+import { useEffect, useState } from "react";
 import ReviewModal from "../ui/ReviewModal";
 const CourseDetails = ({ id, role }: { id: number; role: string }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -36,21 +34,6 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     },
   });
 
-  const { setStudent, student } = useAppContext();
-
-  const {
-    isLoading: isLoadingGettingStudent,
-    refetch: refetchStudent,
-    isError: isErrorGettingStudent,
-  } = useQuery({
-    queryKey: ["student"],
-    queryFn: async () => {
-      const data = await authApi.me();
-      setStudent(data);
-      return data;
-    },
-  });
-
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     if (isVideoPlaying) {
@@ -63,22 +46,17 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
     };
   }, [isVideoPlaying]);
 
-  // Find the current user's review if it exists
-  const currentUserReview = useMemo(() => {
-    return course?.courseReviews.find((r) => r.student.id === student?.id);
-  }, [course, student]);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
-  if (isLoading || (isLoadingGettingStudent && role == "student")) {
+  if (isLoading) {
     return <CourseDetailsSkeleton />;
   }
 
-  if (isError || (isErrorGettingStudent && role == "student")) {
+  if (isError) {
     return (
       <CourseDetailsError
         refetch={() => {
           refetchCourse();
-          refetchStudent();
         }}
       />
     );
@@ -126,7 +104,7 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
         <ReviewModal
           courseId={course.id}
           onClose={() => setReviewModalOpen(false)}
-          review={currentUserReview}
+          review={course.studentReview}
           onAdd={async () => {
             setReviewModalOpen(false);
             refetchCourse();
@@ -153,7 +131,6 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
             course={course}
             setIsVideoPlaying={setIsVideoPlaying}
             setReviewModalOpen={setReviewModalOpen}
-            currentUserReview={currentUserReview}
           />
         </div>
       </section>

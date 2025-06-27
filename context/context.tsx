@@ -27,6 +27,9 @@ interface AppContextType {
 
   courses: Course[] | null;
   setCourses: (courses: Course[]) => void;
+
+  showHeader: boolean;
+  setShowHeader: (showHeader: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -45,6 +48,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [isLogged, setIsLogged] = useState<boolean | undefined>(undefined);
   const [courses, setCourses] = useState<Course[] | null>(null);
+  const [showHeader, setShowHeader] = useState<boolean>(true);
 
   const logout = () => {
     setStudent(null);
@@ -79,6 +83,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           setTeacher,
           courses,
           setCourses,
+          showHeader,
+          setShowHeader,
         }}
       >
         {children}

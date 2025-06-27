@@ -77,6 +77,7 @@ const ChangePassword = () => {
           <input
             type="password"
             id="currentPassword"
+            autoComplete="current-password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
@@ -91,6 +92,7 @@ const ChangePassword = () => {
           <input
             type="password"
             id="newPassword"
+            autoComplete="new-password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
@@ -106,6 +108,7 @@ const ChangePassword = () => {
             type="password"
             id="verifyPassword"
             value={verifyPassword}
+            autoComplete="new-password"
             onChange={(e) => setVerifyPassword(e.target.value)}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--addi-color-400)]"
             required
