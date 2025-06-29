@@ -1,3 +1,5 @@
+import { CourseCategory, PricingModel } from "./types";
+
 export interface UpdateStudentRequest {
   firstName: string;
   lastName: string;
@@ -87,4 +89,16 @@ export interface CreateOrUpdateAnnouncement {
   courseId: number;
   text: string;
   announcementId: number | null;
+}
+
+export interface UpdateCourseRequest {
+  courseId: number;
+  title: string;
+  description: string;
+  category: CourseCategory;
+  price: number;
+  discountPercentage: number;
+  discountExpirationDate: string | null; // ISO date string
+  imageUrl?: string | null;
+  introductionVideoUrl?: string | null;
 }

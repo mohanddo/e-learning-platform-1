@@ -10,6 +10,7 @@ import {
   UpVoteReplyComment,
   UpdateActiveResourceRequest,
   CreateOrUpdateAnnouncement,
+  UpdateCourseRequest,
 } from "@/types/request";
 
 export const courseApi = {
@@ -143,5 +144,9 @@ export const courseApi = {
       `course/announcement/createOrUpdate`,
       request
     );
+  },
+
+  updateCourse: async (request: UpdateCourseRequest) => {
+    await axiosInstance.put<void>(`course/update`, request);
   },
 };

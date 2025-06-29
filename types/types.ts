@@ -37,19 +37,15 @@ export interface RegisterCredentials {
   password: string;
 }
 
-export enum PricingModel {
-  SUBSCRIPTION,
-  ONE_TIME_PURCHASE,
-  FREE,
-}
+export type PricingModel = "SUBSCRIPTION" | "ONE_TIME_PURCHASE" | "FREE";
 
-export enum CourseCategory {
-  MATH,
-  SCIENCE,
-  HISTORY,
-  LANGUAGE,
-  PHYSICS,
-}
+export type CourseCategory =
+  | "MATH"
+  | "SCIENCE"
+  | "HISTORY"
+  | "LANGUAGE"
+  | "PROGRAMMING"
+  | "PHYSICS";
 
 export interface JwtPayload {
   role: string;

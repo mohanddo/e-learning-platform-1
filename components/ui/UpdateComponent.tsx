@@ -38,11 +38,11 @@ const UpdateComponent: React.FC<UpdateComponentProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md mx-4 rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200"
+        className="relative w-full max-w-2xl mx-4 rounded-xl overflow-hidden shadow-2xl bg-white border border-gray-200"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <p className="text-lg font-bold">{title}</p>
+        <div className="px-8 py-6 border-b border-gray-200 flex items-center justify-between">
+          <p className="text-xl font-bold">{title}</p>
           <Button
             variant="ghost"
             size="icon"
@@ -55,9 +55,9 @@ const UpdateComponent: React.FC<UpdateComponentProps> = ({
         </div>
 
         {/* Content */}
-        <div className="px-6 py-4">
+        <div className="px-8 py-6">
           <textarea
-            className="w-full min-h-[100px] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full min-h-[200px] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base resize-none"
             placeholder={placeHolder}
             value={newComment}
             onChange={(e) => {
@@ -68,17 +68,17 @@ const UpdateComponent: React.FC<UpdateComponentProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-4">
+        <div className="px-8 py-6 border-t border-gray-200 flex justify-end gap-4">
           <Button
             variant="ghost"
-            className="text-[var(--addi-color-500)] font-bold"
+            className="text-[var(--addi-color-500)] font-bold px-6 py-2"
             onClick={onClose}
           >
             Cancel
           </Button>
 
           <Button
-            className={`bg-[var(--addi-color-500)] text-white font-bold hover:bg-[var(--addi-color-400)]
+            className={`bg-[var(--addi-color-500)] text-white font-bold hover:bg-[var(--addi-color-400)] px-6 py-2
                 ${mutation.isPending ? "opacity-50" : ""}
               `}
             onClick={() => {
