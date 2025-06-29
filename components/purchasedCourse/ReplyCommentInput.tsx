@@ -13,6 +13,7 @@ interface ReplyCommentInputProps {
   commentId: number;
   resourceId: number;
   chapterId: number;
+  role: "student" | "teacher";
 }
 
 const ReplyCommentInput: React.FC<ReplyCommentInputProps> = ({
@@ -20,9 +21,10 @@ const ReplyCommentInput: React.FC<ReplyCommentInputProps> = ({
   commentId,
   resourceId,
   chapterId,
+  role,
 }) => {
   const [comment, setComment] = useState("");
-  const { student } = useAppContext();
+  const { user } = useAppContext();
   const { course } = useCourse();
   const handleSubmit = () => {
     if (comment.trim()) {
@@ -62,11 +64,11 @@ const ReplyCommentInput: React.FC<ReplyCommentInputProps> = ({
         {/* Placeholder for user avatar - you can replace with actual avatar */}
 
         <ProfileImage
-          src={`${profilePicsEndPoint}/${student!.id}?${
-            student!.sasTokenForReadingProfilePic
+          src={`${profilePicsEndPoint}/${user!.id}?${
+            user!.sasTokenForReadingProfilePic
           }`}
-          firstName={student!.firstName}
-          lastName={student!.lastName}
+          firstName={user!.firstName}
+          lastName={user!.lastName}
           className="mr-2"
           size="sm"
         />

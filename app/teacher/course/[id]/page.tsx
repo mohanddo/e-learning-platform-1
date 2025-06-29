@@ -12,5 +12,5 @@ export default function CoursePage() {
     return () => setShowHeader(true);
   }, []);
 
-  return <PurchasedCourse id={Number(id)} role="student" />;
+  return <PurchasedCourse id={Number(id)} role="teacher" />;
 }

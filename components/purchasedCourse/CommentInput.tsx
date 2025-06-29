@@ -21,7 +21,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
   courseId,
 }) => {
   const [comment, setComment] = useState("");
-  const { student } = useAppContext();
+  const { user } = useAppContext();
   const handleSubmit = () => {
     if (comment.trim()) {
       const request: CreateOrUpdateAnnouncementComment = {
@@ -63,9 +63,9 @@ const CommentInput: React.FC<CommentInputProps> = ({
     <div className="flex items-center space-x-2 border rounded p-2 focus-within:ring-1">
       <div className="flex-shrink-0">
         <ProfileImage
-          src={`${profilePicsEndPoint}/${student?.id}?${student?.sasTokenForReadingProfilePic}`}
-          firstName={student!.firstName}
-          lastName={student!.lastName}
+          src={`${profilePicsEndPoint}/${user?.id}?${user?.sasTokenForReadingProfilePic}`}
+          firstName={user!.firstName}
+          lastName={user!.lastName}
           size="sm"
           className="mr-2"
         />

@@ -8,7 +8,7 @@ interface AlertCProps {
 
 const AlertC: React.FC<AlertCProps> = ({ severity, message }) => {
   return (
-    <Alert severity={severity} variant="filled" className="whitespace-nowrap">
+    <Alert severity={severity} variant="filled">
       {message}
     </Alert>
   );

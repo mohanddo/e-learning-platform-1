@@ -14,7 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
 import { useAppContext } from "@/context/context";
 import { useRouter } from "next/navigation";
-import { Course, CourseReview } from "../../types/types";
+import { Course } from "../../types/types";
 import { useRemoveFromCartMutation } from "@/hooks/useRemoveFromCartMutation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { paymentApi } from "@/api/payment.api";
@@ -258,6 +258,15 @@ const JoinCourse = ({
                 onClick={() => router.push(`/student/course/${course.id}`)}
               >
                 Access Course
+              </Button>
+            )}
+
+            {role === "teacher" && course.ownsCourse && (
+              <Button
+                className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+                onClick={() => router.push(`/teacher/course/${course.id}`)}
+              >
+                Edit Course
               </Button>
             )}
 

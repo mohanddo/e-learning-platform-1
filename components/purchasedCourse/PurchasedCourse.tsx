@@ -1,3 +1,4 @@
+"use client";
 import CourseSidebar from "@/components/purchasedCourse/CourseSidebar";
 import { courseApi } from "@/api/course.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -10,11 +11,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
 import OpenSidebarButton from "./OpenSidebarButton";
 import { useAppContext } from "@/context/context";
-import { authApi } from "@/api/auth/studentAuth.api";
+import { authApi as studentApi } from "@/api/auth/studentAuth.api";
+import { authApi as teacherApi } from "@/api/auth/teacherAuth.api";
 import PurchasedCourseLoading from "./PurchasedCourseLoading";
 import PurchasedCourseError from "./PurchasedCourseError";
 import { CourseProvider, useCourse } from "@/context/CourseContext";
 import { findChapterId } from "@/utils";
+import RedirectComponent from "@/components/ui/RedirectComponent";
 
 function Header({ title, isVisible }: { title: string; isVisible: boolean }) {
   return (
@@ -54,7 +57,13 @@ function Header({ title, isVisible }: { title: string; isVisible: boolean }) {
   );
 }
 
-function PurchasedCourseContent({ course }: { course: Course }) {
+function PurchasedCourseContent({
+  course,
+  role,
+}: {
+  course: Course;
+  role: "student" | "teacher";
+}) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
@@ -66,7 +75,7 @@ function PurchasedCourseContent({ course }: { course: Course }) {
 
   useEffect(() => {
     setActiveResource(
-      course.activeResource
+      course.activeResource && role !== "teacher"
         ? course.activeResource
         : course?.chapters.flatMap((c) => c.videos)[0] || null
     );
@@ -91,7 +100,7 @@ function PurchasedCourseContent({ course }: { course: Course }) {
   });
 
   useEffect(() => {
-    if (activeResource) {
+    if (activeResource && role !== "teacher") {
       updateActiveResourceMutation.mutate({
         courseId: course.id,
         resourceId: activeResource!.id,
@@ -134,20 +143,27 @@ function PurchasedCourseContent({ course }: { course: Course }) {
             <OpenSidebarButton onOpen={() => setIsSidebarOpen(true)} />
           )}
           <PurchasedCourseVideo />
-          <PurchasedCourseTabs />
+          <PurchasedCourseTabs role={role} />
         </div>
 
         <CourseSidebar
           onClose={() => setIsSidebarOpen(false)}
           isSidebarOpen={isSidebarOpen}
           isHeaderVisible={isHeaderVisible}
+          role={role}
         />
       </div>
     </>
   );
 }
 
-export default function PurchasedCourse({ id }: { id: number }) {
+export default function PurchasedCourse({
+  id,
+  role,
+}: {
+  id: number;
+  role: "student" | "teacher";
+}) {
   const {
     data: course,
     isLoading,
@@ -156,38 +172,74 @@ export default function PurchasedCourse({ id }: { id: number }) {
   } = useQuery({
     queryKey: ["course", id],
     queryFn: async () => {
-      return await courseApi.getStudentCourseById(Number(id));
+      if (role === "student") {
+        return await courseApi.getStudentCourseById(Number(id));
+      } else {
+        return await courseApi.getTeacherCourseById(Number(id));
+      }
     },
   });
 
-  const { setStudent } = useAppContext();
+  const { setStudent, setTeacher, setUser } = useAppContext();
   const { status: studentStatus, refetch: refetchStudent } = useQuery({
     queryKey: ["student"],
     queryFn: async () => {
-      const data = await authApi.me();
+      const data = await studentApi.me();
       setStudent(data);
+      setUser(data);
       return data;
     },
+    enabled: role == "student",
   });
 
-  if (isLoading || studentStatus === "pending") {
+  const { status: teacherStatus, refetch: refetchTeacher } = useQuery({
+    queryKey: ["teacher"],
+    queryFn: async () => {
+      const data = await teacherApi.me();
+      setTeacher(data);
+      setUser(data);
+      return data;
+    },
+    enabled: role == "teacher",
+  });
+
+  if (
+    isLoading ||
+    (studentStatus === "pending" && role === "student") ||
+    (teacherStatus === "pending" && role === "teacher")
+  ) {
     return <PurchasedCourseLoading />;
   }
 
-  if (isError || studentStatus === "error") {
+  if (isError || studentStatus === "error" || teacherStatus === "error") {
     return (
       <PurchasedCourseError
         onRetry={() => {
           refetch();
-          refetchStudent();
+          if (role === "student") {
+            refetchStudent();
+          } else if (role === "teacher") {
+            refetchTeacher();
+          }
         }}
+      />
+    );
+  }
+
+  if (!(course?.ownsCourse || course?.enrolled)) {
+    return (
+      <RedirectComponent
+        message="You need to purchase this course to access its content"
+        redirectTo={`/courseDetails/${id}`}
+        delay={5000}
+        variant="warning"
       />
     );
   }
 
   return (
     <CourseProvider initialCourse={course || null} refetch={refetch}>
-      <PurchasedCourseContent course={course!} />
+      <PurchasedCourseContent course={course!} role={role} />
     </CourseProvider>
   );
 }

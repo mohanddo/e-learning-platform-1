@@ -101,11 +101,21 @@ const CourseCard = ({ course, role }: { course: Course; role: string }) => {
               </Button>
             )}
 
+            {role == "teacher" && course.ownsCourse && (
+              <Button
+                className="btn-principal cursor-pointer"
+                onClick={() => router.push(`teacher/course/${course.id}`)}
+              >
+                Edit Course
+              </Button>
+            )}
+
             <Button
               variant={"outline"}
               className={`
-                ${role !== "student" ? "w-full" : ""}
-                    text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] cursor-pointer`}
+                flex-1
+                ${role === "unauthenticated" ? "w-full" : ""}
+                    text-[var(--addi-color-500)] font-semibold border-[var(--addi-color-500)] py-3 hover:bg-[var(--color-100)] cursor-pointer ml-2`}
               onClick={goToCourseDetails}
             >
               See Course details

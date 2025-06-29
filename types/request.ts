@@ -82,3 +82,9 @@ export interface UpdateActiveResourceRequest {
   chapterId: number;
   resourceId: number;
 }
+
+export interface CreateOrUpdateAnnouncement {
+  courseId: number;
+  text: string;
+  announcementId: number | null;
+}

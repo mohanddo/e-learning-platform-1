@@ -13,7 +13,11 @@ const tabList = [
   { key: "announcements", label: "Announcements" },
 ];
 
-const PurchasedCourseTabs: React.FC = () => {
+type PurchasedCourseTabsProps = {
+  role: "student" | "teacher";
+};
+
+const PurchasedCourseTabs: React.FC<PurchasedCourseTabsProps> = ({ role }) => {
   const [activeTab, setActiveTab] = useState<string>("presentation");
 
   return (
@@ -39,9 +43,11 @@ const PurchasedCourseTabs: React.FC = () => {
       {/* Tab Content */}
       <div className="p-6 min-h-[200px]">
         {activeTab === "presentation" && <CoursePresentation />}
-        {activeTab === "qa" && <CourseQAList />}
+        {activeTab === "qa" && <CourseQAList role={role} />}
         {activeTab === "reviews" && <PurchasedCourseReviewsTab />}
-        {activeTab === "announcements" && <CourseAnnouncementsList />}
+        {activeTab === "announcements" && (
+          <CourseAnnouncementsList role={role} />
+        )}
       </div>
     </div>
   );

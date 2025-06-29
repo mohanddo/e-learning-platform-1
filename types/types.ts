@@ -160,6 +160,7 @@ export interface UserPreview {
   lastName: string;
   hasProfilePic: boolean;
   sasTokenForReadingProfilePic: string;
+  role: "ROLE_STUDENT" | "ROLE_TEACHER" | "ROLE_ADMIN";
 }
 
 export type StudentPreview = UserPreview;

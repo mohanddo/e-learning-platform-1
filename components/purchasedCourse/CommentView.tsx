@@ -33,6 +33,7 @@ interface CommentViewProps {
   resource: Resource;
   onClose: () => void;
   onReplyCommentPosted: () => void;
+  role: "student" | "teacher";
 }
 
 const CommentView: React.FC<CommentViewProps> = ({
@@ -40,6 +41,7 @@ const CommentView: React.FC<CommentViewProps> = ({
   resource,
   onClose,
   onReplyCommentPosted,
+  role,
 }) => {
   const { course, refetch, setCourse } = useCourse();
   const isMounted = useRef<boolean | undefined>(undefined);
@@ -205,7 +207,10 @@ const CommentView: React.FC<CommentViewProps> = ({
       await refetch();
     },
     onError() {
-      showAlert("warning", "Failed to post a reply. Please try again");
+      showAlert(
+        "warning",
+        "Failed to post a reply. Please try again Please try again Please try again"
+      );
     },
   });
 
@@ -325,7 +330,14 @@ const CommentView: React.FC<CommentViewProps> = ({
                 />
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800">
-                    {reply.user.firstName} {reply.user.lastName} •{" "}
+                    {reply.user.firstName} {reply.user.lastName}
+                    {reply.user.role === "ROLE_TEACHER" &&
+                      course?.ownsCourse && (
+                        <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          Teacher
+                        </span>
+                      )}{" "}
+                    •{" "}
                     <span className="text-gray-500 font-normal">
                       {getRelativeTimeFromNow(reply.dateOfCreation)}
                     </span>
@@ -404,6 +416,7 @@ const CommentView: React.FC<CommentViewProps> = ({
               commentId={comment.id}
               resourceId={resource.id}
               chapterId={findChapterId(resource, course?.chapters)!}
+              role={role}
             />
           </div>
         </div>

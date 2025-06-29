@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import type { Course, Student, Teacher } from "@/types/types";
+import type { Course, Student, Teacher, User } from "@/types/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useEffect } from "react";
@@ -18,6 +18,9 @@ interface AppContextType {
 
   teacher: Teacher | null;
   setTeacher: (teacher: Teacher) => void;
+
+  user: User | null;
+  setUser: (user: User) => void;
 
   isLogged: boolean | undefined;
   logout: () => void;
@@ -46,6 +49,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [emailToVerify, setEmailToVerify] = useState<string | null>(null);
   const [student, setStudent] = useState<Student | null>(null);
   const [teacher, setTeacher] = useState<Teacher | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLogged, setIsLogged] = useState<boolean | undefined>(undefined);
   const [courses, setCourses] = useState<Course[] | null>(null);
   const [showHeader, setShowHeader] = useState<boolean>(true);
@@ -85,6 +89,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           setCourses,
           showHeader,
           setShowHeader,
+          user,
+          setUser,
         }}
       >
         {children}

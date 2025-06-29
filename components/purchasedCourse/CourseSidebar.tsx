@@ -17,12 +17,14 @@ interface CourseSidebarProps {
   onClose?: () => void;
   isHeaderVisible: boolean;
   isSidebarOpen: boolean;
+  role: "student" | "teacher";
 }
 
 const CourseSidebar: React.FC<CourseSidebarProps> = ({
   onClose,
   isHeaderVisible,
   isSidebarOpen,
+  role,
 }) => {
   const { course, setActiveResource, activeResource, setCourse } = useCourse();
   const handleResourceClick = (resource: Resource) => {
@@ -158,43 +160,47 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
                         `}
                         onClick={() => handleResourceClick(video)}
                       >
-                        <label className="relative flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={video.isFinished}
-                            onChange={(e) => {
-                              e.stopPropagation();
-                              if (video.isFinished) {
-                                deleteFinishedResourceMutation.mutate(video.id);
-                              } else {
-                                addFinishedResourceMutation.mutate({
-                                  courseId: course!.id,
-                                  chapterId: chapter.id,
-                                  resourceId: video.id,
-                                });
-                              }
-                              handleCheckboxChange(
-                                chapter.id,
-                                "video",
-                                video.id
-                              );
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="peer sr-only"
-                            tabIndex={-1}
-                          />
-                          <span
-                            className={`
+                        {role === "student" && (
+                          <label className="relative flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={video.isFinished}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                if (video.isFinished) {
+                                  deleteFinishedResourceMutation.mutate(
+                                    video.id
+                                  );
+                                } else {
+                                  addFinishedResourceMutation.mutate({
+                                    courseId: course!.id,
+                                    chapterId: chapter.id,
+                                    resourceId: video.id,
+                                  });
+                                }
+                                handleCheckboxChange(
+                                  chapter.id,
+                                  "video",
+                                  video.id
+                                );
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                              className="peer sr-only"
+                              tabIndex={-1}
+                            />
+                            <span
+                              className={`
                               w-4 h-4 flex items-center justify-center border-2 border-gray-800 rounded-sm
                               transition-all duration-200
                               peer-checked:bg-[var(--addi-color-500)]
                               peer-checked:border-[var(--addi-color-500)]
                               bg-white
                             `}
-                          >
-                            <Check className="text-white" />
-                          </span>
-                        </label>
+                            >
+                              <Check className="text-white" />
+                            </span>
+                          </label>
+                        )}
                         <VideoIcon
                           className="text-[var(--addi-color-500)]"
                           size={18}

@@ -9,6 +9,7 @@ import {
   UpVoteComment,
   UpVoteReplyComment,
   UpdateActiveResourceRequest,
+  CreateOrUpdateAnnouncement,
 } from "@/types/request";
 
 export const courseApi = {
@@ -129,5 +130,18 @@ export const courseApi = {
 
   updateActiveResource: async (request: UpdateActiveResourceRequest) => {
     await axiosInstance.put<void>(`resource/updateActiveResource`, request);
+  },
+
+  deleteAnnouncement: async (announcementId: number, courseId: number) => {
+    await axiosInstance.delete<void>(
+      `course/announcement/delete/${announcementId}/${courseId}`
+    );
+  },
+
+  createOrUpdateAnnouncement: async (request: CreateOrUpdateAnnouncement) => {
+    await axiosInstance.put<void>(
+      `course/announcement/createOrUpdate`,
+      request
+    );
   },
 };

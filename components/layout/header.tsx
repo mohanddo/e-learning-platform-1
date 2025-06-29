@@ -15,7 +15,7 @@ import {
 import { useAppContext } from "../../context/context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { commonAuthApi } from "@/api/auth/commonAuth.api";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 const profilePicsEndPoint =
@@ -23,7 +23,12 @@ const profilePicsEndPoint =
 const Header = () => {
   const { setIsSignUp, logout, isLogged, showHeader } = useAppContext();
   const router = useRouter();
+  const pathname = usePathname();
   const isMounted = useRef(false);
+
+  useEffect(() => {
+    console.log(pathname);
+  }, []);
 
   const logoutMutation = useMutation({
     mutationFn: commonAuthApi.logout,

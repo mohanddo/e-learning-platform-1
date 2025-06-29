@@ -2,12 +2,18 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
 import { useCourse } from "@/context/CourseContext";
 import { Comment, Resource } from "@/types/types";
-import AskQuestion from "./AskQuestion";
+import AskQuestion from "@/components/ui/CreateComponent";
 import { ChevronDown } from "lucide-react";
 import QAListItem from "./QAListItem";
 import CommentView from "./CommentView";
+import { findChapterId } from "@/utils";
+import showAlert from "@/components/ui/AlertC";
+import { useCreateOrUpdateCommentMutation } from "@/hooks/useCreateOrUpdateCommentMutation";
+type CourseQAListProps = {
+  role: "student" | "teacher";
+};
 
-const CourseQAList: React.FC = () => {
+const CourseQAList: React.FC<CourseQAListProps> = ({ role }) => {
   const isMounted = useRef<boolean | undefined>(undefined);
   useEffect(() => {
     isMounted.current = true;
@@ -26,6 +32,30 @@ const CourseQAList: React.FC = () => {
   );
 
   const { course, activeResource, refetch } = useCourse();
+
+  const [question, setQuestion] = useState<string>("");
+  const createCommentMutation = useCreateOrUpdateCommentMutation({
+    onSuccess: async () => {
+      if (isMounted.current) {
+        setShowAskQuestionComponent(false);
+        setQuestion("");
+      }
+      await refetch();
+    },
+    onError: () => {
+      if (isMounted.current) {
+        setShowAskQuestionComponent(false);
+      }
+      showAlert("warning", "Failed to create the question. Please try again.");
+    },
+    createOrUpdateCommentRequest: {
+      text: question,
+      resourceId: activeResource!.id,
+      chapterId: findChapterId(activeResource, course?.chapters)!,
+      courseId: course!.id,
+      commentId: null,
+    },
+  });
 
   // This code need to change, it is garbage
   useEffect(() => {
@@ -131,6 +161,7 @@ const CourseQAList: React.FC = () => {
         onReplyCommentPosted={async () => {
           await refetch();
         }}
+        role={role}
       />
     );
   }
@@ -180,14 +211,16 @@ const CourseQAList: React.FC = () => {
           </div>
         </div>
 
-        <Button
-          className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
-          onClick={() => {
-            setShowAskQuestionComponent(true);
-          }}
-        >
-          Ask a question
-        </Button>
+        {role === "student" && (
+          <Button
+            className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
+            onClick={() => {
+              setShowAskQuestionComponent(true);
+            }}
+          >
+            Ask a question
+          </Button>
+        )}
       </div>
 
       {/* Questions List */}
@@ -225,12 +258,12 @@ const CourseQAList: React.FC = () => {
               setShowAskQuestionComponent(false);
             }
           }}
-          onPost={async () => {
-            if (isMounted.current) {
-              setShowAskQuestionComponent(false);
-            }
-            await refetch();
+          mutation={createCommentMutation}
+          onChange={(text) => {
+            setQuestion(text);
           }}
+          title="Ask Question"
+          placeHolder="Enter your question..."
         />
       )}
     </div>

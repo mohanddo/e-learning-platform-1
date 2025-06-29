@@ -1,21 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCourse } from "@/context/CourseContext";
-import { findChapterId } from "@/utils";
-import { useCreateOrUpdateCommentMutation } from "@/hooks/useCreateOrUpdateCommentMutation";
-import showAlert from "../ui/AlertC";
-interface AskQuestionProps {
+import { UseMutationResult } from "@tanstack/react-query";
+interface CreateComponentProps {
   onClose: () => void;
-  onPost: () => void;
+  onChange: (text: string) => void;
+  mutation: UseMutationResult<void, Error, void, unknown>;
+  title: string;
+  placeHolder: string;
 }
 
-const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
+const CreateComponent: React.FC<CreateComponentProps> = ({
+  onClose,
+  onChange,
+  mutation,
+  title,
+  placeHolder,
+}) => {
   const isMounted = useRef(false);
 
   const [question, setQuestion] = useState<string>("");
-
-  const { course, activeResource } = useCourse();
 
   useEffect(() => {
     isMounted.current = true;
@@ -23,23 +27,6 @@ const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
       isMounted.current = false;
     };
   }, []);
-
-  const createCommentMutation = useCreateOrUpdateCommentMutation({
-    onSuccess: () => {
-      onPost();
-    },
-    onError: () => {
-      onClose();
-      showAlert("warning", "Failed to create the question. Please try again.");
-    },
-    createOrUpdateCommentRequest: {
-      text: question,
-      resourceId: activeResource!.id,
-      chapterId: findChapterId(activeResource, course?.chapters)!,
-      courseId: course!.id,
-      commentId: null,
-    },
-  });
 
   return (
     <div
@@ -52,7 +39,7 @@ const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
       >
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <p className="text-lg font-bold">Ask Question</p>
+          <p className="text-lg font-bold">{title}</p>
           <Button
             variant="ghost"
             size="icon"
@@ -68,9 +55,13 @@ const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
         <div className="px-6 py-4">
           <textarea
             className="w-full min-h-[100px] p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your question..."
+            placeholder={placeHolder}
             value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            onChange={(e) => {
+              setQuestion(e.target.value);
+
+              onChange(e.target.value);
+            }}
           />
         </div>
 
@@ -86,16 +77,16 @@ const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
 
           <Button
             className={`bg-[var(--addi-color-500)] text-white font-bold hover:bg-[var(--addi-color-400)]
-                ${createCommentMutation.isPending ? "opacity-50" : ""}
+                ${mutation.isPending ? "opacity-50" : ""}
               `}
             onClick={() => {
               if (question.length > 1) {
-                createCommentMutation.mutate();
+                mutation.mutate();
               }
             }}
-            disabled={createCommentMutation.isPending}
+            disabled={mutation.isPending}
           >
-            {createCommentMutation.isPending ? (
+            {mutation.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : null}
             Post
@@ -106,4 +97,4 @@ const AskQuestion: React.FC<AskQuestionProps> = ({ onClose, onPost }) => {
   );
 };
 
-export default AskQuestion;
+export default CreateComponent;
