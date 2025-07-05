@@ -2,6 +2,8 @@
 @import "https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap";
 @import "tailwindcss";
 @import "./definedClasses.css";
+@import "react-pdf/dist/Page/TextLayer.css";
+@import "react-pdf/dist/Page/AnnotationLayer.css";
 
 * {
   font-family: "Nunito Sans", sans-serif;

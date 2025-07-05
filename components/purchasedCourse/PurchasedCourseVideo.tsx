@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 import { UpdateVideoProgressRequest } from "@/types/request";
 import { findChapterId } from "@/utils";
-import { Course, Resource, Video } from "@/types/types";
+import { Course, Resource } from "@/types/types";
 import { useAddFinishedResourceMutation } from "@/hooks/useAddFinishedResourceMutation";
 
 const PurchasedCourseVideo: React.FC = () => {
@@ -51,10 +51,10 @@ const PurchasedCourseVideo: React.FC = () => {
           ...prevCourse,
           chapters: prevCourse.chapters.map((chapter) => ({
             ...chapter,
-            videos: chapter.videos.map((video) =>
-              video.id === prevResource.id
-                ? { ...video, videoProgress: prevProgress }
-                : video
+            resources: chapter.resources.map((resource) =>
+              resource.id === prevResource.id
+                ? { ...resource, videoProgress: prevProgress }
+                : resource
             ),
           })),
         };
@@ -87,10 +87,7 @@ const PurchasedCourseVideo: React.FC = () => {
       style={{ maxHeight: 500 }}
       onReady={() => {
         if (activeResource && !hasSeekedRef.current) {
-          playerRef.current?.seekTo(
-            (activeResource as Video).videoProgress,
-            "seconds"
-          );
+          playerRef.current?.seekTo(activeResource.videoProgress!, "seconds");
           hasSeekedRef.current = true;
         }
       }}
@@ -121,7 +118,7 @@ const PurchasedCourseVideo: React.FC = () => {
                   return chapter;
                 return {
                   ...chapter,
-                  videos: chapter.videos.map((v) =>
+                  resources: chapter.resources.map((v) =>
                     v.id === activeResource.id
                       ? { ...v, isFinished: !v.isFinished }
                       : v

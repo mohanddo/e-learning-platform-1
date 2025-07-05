@@ -214,35 +214,35 @@ const CoursePresentation: React.FC = () => {
       {/* Teacher Info */}
       <div className="flex items-center gap-6 bg-gray-50 p-4 rounded">
         <ProfileImage
-          src={`${profilePicsEndPoint}/${teacher!.id}?${
-            teacher!.sasTokenForReadingProfilePic
+          src={`${profilePicsEndPoint}/${course!.teacher.id}?${
+            course!.teacher.sasTokenForReadingProfilePic
           }`}
-          firstName={teacher!.firstName}
-          lastName={teacher!.lastName}
+          firstName={course!.teacher.firstName}
+          lastName={course!.teacher.lastName}
           className="mr-2"
           size="lg"
         />
         <div>
           <div className="font-bold text-lg">
-            {teacher!.firstName} {teacher!.lastName}
+            {course!.teacher.firstName} {course!.teacher.lastName}
           </div>
-          {teacher!.description && (
+          {course!.teacher.description && (
             <div className="text-md text-gray-600 mb-3 mt-1">
-              {teacher!.description}
+              {course!.teacher.description}
             </div>
           )}
-          {(teacher!.facebookLink ||
-            teacher!.youtubeLink ||
-            teacher!.instagramLink) && (
+          {(course!.teacher.facebookLink ||
+            course!.teacher.youtubeLink ||
+            course!.teacher.instagramLink) && (
             <div className="flex gap-2 mt-1">
-              {teacher!.facebookLink && (
+              {course!.teacher.facebookLink && (
                 <Button
                   asChild
                   variant="outline"
                   className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
                 >
                   <a
-                    href={teacher!.facebookLink}
+                    href={course!.teacher.facebookLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -250,14 +250,14 @@ const CoursePresentation: React.FC = () => {
                   </a>
                 </Button>
               )}
-              {teacher!.youtubeLink && (
+              {course!.teacher.youtubeLink && (
                 <Button
                   asChild
                   variant="outline"
                   className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
                 >
                   <a
-                    href={teacher!.youtubeLink}
+                    href={course!.teacher.youtubeLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -265,14 +265,14 @@ const CoursePresentation: React.FC = () => {
                   </a>
                 </Button>
               )}
-              {teacher!.instagramLink && (
+              {course!.teacher.instagramLink && (
                 <Button
                   asChild
                   variant="outline"
                   className="border-[var(--addi-color-500)] font-bold py-3 hover:bg-[var(--color-100)] flex items-center justify-center gap-2"
                 >
                   <a
-                    href={teacher!.instagramLink}
+                    href={course!.teacher.instagramLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

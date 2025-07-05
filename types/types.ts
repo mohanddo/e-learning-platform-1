@@ -129,8 +129,7 @@ export interface Chapter {
   id: number;
   title: string;
   dateOfCreation: string; // ISO 8601 datetime string
-  videos: Video[];
-  documents: Document[];
+  resources: Resource[];
 }
 
 export interface Resource {
@@ -140,15 +139,11 @@ export interface Resource {
   dateOfCreation: string;
   isFinished: boolean;
   free: boolean;
+  position: number;
   comments: Comment[];
+  duration: number | null;
+  videoProgress: number | null;
 }
-
-export interface Video extends Resource {
-  duration: number;
-  videoProgress: number;
-}
-
-export type Document = Resource;
 
 export interface UserPreview {
   id: number;

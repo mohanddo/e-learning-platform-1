@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useEffect } from "react";
 import Cookie from "js-cookie";
+import { useRouter, usePathname } from "next/navigation";
 
 interface AppContextType {
   categorie: string;
@@ -30,9 +31,6 @@ interface AppContextType {
 
   courses: Course[] | null;
   setCourses: (courses: Course[]) => void;
-
-  showHeader: boolean;
-  setShowHeader: (showHeader: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -52,13 +50,26 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLogged, setIsLogged] = useState<boolean | undefined>(undefined);
   const [courses, setCourses] = useState<Course[] | null>(null);
-  const [showHeader, setShowHeader] = useState<boolean>(true);
+  const router = useRouter();
+  const path = usePathname();
 
   const logout = () => {
     setStudent(null);
     setTeacher(null);
     setIsLogged(false);
+    const shouldRedirect =
+      path.startsWith("/teacher") || path.startsWith("/student");
+
+    const isAlreadyOnAuthPage = path.startsWith("/auth");
+    if (shouldRedirect && !isAlreadyOnAuthPage) {
+      router.push("/auth");
+    }
   };
+
+  useEffect(() => {
+    window.addEventListener("isLoggedOut", logout);
+    return () => window.removeEventListener("isLoggedOut", logout);
+  }, []);
 
   useEffect(() => {
     const token = Cookie.get("isLogged");
@@ -87,8 +98,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           setTeacher,
           courses,
           setCourses,
-          showHeader,
-          setShowHeader,
+
           user,
           setUser,
         }}

@@ -102,3 +102,63 @@ export interface UpdateCourseRequest {
   imageUrl?: string | null;
   introductionVideoUrl?: string | null;
 }
+
+export interface AddOrUpdateChapterRequest {
+  title: string;
+  courseId: number;
+  chapterId: number | null;
+}
+
+export interface ReorderChaptersRequest {
+  orderedChapterIds: number[];
+  courseId: number;
+}
+
+export interface ReorderResourcesRequest {
+  orderedResourceIds: number[];
+  chapterId: number;
+  courseId: number;
+}
+
+export interface AddVideoRequest {
+  title: string;
+  duration: number;
+  isFree: boolean;
+  downloadUrl: string;
+  courseId: number;
+  chapterId: number;
+}
+
+export interface AddDocumentRequest {
+  title: string;
+  isFree: boolean;
+  downloadUrl: string;
+  courseId: number;
+  chapterId: number;
+}
+
+export interface UpdateVideoRequest {
+  title: string;
+  isFree: boolean;
+  duration: number;
+  courseId: number;
+  chapterId: number;
+  videoId: number;
+}
+
+export interface UpdateDocumentRequest {
+  title: string;
+  isFree: boolean;
+  courseId: number;
+  chapterId: number;
+  documentId: number;
+}
+
+export interface UpdateResourceRequest {
+  title: string;
+  isFree: boolean;
+  duration: number | null;
+  courseId: number;
+  chapterId: number;
+  resourceId: number;
+}

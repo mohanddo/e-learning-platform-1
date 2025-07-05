@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import { Course, Resource } from "@/types/types";
+import React, { useEffect, useState } from "react";
+
+import { Accordion } from "@/components/ui/accordion";
+import { X } from "lucide-react";
+import { useCourse } from "@/context/CourseContext";
+import ChapterItem from "./ChapterItem";
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
-import { Video as VideoIcon, File, Check, X } from "lucide-react";
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
-import { formatSecondsToMMSS } from "@/utils";
-import { useCourse } from "@/context/CourseContext";
-import { useAddFinishedResourceMutation } from "@/hooks/useAddFinishedResourceMutation";
+import { ReorderChaptersRequest } from "@/types/request";
 
 interface CourseSidebarProps {
   onClose?: () => void;
@@ -24,67 +26,41 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
   onClose,
   isHeaderVisible,
   isSidebarOpen,
-  role,
 }) => {
-  const { course, setActiveResource, activeResource, setCourse } = useCourse();
-  const handleResourceClick = (resource: Resource) => {
-    setActiveResource(resource);
-  };
+  const { course, setIsAddModalOpen, setIsAddResourceModalOpen } = useCourse();
 
-  // const handleDocumentClick = (doc: Document) => {
-  //   window.open(doc.downloadUrl, "_blank");
-  // };
+  // State for chapter IDs
+  const [items, setItems] = useState<number[]>([]);
 
-  const addFinishedResourceMutation = useAddFinishedResourceMutation();
+  // Update items when course changes
+  useEffect(() => {
+    if (course?.chapters) {
+      setItems(course.chapters.map((_chapter, index) => index));
+    }
+  }, [course]);
 
-  const deleteFinishedResourceMutation = useMutation({
-    mutationFn: async (resourceId: number) => {
-      courseApi.deleteFinishedResource(resourceId);
-    },
-  });
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over) return;
+    if (active.id !== over.id) {
+      const oldIndex = items.indexOf(Number(active.id));
+      const newIndex = items.indexOf(Number(over.id));
+      const newItems = arrayMove(items, oldIndex, newIndex);
 
-  // Toggle studied status for video or document
-  const handleCheckboxChange = (
-    chapterId: number,
-    resourceType: "video" | "document",
-    resourceId: number
-  ) => {
-    if (resourceId == activeResource?.id) {
-      setActiveResource((prevActiveResource: Resource | null) => {
-        if (!prevActiveResource) return prevActiveResource;
-        return {
-          ...prevActiveResource,
-          isFinished: !prevActiveResource.isFinished,
-        };
+      setItems(newItems);
+
+      reorderChaptersMutationMutation.mutate({
+        courseId: course!.id,
+        orderedChapterIds: newItems.map((item) => course!.chapters[item].id),
       });
     }
-    setCourse((prevCourse: Course | null) => {
-      if (!prevCourse) return prevCourse;
+  }
 
-      return {
-        ...prevCourse,
-        chapters: prevCourse.chapters.map((chapter) => {
-          if (chapter.id !== chapterId) return chapter;
-
-          if (resourceType === "video") {
-            return {
-              ...chapter,
-              videos: chapter.videos.map((v) =>
-                v.id === resourceId ? { ...v, isFinished: !v.isFinished } : v
-              ),
-            };
-          } else {
-            return {
-              ...chapter,
-              documents: chapter.documents.map((d) =>
-                d.id === resourceId ? { ...d, isFinished: !d.isFinished } : d
-              ),
-            };
-          }
-        }),
-      };
-    });
-  };
+  const reorderChaptersMutationMutation = useMutation({
+    mutationFn: async (request: ReorderChaptersRequest) => {
+      await courseApi.reorderChapters(request);
+    },
+  });
 
   return (
     <aside
@@ -108,158 +84,47 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
         </button>
       </div>
 
+      {/* Add Chapter Button */}
+      {course!.ownsCourse && (
+        <div className="p-4 border-b border-gray-100 flex items-center justify-center gap-2">
+          <Button
+            onClick={() => setIsAddModalOpen(true)}
+            className="bg-[var(--addi-color-500)] text-white font-bold"
+          >
+            + Add Chapter
+          </Button>
+
+          <Button
+            onClick={() => setIsAddResourceModalOpen(true)}
+            className="bg-[var(--addi-color-500)] text-white font-bold"
+          >
+            + Add Resource
+          </Button>
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto p-4">
         <Accordion type="single" collapsible className="w-full">
-          {[...course!.chapters].map((chapter) => {
-            // Calculate chapter stats
-            const chapterTotalResources =
-              chapter.videos.length + chapter.documents.length;
-            const chapterCompletedResources =
-              chapter.videos.filter((v) => v.isFinished).length +
-              chapter.documents.filter((d) => d.isFinished).length;
-            const chapterTotalSeconds = chapter.videos.reduce(
-              (sum, v) => sum + (v.duration || 0),
-              0
-            );
-
-            const chapterHours = Math.floor(chapterTotalSeconds / 3600);
-            const chapterMinutes = Math.floor(
-              (chapterTotalSeconds % 3600) / 60
-            );
-            const chapterFormattedDuration =
-              chapterHours > 0
-                ? `${chapterHours} h ${chapterMinutes} min`
-                : `${chapterMinutes} min`;
-
-            return (
-              <AccordionItem
-                key={chapter.id}
-                value={chapter.id.toString()}
-                className="mb-2 border-none shadow-sm rounded-lg cursor-pointer"
-              >
-                <AccordionTrigger className="py-3 px-4 text-base font-bold data-[state=open]:bg-[var(--color-100)] cursor-pointer">
-                  <div className="flex flex-col justify-between w-full">
-                    <span>{chapter.title}</span>
-                    <span className="text-xs font-medium text-gray-600">
-                      {chapterCompletedResources} / {chapterTotalResources} |{" "}
-                      {chapterFormattedDuration}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 py-2">
-                  <div className="flex flex-col gap-2">
-                    {chapter.videos.map((video) => (
-                      <div
-                        key={video.id}
-                        className={`flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-[var(--color-100)]
-                          ${
-                            activeResource?.id == video.id
-                              ? "bg-[var(--color-100)]"
-                              : ""
-                          }
-                        `}
-                        onClick={() => handleResourceClick(video)}
-                      >
-                        {role === "student" && (
-                          <label className="relative flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={video.isFinished}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                if (video.isFinished) {
-                                  deleteFinishedResourceMutation.mutate(
-                                    video.id
-                                  );
-                                } else {
-                                  addFinishedResourceMutation.mutate({
-                                    courseId: course!.id,
-                                    chapterId: chapter.id,
-                                    resourceId: video.id,
-                                  });
-                                }
-                                handleCheckboxChange(
-                                  chapter.id,
-                                  "video",
-                                  video.id
-                                );
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="peer sr-only"
-                              tabIndex={-1}
-                            />
-                            <span
-                              className={`
-                              w-4 h-4 flex items-center justify-center border-2 border-gray-800 rounded-sm
-                              transition-all duration-200
-                              peer-checked:bg-[var(--addi-color-500)]
-                              peer-checked:border-[var(--addi-color-500)]
-                              bg-white
-                            `}
-                            >
-                              <Check className="text-white" />
-                            </span>
-                          </label>
-                        )}
-                        <VideoIcon
-                          className="text-[var(--addi-color-500)]"
-                          size={18}
-                        />
-                        <span className="truncate flex-1">{video.title}</span>
-                        <span className="ml-auto text-xs text-gray-500 min-w-[48px] text-right">
-                          {formatSecondsToMMSS(video.duration)}
-                        </span>
-                      </div>
-                    ))}
-                    {chapter.documents.map((doc) => (
-                      <div
-                        key={doc.id}
-                        className="flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-[var(--color-100)] text-gray-700"
-                        onClick={() => handleResourceClick(doc)}
-                      >
-                        <label className="relative flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={!!doc.isFinished}
-                            onChange={(e) => {
-                              e.stopPropagation();
-                              handleCheckboxChange(
-                                chapter.id,
-                                "document",
-                                doc.id
-                              );
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="peer sr-only"
-                            tabIndex={-1}
-                          />
-                          <span
-                            className={`
-                              w-4 h-4 flex items-center justify-center border-2 border-gray-800
-                              transition-all duration-200
-                              peer-checked:bg-[var(--addi-color-500)]
-                              peer-checked:border-[var(--addi-color-500)]
-                              bg-white
-                            `}
-                          >
-                            <Check
-                              className="text-white w-2.5 h-2.5 opacity-0 scale-75 transition-all duration-200 peer-checked:opacity-100 peer-checked:scale-100"
-                              strokeWidth={3}
-                            />
-                          </span>
-                        </label>
-                        <File
-                          className="text-[var(--addi-color-500)]"
-                          size={18}
-                        />
-                        <span className="truncate">{doc.title}</span>
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            );
-          })}
+          <DndContext
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCenter}
+          >
+            <SortableContext
+              items={items}
+              strategy={verticalListSortingStrategy}
+            >
+              {items.map((item) => {
+                if (!course!.chapters[item]) return;
+                return (
+                  <ChapterItem
+                    key={item}
+                    id={item}
+                    chapter={course!.chapters[item]}
+                  />
+                );
+              })}
+            </SortableContext>
+          </DndContext>
         </Accordion>
       </div>
     </aside>

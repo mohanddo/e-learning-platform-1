@@ -8,9 +8,9 @@ import { courseApi } from "@/api/course.api";
 import CourseDetailsSkeleton from "./courseDetailsSkeleton";
 import CourseDetailsError from "./courseDetailsError";
 import VideoPlayer from "../ui/VideoPlayer";
-import { Video } from "../../types/types";
 import { useEffect, useState } from "react";
 import ReviewModal from "../ui/ReviewModal";
+import { Chapter, Resource } from "@/types/types";
 const CourseDetails = ({ id, role }: { id: number; role: string }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
@@ -63,7 +63,7 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
   }
 
   // This part should be put in a useEffect ?
-  let freeVideos: Video[] = [];
+  let freeVideos: Resource[] = [];
   if (course) {
     freeVideos = [
       ...(course.introductionVideoUrl
@@ -76,12 +76,13 @@ const CourseDetails = ({ id, role }: { id: number; role: string }) => {
               duration: 0,
               dateOfCreation: "",
               isFinished: false,
-            } as Video,
+            } as Resource,
           ]
         : []),
-      ...course.chapters.flatMap(
-        (chapter: import("../../types/types").Chapter) =>
-          chapter.videos.filter((video: Video) => video.free)
+      ...course.chapters.flatMap((chapter: Chapter) =>
+        chapter.resources.filter(
+          (resource: Resource) => resource.free && resource.duration !== null
+        )
       ),
     ];
   } else {

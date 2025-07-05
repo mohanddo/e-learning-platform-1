@@ -21,22 +21,15 @@ import { useEffect, useRef } from "react";
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
 const Header = () => {
-  const { setIsSignUp, logout, isLogged, showHeader } = useAppContext();
+  const { setIsSignUp, logout, isLogged } = useAppContext();
   const router = useRouter();
   const pathname = usePathname();
   const isMounted = useRef(false);
-
-  useEffect(() => {
-    console.log(pathname);
-  }, []);
 
   const logoutMutation = useMutation({
     mutationFn: commonAuthApi.logout,
     onSuccess: () => {
       logout();
-      if (isMounted.current) {
-        router.push("/auth");
-      }
     },
     onError: () => {
       if (isMounted.current) {
@@ -67,7 +60,7 @@ const Header = () => {
     }
   }, [isLogged]);
 
-  if (!showHeader) {
+  if (pathname.includes("/course/")) {
     return null;
   }
 

@@ -64,22 +64,13 @@ const CourseQAList: React.FC<CourseQAListProps> = ({ role }) => {
       let updatedResource: Resource | null = null;
 
       course.chapters.forEach((chapter) => {
-        chapter.videos.forEach((video) => {
-          const foundComment = video.comments?.find(
+        chapter.resources.forEach((resource) => {
+          const foundComment = resource.comments?.find(
             (c) => c.id === selectedComment.id
           );
           if (foundComment) {
             updatedComment = foundComment;
-            updatedResource = video;
-          }
-        });
-        chapter.documents.forEach((doc) => {
-          const foundComment = doc.comments?.find(
-            (c) => c.id === selectedComment.id
-          );
-          if (foundComment) {
-            updatedComment = foundComment;
-            updatedResource = doc;
+            updatedResource = resource;
           }
         });
       });
@@ -97,15 +88,11 @@ const CourseQAList: React.FC<CourseQAListProps> = ({ role }) => {
   const totalComments = useMemo(() => {
     if (!course?.chapters) return 0;
     return course.chapters.reduce((total, chapter) => {
-      const videoComments = chapter.videos.reduce(
-        (sum, video) => sum + (video.comments?.length || 0),
+      const resourceComments = chapter.resources.reduce(
+        (sum, resource) => sum + (resource.comments?.length || 0),
         0
       );
-      const documentComments = chapter.documents.reduce(
-        (sum, doc) => sum + (doc.comments?.length || 0),
-        0
-      );
-      return total + videoComments + documentComments;
+      return total + resourceComments;
     }, 0);
   }, [course]);
 
@@ -116,14 +103,9 @@ const CourseQAList: React.FC<CourseQAListProps> = ({ role }) => {
       commentsMap.set(activeResource, activeResource.comments || []);
     } else if (filter === "all" && course?.chapters) {
       course.chapters.forEach((chapter) => {
-        chapter.videos.forEach((video) => {
-          if (video.comments) {
-            commentsMap.set(video, video.comments);
-          }
-        });
-        chapter.documents.forEach((doc) => {
-          if (doc.comments) {
-            commentsMap.set(doc, doc.comments);
+        chapter.resources.forEach((resource) => {
+          if (resource.comments) {
+            commentsMap.set(resource, resource.comments);
           }
         });
       });

@@ -17,18 +17,9 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    const path = window?.location?.pathname;
 
     if ((status === 401 || status === 403) && typeof window !== "undefined") {
-      const shouldRedirect =
-        path.startsWith("/teacher") || path.startsWith("/student");
-
-      const isAlreadyOnAuthPage = path.startsWith("/auth");
-
-      if (shouldRedirect && !isAlreadyOnAuthPage) {
-        window.location.href = "/auth";
-      }
-
+      window.dispatchEvent(new Event("isLoggedOut"));
       Cookie.remove("isLogged");
     }
 

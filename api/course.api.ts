@@ -1,5 +1,5 @@
 import { axiosInstance } from "./axios";
-import { Course } from "../types/types";
+import { Course, Teacher } from "../types/types";
 import {
   AddOrUpdateCourseReviewRequest,
   CreateOrUpdateAnnouncementComment,
@@ -11,7 +11,16 @@ import {
   UpdateActiveResourceRequest,
   CreateOrUpdateAnnouncement,
   UpdateCourseRequest,
+  AddOrUpdateChapterRequest,
+  ReorderChaptersRequest,
+  ReorderResourcesRequest,
+  AddVideoRequest,
+  AddDocumentRequest,
+  UpdateDocumentRequest,
+  UpdateVideoRequest,
+  UpdateResourceRequest,
 } from "@/types/request";
+import axios from "axios";
 
 export const courseApi = {
   getAllCourses: async () => {
@@ -148,5 +157,71 @@ export const courseApi = {
 
   updateCourse: async (request: UpdateCourseRequest) => {
     await axiosInstance.put<void>(`course/update`, request);
+  },
+
+  addOrUpdateChapter: async (request: AddOrUpdateChapterRequest) => {
+    await axiosInstance.put<void>(`chapter/addOrUpdate`, request);
+  },
+
+  reorderChapters: async (request: ReorderChaptersRequest) => {
+    await axiosInstance.put<void>(`chapter/reorderChapters`, request);
+  },
+
+  deleteChapter: async (chapterId: number, courseId: number) => {
+    await axiosInstance.delete<void>(
+      `chapter/deleteChapter/${courseId}/${chapterId}`
+    );
+  },
+
+  deleteResource: async (
+    chapterId: number,
+    courseId: number,
+    resourceId: number
+  ) => {
+    await axiosInstance.delete<void>(
+      `resource/deleteResource/${courseId}/${chapterId}/${resourceId}`
+    );
+  },
+
+  addVideo: async (request: AddVideoRequest) => {
+    await axiosInstance.post<void>(`resource/addVideo`, request);
+  },
+
+  addDocument: async (
+    request: AddDocumentRequest,
+    teacher: Teacher,
+    document: File
+  ) => {
+    const blobUrl = `${teacher!.baseUrl}/${request.courseId}/${
+      request.chapterId
+    }/${document.name}?${teacher!.sasToken}`;
+    try {
+      await axios.put(blobUrl, document, {
+        headers: {
+          "x-ms-blob-type": "BlockBlob",
+          "Content-Type": document.type,
+        },
+      });
+
+      await axiosInstance.post<void>(`resource/addDocument`, request);
+    } catch (error) {
+      throw new Error(String(error));
+    }
+  },
+
+  reorderResources: async (request: ReorderResourcesRequest) => {
+    await axiosInstance.put<void>(`resource/reorderResources`, request);
+  },
+
+  updateVideo: async (request: UpdateVideoRequest) => {
+    await axiosInstance.put<void>(`resource/updateVideo`, request);
+  },
+
+  updateDocument: async (request: UpdateDocumentRequest) => {
+    await axiosInstance.put<void>(`resource/updateDocument`, request);
+  },
+
+  updateResource: async (request: UpdateResourceRequest) => {
+    await axiosInstance.put<void>(`resource/updateResource`, request);
   },
 };

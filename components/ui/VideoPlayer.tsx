@@ -1,15 +1,15 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { X } from "lucide-react";
 import { Button } from "./button";
 import { formatSecondsToMMSS } from "@/utils";
-import { Video as VideoType } from "@/types/types";
+import { Resource } from "@/types/types";
 
 interface VideoPlayerProps {
   open: boolean;
   onClose: () => void;
-  freeVideos: VideoType[];
-  onSelectVideo: (video: VideoType) => void;
+  freeVideos: Resource[];
+  onSelectVideo: (video: Resource) => void;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -91,7 +91,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 </div>
                 {index != 0 && (
                   <span className="text-xs text-gray-300 font-semibold min-w-[40px] text-right">
-                    {formatSecondsToMMSS(video.duration)}
+                    {formatSecondsToMMSS(video.duration!)}
                   </span>
                 )}
               </button>

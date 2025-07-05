@@ -103,9 +103,9 @@ const AboutCourse = ({ course }: AboutCourseProps) => {
                   {chapter.title}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-gray-400 w-full px-5 py-5">
-                  {chapter.videos.map((video) => (
+                  {chapter.resources.map((resource) => (
                     <div
-                      key={video.id}
+                      key={resource.id}
                       className="flex items-center justify-between gap-2 mt-2 mb-2"
                     >
                       <div className="flex items-center gap-2">
@@ -113,33 +113,20 @@ const AboutCourse = ({ course }: AboutCourseProps) => {
                           className="text-[var(--addi-color-500)]"
                           size={20}
                         />
-                        <p className="text-md text-gray-400">{video.title}</p>
-                        {video.free && (
-                          <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
-                            Free
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-400">
-                        {formatSecondsToMMSS(video.duration)}
-                      </p>
-                    </div>
-                  ))}
-                  {chapter.documents.map((document) => (
-                    <div
-                      key={document.id}
-                      className="flex items-center justify-between gap-2 mt-2 mb-2"
-                    >
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm text-gray-400">
-                          {document.title}
+                        <p className="text-md text-gray-400">
+                          {resource.title}
                         </p>
-                        {document.free && (
+                        {resource.free && (
                           <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
                             Free
                           </span>
                         )}
                       </div>
+                      {resource.duration !== null && (
+                        <p className="text-sm text-gray-400">
+                          {formatSecondsToMMSS(resource.duration!)}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </AccordionContent>

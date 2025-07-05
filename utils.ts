@@ -165,7 +165,10 @@ export function calculateCourseTotalHours(course: Course): number {
   const totalSeconds = course.chapters.reduce((sum, chapter) => {
     return (
       sum +
-      chapter.videos.reduce((vSum, video) => vSum + (video.duration || 0), 0)
+      chapter.resources.reduce(
+        (vSum, resource) => vSum + (resource.duration || 0),
+        0
+      )
     );
   }, 0);
   return parseFloat((totalSeconds / 3600).toFixed(2));
@@ -195,13 +198,8 @@ export const findChapterId = (
   if (!chapters || !resource) return null;
 
   for (const chapter of chapters) {
-    // Check in videos
-    const videoFound = chapter.videos.find((video) => video.id === resource.id);
-    if (videoFound) return chapter.id;
-
-    // Check in documents
-    const docFound = chapter.documents.find((doc) => doc.id === resource.id);
-    if (docFound) return chapter.id;
+    const resourceFound = chapter.resources.find((r) => r.id === resource.id);
+    if (resourceFound) return chapter.id;
   }
   return null;
 };
@@ -216,24 +214,12 @@ export function updateCommentInCourse(
     ...course,
     chapters: course.chapters.map((chapter) => ({
       ...chapter,
-      videos: chapter.videos.map((resource) => ({
+      resources: chapter.resources.map((resource) => ({
         ...resource,
         comments: resource.comments.map((comment) =>
           comment.id === commentId
             ? (() => {
                 const updated: Comment = { ...comment };
-                updater(updated);
-                return updated;
-              })()
-            : comment
-        ),
-      })),
-      documents: chapter.documents.map((resource) => ({
-        ...resource,
-        comments: resource.comments.map((comment) =>
-          comment.id === commentId
-            ? (() => {
-                const updated = { ...comment };
                 updater(updated);
                 return updated;
               })()
@@ -254,22 +240,7 @@ export function updateReplyCommentInCourse(
     ...course,
     chapters: course.chapters.map((chapter) => ({
       ...chapter,
-      videos: chapter.videos.map((resource) => ({
-        ...resource,
-        comments: resource.comments.map((comment) => ({
-          ...comment,
-          replyComments: comment.replyComments.map((replyComment) =>
-            replyComment.id == replyCommentId
-              ? (() => {
-                  const updated = { ...replyComment };
-                  updater(updated);
-                  return updated;
-                })()
-              : replyComment
-          ),
-        })),
-      })),
-      documents: chapter.documents.map((resource) => ({
+      resources: chapter.resources.map((resource) => ({
         ...resource,
         comments: resource.comments.map((comment) => ({
           ...comment,
@@ -286,4 +257,22 @@ export function updateReplyCommentInCourse(
       })),
     })),
   };
+}
+
+export async function getVideoDuration(file: File): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+
+    video.src = URL.createObjectURL(file);
+
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src);
+      resolve(video.duration);
+    };
+
+    video.onerror = (e) => {
+      reject(new Error("Failed to load video metadata"));
+    };
+  });
 }
