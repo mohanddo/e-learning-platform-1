@@ -75,10 +75,40 @@ export default function CartItem({
             ? "One-time purchase"
             : "Free course"}
         </p>
+        {/* Discount Info */}
+        {item.discountPercentage && item.discountPercentage > 0 && (
+          <div className="flex items-center gap-2 mt-2">
+            <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">
+              -{item.discountPercentage}% OFF
+            </span>
+            {item.discountExpirationDate && (
+              <span className="text-xs text-gray-500 ml-2">
+                Expires on{" "}
+                {new Date(item.discountExpirationDate).toLocaleDateString()}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-6">
-        <p className="text-xl font-semibold text-gray-800">${item.price}</p>
+        {/* Price display with discount */}
+        {item.discountPercentage && item.discountPercentage > 0 ? (
+          <div className="flex flex-col items-end">
+            <span className="text-green-600 text-xl font-bold">
+              {(
+                item.price -
+                (item.price * item.discountPercentage) / 100
+              ).toFixed(0)}{" "}
+              DA
+            </span>
+            <span className="text-gray-400 text-sm font-semibold line-through">
+              {item.price} DA
+            </span>
+          </div>
+        ) : (
+          <p className="text-xl font-semibold text-gray-800">{item.price} DA</p>
+        )}
         <Button
           variant="outline"
           className={`text-red-500 border-red-500 hover:bg-red-50 transition-colors duration-200 

@@ -42,7 +42,12 @@ const Cart = () => {
     },
     onSuccess: (data) => {
       if (isMounted.current) {
-        router.replace(data);
+        if (data) {
+          router.replace(data);
+        } else {
+          router.replace("/student/profile");
+          showAlert("success", "Purchased cart successfully.");
+        }
       }
     },
     onError: () => {
@@ -94,7 +99,12 @@ const Cart = () => {
               <p className="text-3xl font-bold text-gray-900">
                 {student!.courses
                   .filter((crs) => crs.inCart)
-                  .reduce((total, item) => total + item.price, 0)
+                  .reduce((total, item) => {
+                    const plus: number = item.discountPercentage
+                      ? (item.price * item.discountPercentage) / 100
+                      : item.price;
+                    return total + plus;
+                  }, 0)
                   .toFixed(2)}{" "}
                 DA
               </p>

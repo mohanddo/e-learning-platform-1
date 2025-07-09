@@ -9,6 +9,7 @@ import {
   Phone,
   Mail,
   Play,
+  Loader2,
 } from "lucide-react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
@@ -50,7 +51,12 @@ const JoinCourse = ({
   const purchaseCourseMutation = useMutation({
     mutationFn: paymentApi.purchaseCourse,
     onSuccess(data) {
-      router.replace(data);
+      if (data) {
+        router.replace(data);
+      } else {
+        router.push(`/student/course/${course.id}`);
+        showAlert("success", "Purchased course successfully.");
+      }
     },
     onError: () => {
       showAlert("warning", "Failed to purchase course. Please try again.");
@@ -181,7 +187,7 @@ const JoinCourse = ({
             <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 px-3 py-2 rounded-lg mb-4">
               <Clock size={16} className="text-yellow-500" />
               <span className="text-sm font-medium text-yellow-800">
-                Expires on{" "}
+                Discount Expires on{" "}
                 {new Date(course.discountExpirationDate).toLocaleDateString(
                   undefined,
                   {
@@ -246,10 +252,18 @@ const JoinCourse = ({
                 </div>
 
                 <Button
-                  className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold w-full"
+                  className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold w-full flex items-center justify-center"
                   onClick={handleJoinCourse}
+                  disabled={purchaseCourseMutation.isPending}
                 >
-                  Join Course
+                  {purchaseCourseMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Joining...
+                    </>
+                  ) : (
+                    "Join Course"
+                  )}
                 </Button>
               </div>
             )}

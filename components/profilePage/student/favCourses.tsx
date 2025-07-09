@@ -32,7 +32,7 @@ const FavoritCouses = () => {
             .filter((crs) => crs.favourite)
             .map((crs) => (
               <div
-                className="w-[100%] flex flex-row items-center mb-2 p-5 border border-gray-200 rounded-lg hover:bg-gray-200"
+                className="w-[100%] flex flex-row items-center mb-2 p-5 border border-gray-200 rounded-lg hover:bg-gray-200 cursor-pointer"
                 onClick={() => goToPage(crs.id)}
                 key={crs.id}
               >
