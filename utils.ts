@@ -2,6 +2,7 @@ import { JwtPayload, Course, Resource, Chapter } from "@/types/types";
 
 import { jwtDecode } from "jwt-decode";
 import { CourseReview, Comment, ReplyComment } from "@/types/types";
+import { BlockBlobClient } from "@azure/storage-blob";
 
 // utils/validations.ts
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -276,3 +277,19 @@ export async function getVideoDuration(file: File): Promise<number> {
     };
   });
 }
+
+export const uploadVideoToBlobStorage = async (
+  video: File,
+  setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+  blockBlobClient: BlockBlobClient
+) => {
+  await blockBlobClient.uploadData(video, {
+    blobHTTPHeaders: { blobContentType: video.type },
+    onProgress: (progress) => {
+      setUploadProgress((progress.loadedBytes / video.size) * 100);
+    },
+    maxSingleShotSize: 256 * 1024, // 256 KB
+    blockSize: 256 * 1024, // 256 KB per block
+    concurrency: 1,
+  });
+};

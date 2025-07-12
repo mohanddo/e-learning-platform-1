@@ -9,28 +9,26 @@ import Cookie from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 
 interface AppContextType {
-  categorie: string;
-  setCategorie: React.Dispatch<React.SetStateAction<string>>;
   isSignUp: boolean;
   setIsSignUp: React.Dispatch<React.SetStateAction<boolean>>;
 
   student: Student | null;
-  setStudent: (student: Student) => void;
+  setStudent: React.Dispatch<React.SetStateAction<Student | null>>;
 
   teacher: Teacher | null;
-  setTeacher: (teacher: Teacher) => void;
+  setTeacher: React.Dispatch<React.SetStateAction<Teacher | null>>;
 
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 
   isLogged: boolean | undefined;
   logout: () => void;
 
   emailToVerify: string | null;
-  setEmailToVerify: (emailToVerify: string) => void;
+  setEmailToVerify: React.Dispatch<React.SetStateAction<string | null>>;
 
   courses: Course[] | null;
-  setCourses: (courses: Course[]) => void;
+  setCourses: React.Dispatch<React.SetStateAction<Course[] | null>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -42,7 +40,6 @@ const queryClient = new QueryClient({
   },
 });
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [categorie, setCategorie] = useState<string>("All");
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [emailToVerify, setEmailToVerify] = useState<string | null>(null);
   const [student, setStudent] = useState<Student | null>(null);
@@ -84,8 +81,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     <QueryClientProvider client={queryClient}>
       <AppContext.Provider
         value={{
-          categorie,
-          setCategorie,
           isSignUp,
           setIsSignUp,
           student,

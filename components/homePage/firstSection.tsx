@@ -1,9 +1,21 @@
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+"use client";
+
+import { Button } from "../ui/button";
 import { TypingAnimation } from "@/components/magicui/typing-animation";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import { NumberTicker } from "../magicui/number-ticker";
 
 const FirstSection = () => {
+  const handleStartNow = () => {
+    const coursesSection = document.getElementById("courses");
+    if (coursesSection) {
+      coursesSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <section className="h-auto w-full flex flex-row pt-[3%] bg-[var(--color-50)]">
       <div className="flex-1 flex flex-col justify-center h-screen pt-[5%] pl-16">
@@ -23,16 +35,14 @@ const FirstSection = () => {
             You can now learn from anywhere, and build a bright career
           </TypingAnimation>
         </div>
-        <div className="w-[70%] mb-9">
-          <p className="text-sm font-bold text-gray-400">
-            it has survived not only five centuries but also the leap into
-            electronic typesetting
-          </p>
-        </div>
+
         <div className="w-full">
-          <InteractiveHoverButton className="btn-principal ">
-            Start Course
-          </InteractiveHoverButton>
+          <Button
+            className="btn-principal text-xl px-6 py-3 h-auto font-semibold"
+            onClick={handleStartNow}
+          >
+            Start Now
+          </Button>
         </div>
       </div>
       <div className="relative flex-2 flex items-center justify-center">

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, LogOut, User as UserIcon } from "lucide-react";
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+import { ShoppingCart, LogOut, User as UserIcon, BookOpen } from "lucide-react";
+import { Button } from "../ui/button";
 import ProfileImage from "@/components/ui/profile-image";
 import {
   DropdownMenu,
@@ -93,6 +93,15 @@ const Header = () => {
         >
           Contact
         </Link>
+
+        {user?.role == "ROLE_TEACHER" && (
+          <Link
+            href="/teacher/createCourse"
+            className="header-Links flex-[0.3] hover:text-[var(--color-500)] transition-colors duration-200 whitespace-nowrap"
+          >
+            Create Course
+          </Link>
+        )}
       </nav>
 
       <div className="flex-1 flex flex-row items-center justify-end gap-10">
@@ -106,9 +115,9 @@ const Header = () => {
               Sign in
             </Link>
             <Link href="/auth" onClick={() => setIsSignUp(true)}>
-              <InteractiveHoverButton className="rounded-lg px-4 py-2 text-center border-1 border-solid border-gray-300 bg-white text-black">
+              <Button className="rounded-lg px-4 py-2 text-center border-1 border-solid border-gray-300 bg-white text-black">
                 Sign up
-              </InteractiveHoverButton>
+              </Button>
             </Link>
           </>
         ) : (
@@ -126,6 +135,7 @@ const Header = () => {
                   </button>
                 </div>
               )}
+
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex flex-row hover:bg-[var(--color-300)] gap-3 items-center cursor-alias p-2 rounded-lg">
                   <p className="font-medium">
@@ -155,6 +165,19 @@ const Header = () => {
                       <span>Profile</span>
                     </Link>
                   </DropdownMenuItem>
+
+                  {user?.role === "ROLE_TEACHER" && (
+                    <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                      <Link
+                        href={"/teacher/createCourse"}
+                        className="flex flex-row gap-2 w-full items-center"
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        <span>Create course</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuItem
                     className="hover:bg-gray-100 cursor-pointer flex flex-row gap-2 items-center"
                     onClick={() => logoutMutation.mutate()}

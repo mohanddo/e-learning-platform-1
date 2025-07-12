@@ -50,7 +50,7 @@ const CourseQAList: React.FC<CourseQAListProps> = ({ role }) => {
     },
     createOrUpdateCommentRequest: {
       text: question,
-      resourceId: activeResource!.id,
+      resourceId: activeResource ? activeResource.id : -1,
       chapterId: findChapterId(activeResource, course?.chapters)!,
       courseId: course!.id,
       commentId: null,
@@ -195,8 +195,13 @@ const CourseQAList: React.FC<CourseQAListProps> = ({ role }) => {
 
         {role === "student" && (
           <Button
+            disabled={!activeResource}
             className="bg-[var(--addi-color-400)] hover:bg-[var(--addi-color-500)] text-white text-md font-semibold"
             onClick={() => {
+              if (!activeResource) {
+                showAlert("warning", "Please select a session/resource first.");
+                return;
+              }
               setShowAskQuestionComponent(true);
             }}
           >

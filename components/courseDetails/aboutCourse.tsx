@@ -92,47 +92,54 @@ const AboutCourse = ({ course }: AboutCourseProps) => {
           Curriculum
         </p>
         <div className="flex flex-col justify-center">
-          <Accordion type="single" collapsible className="w-[90%]">
-            {course.chapters.map((chapter) => (
-              <AccordionItem
-                key={chapter.id}
-                value={chapter.id.toString()}
-                className="border-none shadow-md mb-3 rounded-lg"
-              >
-                <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)] cursor-pointer">
-                  {chapter.title}
-                </AccordionTrigger>
-                <AccordionContent className="text-sm text-gray-400 w-full px-5 py-5">
-                  {chapter.resources.map((resource) => (
-                    <div
-                      key={resource.id}
-                      className="flex items-center justify-between gap-2 mt-2 mb-2"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Video
-                          className="text-[var(--addi-color-500)]"
-                          size={20}
-                        />
-                        <p className="text-md text-gray-400">
-                          {resource.title}
-                        </p>
-                        {resource.free && (
-                          <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
-                            Free
-                          </span>
+          {course.chapters.length === 0 ? (
+            <div className="w-full flex flex-col items-center justify-center text-gray-400 py-8">
+              <span className="text-2xl mb-2">📄</span>
+              <span className="text-base">No curriculum available yet.</span>
+            </div>
+          ) : (
+            <Accordion type="single" collapsible className="w-[90%]">
+              {course.chapters.map((chapter) => (
+                <AccordionItem
+                  key={chapter.id}
+                  value={chapter.id.toString()}
+                  className="border-none shadow-md mb-3 rounded-lg"
+                >
+                  <AccordionTrigger className="py-4 px-5 text-lg font-bold data-[state=open]:bg-[var(--color-100)] cursor-pointer">
+                    {chapter.title}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-sm text-gray-400 w-full px-5 py-5">
+                    {chapter.resources.map((resource) => (
+                      <div
+                        key={resource.id}
+                        className="flex items-center justify-between gap-2 mt-2 mb-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Video
+                            className="text-[var(--addi-color-500)]"
+                            size={20}
+                          />
+                          <p className="text-md text-gray-400">
+                            {resource.title}
+                          </p>
+                          {resource.free && (
+                            <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
+                              Free
+                            </span>
+                          )}
+                        </div>
+                        {resource.duration !== null && (
+                          <p className="text-sm text-gray-400">
+                            {formatSecondsToMMSS(resource.duration!)}
+                          </p>
                         )}
                       </div>
-                      {resource.duration !== null && (
-                        <p className="text-sm text-gray-400">
-                          {formatSecondsToMMSS(resource.duration!)}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
         </div>
       </div>
 

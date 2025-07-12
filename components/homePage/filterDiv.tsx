@@ -1,13 +1,28 @@
 "use client";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { categories } from "../../app/data";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useAppContext } from "../../context/context";
-// import CourseCard from "./courseCard";
+import { useFilteredCourses } from "../../context/FilteredCoursesContext";
+
+const categories: { id: number; name: string }[] = [
+  { id: 1, name: "Math" },
+  { id: 2, name: "Science" },
+  { id: 3, name: "History" },
+  { id: 4, name: "Language" },
+  { id: 5, name: "Programming" },
+  { id: 6, name: "Physics" },
+];
 
 const FilterDiv = () => {
-  const { categorie, setCategorie } = useAppContext();
+  const { courses } = useAppContext();
+  const {
+    filterCourses,
+    currentCategory,
+    setCurrentCategory,
+    currentCourseName,
+    setCurrentCourseName,
+  } = useFilteredCourses();
 
   const [startIndex, setStartIndex] = useState<number>(0);
   const categoriesPerPage = 5;
@@ -44,6 +59,10 @@ const FilterDiv = () => {
               type="text"
               placeholder="Search for a course"
               className="focus:outline-none focus:ring-0 focus:border-transparent w-md ml-2"
+              onChange={(e) => {
+                filterCourses(courses, currentCategory, e.target.value);
+                setCurrentCourseName(e.target.value);
+              }}
             />
             <button className="cursor-pointer px-1.5 rounded-lg py-1.5 bg-[var(--color-100)] text-[var(--color-400)] hover:text-[var(--addi-color-500)]">
               <Search />
@@ -74,14 +93,18 @@ const FilterDiv = () => {
                 className={`w-32 border-gray-300 hover:text-[var(--addi-color-500)] 
                                                 hover:border-[var(--addi-color-500)] hover:font-semibold 
                                                 ${
-                                                  ca.name === categorie
+                                                  ca.name === currentCategory
                                                     ? "text-[var(--addi-color-500)]  border-[var(--addi-color-500)] font-semibold"
                                                     : ""
                                                 }`}
                 onClick={() => {
-                  ca.name === categorie
-                    ? setCategorie("All")
-                    : setCategorie(ca.name);
+                  if (ca.name === currentCategory) {
+                    setCurrentCategory("All");
+                    filterCourses(courses, "All", currentCourseName);
+                  } else {
+                    setCurrentCategory(ca.name);
+                    filterCourses(courses, ca.name, currentCourseName);
+                  }
                 }}
               >
                 {ca.name}

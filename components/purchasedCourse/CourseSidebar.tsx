@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
 import { ReorderChaptersRequest } from "@/types/request";
+import showAlert from "../ui/AlertC";
 
 interface CourseSidebarProps {
   onClose?: () => void;
@@ -95,7 +96,13 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
           </Button>
 
           <Button
-            onClick={() => setIsAddResourceModalOpen(true)}
+            onClick={() => {
+              if (course!.chapters.length <= 0) {
+                showAlert("warning", "Please add a chapter first.");
+              } else {
+                setIsAddResourceModalOpen(true);
+              }
+            }}
             className="bg-[var(--addi-color-500)] text-white font-bold"
           >
             + Add Resource
@@ -104,28 +111,35 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
       )}
 
       <div className="flex-1 overflow-y-auto p-4">
-        <Accordion type="single" collapsible className="w-full">
-          <DndContext
-            onDragEnd={handleDragEnd}
-            collisionDetection={closestCenter}
-          >
-            <SortableContext
-              items={items}
-              strategy={verticalListSortingStrategy}
+        {!course?.chapters || course.chapters.length === 0 ? (
+          <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+            <span className="text-2xl mb-2">📄</span>
+            <span className="text-base">No chapters yet.</span>
+          </div>
+        ) : (
+          <Accordion type="single" collapsible className="w-full">
+            <DndContext
+              onDragEnd={handleDragEnd}
+              collisionDetection={closestCenter}
             >
-              {items.map((item) => {
-                if (!course!.chapters[item]) return;
-                return (
-                  <ChapterItem
-                    key={item}
-                    id={item}
-                    chapter={course!.chapters[item]}
-                  />
-                );
-              })}
-            </SortableContext>
-          </DndContext>
-        </Accordion>
+              <SortableContext
+                items={items}
+                strategy={verticalListSortingStrategy}
+              >
+                {items.map((item) => {
+                  if (!course!.chapters[item]) return;
+                  return (
+                    <ChapterItem
+                      key={item}
+                      id={item}
+                      chapter={course!.chapters[item]}
+                    />
+                  );
+                })}
+              </SortableContext>
+            </DndContext>
+          </Accordion>
+        )}
       </div>
     </aside>
   );

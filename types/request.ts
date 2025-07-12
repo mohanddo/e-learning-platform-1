@@ -162,3 +162,14 @@ export interface UpdateResourceRequest {
   chapterId: number;
   resourceId: number;
 }
+
+// CreateCourseRequest interface (converted from Java)
+export interface CreateCourseRequest {
+  title: string;
+  description: string;
+  pricingModel: PricingModel;
+  category: CourseCategory;
+  price: number;
+  imageUrl?: string | null;
+  introductionVideoUrl?: string | null;
+}

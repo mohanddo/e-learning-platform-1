@@ -19,6 +19,7 @@ import {
   UpdateDocumentRequest,
   UpdateVideoRequest,
   UpdateResourceRequest,
+  CreateCourseRequest,
 } from "@/types/request";
 import axios from "axios";
 
@@ -157,6 +158,28 @@ export const courseApi = {
 
   updateCourse: async (request: UpdateCourseRequest) => {
     await axiosInstance.put<void>(`course/update`, request);
+  },
+
+  createCourse: async (
+    request: CreateCourseRequest,
+    teacher: Teacher,
+    setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+    image?: File | null
+  ) => {
+    if (image && request.imageUrl) {
+      await axios.put(`${request.imageUrl}?${teacher!.sasToken}`, image, {
+        headers: {
+          "x-ms-blob-type": "BlockBlob",
+          "Content-Type": image.type,
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = (progressEvent.loaded / image.size) * 100;
+          setUploadProgress(percentCompleted);
+        },
+      });
+    }
+    const response = await axiosInstance.post<number>(`course/create`, request);
+    return response.data;
   },
 
   addOrUpdateChapter: async (request: AddOrUpdateChapterRequest) => {

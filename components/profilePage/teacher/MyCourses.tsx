@@ -5,6 +5,8 @@ import { AnimatedList } from "@/components/magicui/animated-list";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAppContext } from "@/context/context";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const profilePicsEndPoint =
   process.env.NEXT_PUBLIC_AZURE_STORAGE_PROFILE_PICS_CONTAINER_ENDPOINT;
@@ -16,9 +18,23 @@ const MyCourses = () => {
   const goToPage = (id: number) => {
     router.replace(`/courseDetails/${id}`);
   };
+
+  const goToCreateCourse = () => {
+    router.push("/teacher/createCourse");
+  };
+
   return (
     <div className="w-full">
-      <p className="text-xl font-semibold mb-10">Your Courses</p>
+      <div className="flex justify-between items-center mb-10">
+        <p className="text-xl font-semibold">Your Courses</p>
+        <Button
+          onClick={goToCreateCourse}
+          className="bg-[var(--addi-color-500)] text-white font-bold hover:bg-[var(--addi-color-400)] flex items-center gap-2"
+        >
+          <Plus size={16} />
+          Create New Course
+        </Button>
+      </div>
       <AnimatedList className="w-full flex flex-col justify-center gap-5">
         {teacher!.courses.length != 0 ? (
           teacher!.courses.map((crs) => (
@@ -59,7 +75,7 @@ const MyCourses = () => {
             <p className="text-gray-500 text-lg">
               You haven&apos;t created any courses yet.
             </p>
-            <p className="text-gray-400 mt-2">
+            <p className="text-gray-400 mt-2 mb-6">
               Create a course to see it here!
             </p>
           </div>

@@ -4,14 +4,14 @@ import { useMutation } from "@tanstack/react-query";
 import { courseApi } from "@/api/course.api";
 import { useCourse } from "@/context/CourseContext";
 import showAlert from "./AlertC";
-import { BlockBlobClient } from "@azure/storage-blob";
 import { useAppContext } from "@/context/context";
-import { getVideoDuration } from "@/utils";
+import { getVideoDuration, uploadVideoToBlobStorage } from "@/utils";
+import { BlockBlobClient } from "@azure/storage-blob";
 
 interface AddResourceComponentProps {
   onClose: () => void;
   setIsUploadingResource: (val: boolean) => void;
-  setUploadProgress: (val: number) => void;
+  setUploadProgress: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const AddResourceComponent: React.FC<AddResourceComponentProps> = ({
@@ -28,21 +28,6 @@ const AddResourceComponent: React.FC<AddResourceComponentProps> = ({
   const [chapterId, setChapterId] = useState<number>(course!.chapters[0].id);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const uploadVideoToBlobStorage = async (blobUrl: string, video: File) => {
-    const blockBlobClient = new BlockBlobClient(blobUrl);
-
-    await blockBlobClient.uploadData(video, {
-      blobHTTPHeaders: { blobContentType: video.type },
-      onProgress: (progress) => {
-        setUploadProgress((progress.loadedBytes / video.size) * 100);
-        console.log(`Uploaded ${progress.loadedBytes} of ${video.size}`);
-      },
-      maxSingleShotSize: 4 * 1024 * 1024, // 4MB
-      blockSize: 4 * 1024 * 1024, // 4MB per block
-      concurrency: 4, // 4 parallel uploads
-    });
-  };
-
   const addVideoMutation = useMutation({
     mutationFn: async () => {
       onClose();
@@ -51,9 +36,10 @@ const AddResourceComponent: React.FC<AddResourceComponentProps> = ({
       const blobUrl = `${teacher!.baseUrl}/${course!.id}/${chapterId}/${
         file!.name
       }?${teacher!.sasToken}`;
-      console.log("Sas token", teacher!.sasToken);
+
       const duration = await getVideoDuration(file!);
-      await uploadVideoToBlobStorage(blobUrl, file!);
+      const blockBlobClient = new BlockBlobClient(blobUrl);
+      await uploadVideoToBlobStorage(file!, setUploadProgress, blockBlobClient);
       await courseApi.addVideo({
         title,
         duration,
